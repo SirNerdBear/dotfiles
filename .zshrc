@@ -83,7 +83,7 @@ POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="039"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git gpg)
 
 source $ZSH/oh-my-zsh.sh
 

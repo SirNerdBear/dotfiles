@@ -128,7 +128,7 @@
 [commit]
 
 	# https://help.github.com/articles/signing-commits-using-gpg/
-	gpgsign = true
+	gpgsign = false #not working need to figure out how to setup a secret key, install what we need, etc. 
 
 [diff]
 
