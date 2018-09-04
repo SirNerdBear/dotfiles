@@ -180,3 +180,7 @@
 [url "git://gist.github.com/"]
 
 	insteadOf = "gist:"
+
+[user]
+	email = scott@codezoom.com
+	name = Scott Hall

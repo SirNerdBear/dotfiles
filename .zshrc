@@ -12,7 +12,7 @@ export NVIM_TUI_ENABLE_TRUE_COLOR=1
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 #ZSH_THEME="powerlevel9k/powerlevel9k"
 #POWERLEVEL9K_MODE='awesome-patched'
-ZSH_THEME='nodeys'
+ZSH_THEME='spaceship'
 
 POWERLEVEL9K_CONTEXT_BACKGROUND='white'
 POWERLEVEL9K_CONTEXT_FOREGROUND='black'
@@ -122,6 +122,13 @@ alias ssh="TERM=xterm-256color ssh" #remote hosts don't have xterm-256color-ital
 eval "$(rbenv init -)"
 
 if [ -z "$TMUX" ]; then
-  ~/banner.rb
+  ~/.dotfiles/banner.rb
 fi
 
+# Load the shell dotfiles, and then some:
+# * ~/.path can be used to extend `$PATH`.
+for file in ~/.{path,exports,aliases,functions,secure_env}; do
+  #echo "$file"
+	[ -r "$file" ] && [ -f "$file" ] && source "$file";
+done;
+unset file;
