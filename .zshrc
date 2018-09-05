@@ -126,8 +126,7 @@ if [ -z "$TMUX" ]; then
 fi
 
 # Load the shell dotfiles, and then some:
-# * ~/.path can be used to extend `$PATH`.
-for file in ~/.{path,exports,aliases,functions,secure_env}; do
+for file in ~/.{exports,aliases,functions,secure_env}; do
   #echo "$file"
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
