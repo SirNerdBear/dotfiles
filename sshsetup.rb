@@ -260,6 +260,13 @@ Dir.chdir(Dir.home) do
   system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
 end
 
+# SSH
+# Should only need to do this once
+# eval "$(ssh-agent -s)" &> /dev/null
+# for file in ~/.ssh/*_rsa; do
+# 	ssh-add -qK $file
+# done;
+
 
 abort "NOT DONE YET"
 
@@ -299,6 +306,9 @@ wait_for_user if STDIN.tty? && !ENV["TRAVIS"]
 
 
 if should_install_command_line_tools?
+  #installs xcode command line tools without needing XCode installed via the AppStore
+  #xcode-select --install
+
   ohai "Searching online for the Command Line Tools"
   # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
   clt_placeholder = "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
