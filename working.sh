@@ -30,16 +30,32 @@ cecho_bold() {
 CONTINUE=false
   
 echo ""
-cecho_bold '  ______        _______.   ___   ___      ______   ______   .__   __.  _______  __    _______ ' $green
-cecho_bold ' /  __  \      /       |   \  \ /  /     /      | /  __  \  |  \ |  | |   ____||  |  /  _____|' $green
-cecho_bold '|  |  |  |    |   (----     \  V  /     |   ----|   |  |  | |   \|  | |  |__   |  | |  |  __  ' $green
-cecho_bold '|  |  |  |     \   \         >   <      |  |     |  |  |  | |  .    | |   __|  |  | |  | |_ | ' $green
-cecho_bold '|   --   | .----)   |       /  .  \     |   ----.|   --   | |  |\   | |  |     |  | |  |__| | ' $green
-cecho_bold ' \______/  |_______/       /__/ \__\     \______| \______/  |__| \__| |__|     |__|  \______| ' $green
-echo ""
+
+
+cecho_bold ' ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄ ' $blue
+cecho_bold '▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌' $blue
+cecho_bold '▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌     ▐░▌▐░█▀▀▀▀▀▀▀▀▀  ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀ ' $blue
+cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌▐░▌    ▐░▌▐░▌               ▐░▌     ▐░▌          ' $blue
+cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌ ▐░▌   ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░▌     ▐░▌ ▄▄▄▄▄▄▄▄ ' $blue
+cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░▌     ▐░▌▐░░░░░░░░▌' $blue
+cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌   ▐░▌ ▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░▌     ▐░▌ ▀▀▀▀▀▀█░▌' $blue
+cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌    ▐░▌▐░▌▐░▌               ▐░▌     ▐░▌       ▐░▌' $blue
+cecho_bold '▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌     ▐░▐░▌▐░▌           ▄▄▄▄█░█▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌' $blue
+cecho_bold '▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌      ▐░░▌▐░▌          ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌' $blue
+cecho_bold ' ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀            ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀ ' $blue
+                                                                            
+                                        
+cecho_bold "                                                        .d88888b.   .d8888b.  " $blue
+cecho_bold '                                                       d88P" "Y88b d88P  Y88b ' $blue
+cecho_bold '                                                       888     888 Y88b.      ' $blue
+cecho_bold '                       88888b.d88b.   8888b.   .d8888b 888     888  "Y888b.   ' $blue
+cecho_bold '                       888 "888 "88b     "88b d88P"    888     888     "Y88b. ' $blue
+cecho_bold '                       888  888  888 .d888888 888      888     888       "888 ' $blue
+cecho_bold "                       888  888  888 888  888 Y88b.    Y88b. .d88P Y88b  d88P " $blue
+cecho_bold '                       888  888  888 "Y888888  "Y8888P  "Y88888P"   "Y8888P"  ' $blue
  
 echo ""
-cecho "Run config script and set macOS awesomeness? (y/n)" $cyan
+cecho_bold "Run config script and set macOS awesomeness to 11? (y/n)" $red
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   CONTINUE=true
@@ -58,46 +74,6 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
-
-#installs xcode command line tools without needing XCode installed via the AppStore
-xcode-select --install
-
-#configure ruby GEM manager to avoid documentation (speeds up gem install)
-echo "gem: --no-ri --no-rdoc" > $HOME/.gemrc
-
-# Install Homebrew
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew doctor
-
-#Things I code in:
-#Rails(Ruby,HAML,SASS,JS,CoffeeScript,IRB)
-#React(JS,Reacthingmabob)
-#C, C++, C#
-#Java(Android Dev)
-#Swift(macOS, iOS, and watchOS Dev)
-#Ardredno(Pretty much C)
-#Python
-#NodeJS
-
-#For the most part I should switch to Docker instead of dealing with DB
-#instances on my local machine, etc. 
-
-# Install brew development stuff
-brew install lynx wget git
-brew install postgresql
-brew install rbenv ruby-build node
-brew install cmatrix sl cowsay
-brew install python python3 curl fontforge
-
-# Install main applications
-brew cask install iterm2
-brew cask install alfred
-brew cask install dropbox
-brew cask install bettertouchtool #NOT WORKING
-brew cask install visual-studio-code
-brew cask install discord
-#brew cask install scrivener #Must manually install until I get 3.0 (assholes)
-
 
 ##################################################################################
 # General UI/UX 
@@ -227,6 +203,11 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
+# Dark mode
+defaults write -g AppleInterfaceStyle "Dark"
+defaults write -g AppleAquaColorVariant -int 6
+
+
 # Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
 # all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
 #rm -rf ~/Library/Application Support/Dock/desktoppicture.db
@@ -253,11 +234,27 @@ sudo pmset -a sms 0
 # Turn on FileVault2 on next login
 fdesetup enable -defer -forceatlogin 0 -dontaskatlogout -keychain -norecoverykey 
 
+###############################################################################
+# Yucky external media from the darkages
+###############################################################################
+
+# For older MacBooks with Drives or a Mac with an external hooked up for reasons
+# beyond conventional fathoming…
+# not sure how to do this
+
+# defaults write com.apple.digihub.blank.cd.appeared -dict-add action 1
+# defaults write com.apple.digihub.blank.dvd.appeared -dict action 1
+# defaults write com.apple.digihub.cd.music.appeared -dict action 1
+# defaults write com.apple.digihub.cd.picture.appeared -dict action 1
+# defaults write com.apple.digihub.dvd.video.appeared -dict action 1
 
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
 ###############################################################################
+
+#Make function keys work like function keys by default
+defaults write -g com.apple.keyboard.fnState true
 
 #add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
@@ -320,6 +317,11 @@ defaults write com.apple.BezelServices kDimTime -int 120
 # Setting trackpad & mouse speed to a reasonable number
 defaults write -g com.apple.trackpad.scaling 2
 defaults write -g com.apple.mouse.scaling 2.5
+
+# Turn on right click support for mice
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode -string TwoButton
+defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string TwoButton
+defaults write com.apple.driver.AppleHIDMouse Button2 -int 2
 
 ##################################################################################
 # System Shortcuts
@@ -871,5 +873,9 @@ for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
 	"Transmission" "Tweetbot" "Twitter" "iCal"; do
 	killall "${app}" &> /dev/null
 done
+
+# USR=`ls -l /dev/console | awk '{print $3}'`
+# chown $USR /Users/$USR/Library/Preferences/.GlobalPreferences.plist
+# unset USR
 
 echo "Done. Note that some of these changes require a restart to take effect."
