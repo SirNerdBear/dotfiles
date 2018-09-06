@@ -7,6 +7,9 @@ for file in ~/.{bash_prompt,exports,aliases,functions,secure_env}; do
 done;
 unset file;
 
+# SSH
+eval "$(ssh-agent -s)" &> /dev/null
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob;
 
