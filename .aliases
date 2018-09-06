@@ -159,4 +159,4 @@ alias reload="exec $SHELL -l"
 alias path='echo -e ${PATH//:/\\n}'
 
 # Quicklook
-alias ql='qlmanage -p'
+alias ql='qlmanage -p &> /dev/null'
