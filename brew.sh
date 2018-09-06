@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
-
 # Install command-line tools using Homebrew.
+
+#Things I code in:
+#Rails(Ruby,HAML,SASS,JS,CoffeeScript,IRB)
+#React(JS,Reacthingmabob)
+#C, C++, C#
+#Java(Android Dev)
+#Swift(macOS, iOS, and watchOS Dev)
+#Ardredno(Pretty much C)
+#Python
+#NodeJS
+
 
 # Make sure we’re using the latest Homebrew.
 brew update
@@ -14,10 +24,13 @@ brew install coreutils
 
 # Install some other useful utilities like `sponge`.
 brew install moreutils
+
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 brew install findutils
+
 # Install GNU `sed`, overwriting the built-in `sed`.
 brew install gnu-sed --with-default-names
+
 # Install Bash 4.
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
 # running `chsh`.
@@ -25,11 +38,8 @@ brew install bash
 brew tap homebrew/versions
 brew install bash-completion2
 
-# Switch to using brew-installed bash as default shell
-if ! fgrep -q '/usr/local/bin/bash' /etc/shells; then
-  echo '/usr/local/bin/bash' | sudo tee -a /etc/shells;
-  chsh -s /usr/local/bin/bash;
-fi;
+# Install oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Install `wget` with IRI support.
 brew install wget --with-iri
@@ -38,7 +48,6 @@ brew install wget --with-iri
 brew install vim --with-override-system-vi
 brew install homebrew/dupes/grep
 brew install homebrew/dupes/openssh
-brew install homebrew/dupes/screen
 # brew install homebrew/php/php56 --with-gmp
 
 # Install font tools.
@@ -46,6 +55,33 @@ brew tap bramstein/webfonttools
 brew install sfnt2woff
 brew install sfnt2woff-zopfli
 brew install woff2
+
+# Install essentual development tools
+brew install lynx wget git
+brew install postgresql
+brew install rbenv ruby-build node
+brew install cmatrix sl cowsay pinentry-mac gpg
+brew install python python3 curl fontforge reattach-to-user-namespace htop screenfetch tmux
+
+#TODO sourse shell and set rbenv global
+# then
+# gem install rails bundler
+
+LATEST_RUBY=$(rbenv install -l | grep -v - | tail -1)
+rbenv install LATEST_RUBY
+rbenv global LATEST_RUBY
+eval "$(rbenv init -)"
+rbenv rehash
+unset LATEST_RUBY
+
+
+# Neovim because I'm one of the cool kids
+brew install neovim/neovim/neovim
+pip2 install neovim
+gem install neovim
+#TODO python 3
+
+
 
 # Install some CTF tools; see https://github.com/ctfs/write-ups.
 # brew install aircrack-ng
