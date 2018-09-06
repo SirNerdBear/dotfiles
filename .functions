@@ -255,3 +255,12 @@ function o() {
 function tre() {
 	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
+
+# `uxdiff` diffs changes beteen setting changes to trackdown domain and key
+function uxdiff() {
+	mv ~/.new-defaults ~/.old-defaults 2> /dev/null
+	defaults read > ~/.new-defaults
+	if [[ -f ~/.old-defaults && -f ~/.new-defaults ]]; then
+		diff ~/.old-defaults ~/.new-defaults
+	fi;
+}
