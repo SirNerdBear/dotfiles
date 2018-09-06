@@ -1,8 +1,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 " colorschemes
-" Plug 'dracula/vim'
-Plug 'joshdick/onedark.vim'                    "sexy color scheme
+Plug 'dracula/vim'                             "sexy color scheme
 Plug 'itchyny/lightline.vim'                   "status line
 Plug 'scrooloose/nerdtree'                     "file browser al la de facto standard
 Plug 'ryanoasis/vim-devicons'                  "add unicode nerdfront icons to NERDTree, Lightline, etc.

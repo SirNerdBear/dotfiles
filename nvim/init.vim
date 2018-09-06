@@ -27,7 +27,10 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 if &term =~ '256color'
    " disable background color erase
    set t_ut=
+   set t_Co=256
 endif
+
+
 
 if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
@@ -44,7 +47,7 @@ let g:onedark_terminal_italics=1 " Requires support in terminal emulator:
 
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'onedark',
+      \ 'colorscheme': 'Dracula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'fugitive', 'filename' ] ],
@@ -186,14 +189,15 @@ endfunction
 let g:vimshell_force_overwrite_statusline = 0
 
 " onedark.vim override: Darker background color via 24-bit only (256 and 16 color is the same)
-if (has("autocmd") && !has("gui"))
-  let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
-  let s:black = { "gui": "#1C2027", "cterm": "235", "cterm16": "0" }
-  autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white, "bg": s:black }) 
-end
+" if (has("autocmd") && !has("gui"))
+"  let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
+"  let s:black = { "gui": "#1C2027", "cterm": "235", "cterm16": "0" }
+"  autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white, "bg": s:black }) 
+" end
 
 syntax on
-colorscheme onedark         " Set the colorscheme
+color dracula       " For some reason both color and colorscheme need to be set to work???
+colorscheme dracula " Set the colorscheme
 
 " make the highlighting of tabs and other non-text less annoying
 highlight SpecialKey ctermbg=none ctermfg=8
