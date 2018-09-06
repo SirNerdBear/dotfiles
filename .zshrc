@@ -6,6 +6,7 @@ export ZSH=/Users/scott/.oh-my-zsh
 export TERM="xterm-256color-italic"
 #export TERM="st-256color"
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
+export ZSH_DISABLE_COMPFIX=true
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -41,6 +42,8 @@ POWERLEVEL9K_DIR_HOME_BACKGROUND="039"
 POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="039"
 POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="039"
 
+SPACESHIP_CHAR_COLOR_FAILURE="green"
+SPACESHIP_CHAR_SYMBOL=" "
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -121,9 +124,7 @@ alias ssh="TERM=xterm-256color ssh" #remote hosts don't have xterm-256color-ital
 
 eval "$(rbenv init -)"
 
-if [ -z "$TMUX" ]; then
-  ~/.dotfiles/banner.rb
-fi
+#TODO this stuff is duplicated so instead we should isolate out common stuff and source it from bash and zsh
 
 # Load the shell dotfiles, and then some:
 for file in ~/.{exports,aliases,functions,secure_env}; do
@@ -131,3 +132,6 @@ for file in ~/.{exports,aliases,functions,secure_env}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
+
+# SSH
+eval "$(ssh-agent -s)" &> /dev/null
