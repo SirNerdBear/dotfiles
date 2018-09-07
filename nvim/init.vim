@@ -271,3 +271,6 @@ let mapleader = ' ' " spacebar as map leader for more shortcuts
 nmap <leader><space> :set hlsearch! hlsearch?<cr>
 
 nmap <silent> <leader>rc :Econtroller<cr>
+
+hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg " hide ~ on empty lines
+
