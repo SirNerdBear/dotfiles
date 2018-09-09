@@ -1,9 +1,16 @@
 #!/bin/bash
 # Symlink all .dotfiles to the home directory
 
-cd ~/.dotfiles
+cd ~/Projects/dotfiles
 
 now=$(date +"%Y.%m.%d.%H.%M.%S")
+
+if [[ -d ~/.config && ! -L ~/Projects/dotfiles ]]; then
+  #mv -r ~/.config ~/Projects/dotfiles/backup/.config-$now
+  #echo "~/.config directory backup saved as ~/Projects/dotfiles/backup/.config-$now"
+fi
+unlink ~/.config > /dev/null 2>&1
+ln -s ~/Projects/dotfiles ~/.config
 
 for file in .*; do
   if [[ $file == "." || $file == ".." || $file == ".gitignore" || -d $file ]]; then
@@ -12,13 +19,13 @@ for file in .*; do
   echo "Linking ~/$file"
   # if the file exists:
   if [[ -f ~/$file && ! -L ~/$file ]]; then
-      mkdir -p ~/.dotfiles/backup/$now
-      mv ~/$file ~/.dotfiles/backup/$now/$file
-      echo "backup saved as ~/.dotfiles_backup/$now/$file"
+      mkdir -p ~/Projects/dotfiles/backup/$now
+      mv ~/$file ~/Projects/dotfiles/backup/$now/$file
+      echo "$file backup saved as ~/Project/dotfiles/backup/$now/$file"
   fi
   # symlink might still exist
   unlink ~/$file > /dev/null 2>&1
   # create the link
-  ln -s ~/.dotfiles/$file ~/$file
+  ln -s ~/Projects/dotfiles/$file ~/$file
   echo -e '\tlinked'
 done
