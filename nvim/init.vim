@@ -272,5 +272,10 @@ nmap <leader><space> :set hlsearch! hlsearch?<cr>
 
 nmap <silent> <leader>rc :Econtroller<cr>
 
-hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg " hide ~ on empty lines
+if exists('&signcolumn')  " Vim 7.4.2201
+  set signcolumn=yes
+else
+  let g:gitgutter_sign_column_always = 1
+endif
 
+hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg " hide ~ on empty lines
