@@ -5,11 +5,20 @@
 #Rails(Ruby,HAML,SASS,JS,CoffeeScript,IRB)
 #React(JS,Reacthingmabob)
 #C, C++, C#
-#Java(Android Dev)
+#Kotlin(Android Dev)
 #Swift(macOS, iOS, and watchOS Dev)
-#Ardredno(Pretty much C)
+#Ardreno(Pretty much C)
 #Python
 #NodeJS
+#Perl
+
+
+#Things to play with
+#Java
+#Elixar
+#Rust
+#PHP (been awhile good to refresh, YII looks cool)
+
 
 
 # Make sure we’re using the latest Homebrew.
