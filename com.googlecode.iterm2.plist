@@ -298,7 +298,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>351 584 796 486 0 0 1920 1200 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1360 0 560 1200 0 0 1920 1200 </string>
+	<string>0 0 1920 1200 0 0 1920 1200 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>59 43 585 452 0 0 1440 900 </string>
 	<key>New Bookmarks</key>
@@ -1693,7 +1693,13 @@
 	<false/>
 	<key>WordCharacters</key>
 	<string>/-+\~_.</string>
+	<key>disableMetalWhenUnplugged</key>
+	<false/>
 	<key>iTerm Version</key>
 	<string>3.2.0</string>
+	<key>metalMaximizeThroughput</key>
+	<true/>
+	<key>preferIntegratedGPU</key>
+	<true/>
 </dict>
 </plist>

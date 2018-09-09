@@ -188,13 +188,6 @@ endfunction
 
 let g:vimshell_force_overwrite_statusline = 0
 
-" onedark.vim override: Darker background color via 24-bit only (256 and 16 color is the same)
-" if (has("autocmd") && !has("gui"))
-"  let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
-"  let s:black = { "gui": "#1C2027", "cterm": "235", "cterm16": "0" }
-"  autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white, "bg": s:black }) 
-" end
-
 syntax on
 color dracula       " For some reason both color and colorscheme need to be set to work???
 colorscheme dracula " Set the colorscheme
@@ -233,13 +226,21 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
+" makes the entire file name colored
+" let g:NERDTreeFileExtensionHighlightFullName = 0
+" let g:NERDTreeExactMatchHighlightFullName = 0
+" let g:NERDTreePatternMatchHighlightFullName = 0
+
 let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+" let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {} " needed
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.coffee.*\.erb$'] = ''
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.haml$'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.applescript$'] = ''
+
+
 
 let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
 let g:NERDTreeExactMatchHighlightColor['.gitignore'] = 'F54D27'
@@ -247,11 +248,15 @@ let g:NERDTreeExactMatchHighlightColor['.gitignore'] = 'F54D27'
 let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid error
 let g:NERDTreePatternMatchHighlightColor['.*\.coffee.*\.erb$'] = "905532"
 let g:NERDTreePatternMatchHighlightColor['.*\.haml$'] = "31B53E"
+let g:NERDTreePatternMatchHighlightColor['.*\.applescript$'] = "FFFFFF"
 
-" makes the entire file name colored
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
+
+" after a re-source, fix syntax matching issues (concealing brackets):
+if exists('g:loaded_webdevicons')
+    call webdevicons#refresh()
+endif
+
+
 
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " *nix
@@ -279,3 +284,10 @@ else
 endif
 
 hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg " hide ~ on empty lines
+
+" Disable tmux navigator when zooming the Vim pane
+let g:tmux_navigator_disable_when_zoomed = 1
+
+" Prevent NerdTree from blocking tmux pane navigation on J and K
+let g:NERDTreeMapJumpPrevSibling=""
+let g:NERDTreeMapJumpNextSibling=""
