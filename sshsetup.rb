@@ -206,6 +206,15 @@ Dir.chdir(PROJECT_DIR) do
   system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
 end
 
+#install Oh My ZSH
+system "sh", "-c", `curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh`
+
+
+system "/usr/bin/env", "zsh", "#{PROJECT_DIR}/brew.sh"
+system "/usr/bin/env", "zsh", "#{PROJECT_DIR}/brew-apps.sh"
+system "/usr/bin/env", "zsh", "#{PROJECT_DIR}/symlinks.sh"
+
+
 abort "NOT DONE YET"
 
 ohai "Installation successful!"

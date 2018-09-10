@@ -223,8 +223,9 @@ map <C-n> :NERDTreeToggle<CR>
 " close vim if only NERDTree is open and we're quiting
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeDirArrows = 1
+let NERDTreeShowExecutableFlag = 0
 
 " makes the entire file name colored
 " let g:NERDTreeFileExtensionHighlightFullName = 0
@@ -239,6 +240,7 @@ let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {} " needed
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.coffee.*\.erb$'] = ''
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.haml$'] = ''
 let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.applescript$'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*\.sh$'] = ''
 
 
 
@@ -249,7 +251,10 @@ let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid err
 let g:NERDTreePatternMatchHighlightColor['.*\.coffee.*\.erb$'] = "905532"
 let g:NERDTreePatternMatchHighlightColor['.*\.haml$'] = "31B53E"
 let g:NERDTreePatternMatchHighlightColor['.*\.applescript$'] = "FFFFFF"
+let g:NERDTreePatternMatchHighlightColor['.*\.sh$'] = "FFFF00"
+let g:NERDTreePatternMatchHighlightColor['\*$'] = "FF0000"
 
+let g:NERDTreeExactMatchHighlightColor = {}
 
 " after a re-source, fix syntax matching issues (concealing brackets):
 if exists('g:loaded_webdevicons')
