@@ -40,15 +40,11 @@ brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
 brew install gnu-sed --with-default-names
 
-# Install Bash 4.
-# Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
-# running `chsh`.
-brew install bash
-brew tap homebrew/versions
-brew install bash-completion2
+#install zsh shell
+brew install zsh
 
 # Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Install `wget` with IRI support.
 brew install wget --with-iri
@@ -72,10 +68,6 @@ brew install rbenv ruby-build node
 brew install cmatrix sl cowsay pinentry-mac gpg
 brew install python python3 curl fontforge reattach-to-user-namespace htop screenfetch tmux
 
-#TODO sourse shell and set rbenv global
-# then
-# gem install rails bundler
-
 LATEST_RUBY=$(rbenv install -l | grep -v - | tail -1)
 rbenv install LATEST_RUBY
 rbenv global LATEST_RUBY
@@ -83,6 +75,10 @@ eval "$(rbenv init -)"
 rbenv rehash
 unset LATEST_RUBY
 
+#TODO Install other versions of ruby here that we use
+
+#TODO sourse shell
+# then gem install rails bundler
 
 # Neovim because I'm one of the cool kids
 brew install neovim/neovim/neovim
