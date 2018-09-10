@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+
+#AppStore
+#mas signin --dialog #NEED EMAIL#
+mas install 409203825 #Numbers
+mas install 409203825 #XCoode
+mas install 497799835 #Pages
+mas install 409201541 #The Archive Browser
+mas install 409183694 #Keynote
+mas install 425424353 #The Unarchiver
+
 # Install apps
 
 # Chrome & Canary
@@ -25,6 +35,10 @@ brew cask install bettertouchtool #NOT WORKING
 brew cask install visual-studio-code
 brew cask install discord
 #brew cask install scrivener #Must manually install until I get 3.0 (assholes)
+
+
+brew cask install imageoptim #Reduce size of images https://imageoptim.com/mac
+brew cask install imagealpha #PNG24 to PNG8 with alpha channel support https://pngmini.com/ 
 
 
 brew tap homebrew/completions
