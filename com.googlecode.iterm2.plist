@@ -233,6 +233,8 @@
 	<false/>
 	<key>DimOnlyText</key>
 	<false/>
+	<key>DisableFullscreenTransparency</key>
+	<false/>
 	<key>EnableDivisionView</key>
 	<false/>
 	<key>EnableProxyIcon</key>
@@ -1664,7 +1666,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-09-08T04:00:08Z</date>
+	<date>2018-09-09T04:00:08Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -1694,7 +1696,7 @@
 	<key>WordCharacters</key>
 	<string>/-+\~_.</string>
 	<key>disableMetalWhenUnplugged</key>
-	<false/>
+	<true/>
 	<key>iTerm Version</key>
 	<string>3.2.0</string>
 	<key>metalMaximizeThroughput</key>
