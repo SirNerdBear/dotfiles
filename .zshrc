@@ -127,11 +127,16 @@ eval "$(rbenv init -)"
 #TODO this stuff is duplicated so instead we should isolate out common stuff and source it from bash and zsh
 
 # Load the shell dotfiles, and then some:
-for file in ~/.{exports,aliases,functions,secure_env}; do
+for file in ~/.config/zsh/{exports,aliases,functions,secure_env}; do
   #echo "$file"
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
+
+
+#Run after all the sourcing
+system 'git', 'config', '--global user.name', "$GIT_AUTHOR_NAME"
+system 'git', 'config', '--global user.email', "$GIT_AUTHOR_EMAIL"
 
 # SSH
 eval "$(ssh-agent -s)" &> /dev/null

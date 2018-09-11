@@ -4,6 +4,7 @@ require 'open3'
 
 SSH_DIR = "#{ENV["HOME"]}/.ssh".freeze
 PROJECT_DIR = "#{ENV["HOME"]}/Projects".freeze
+CONFIG_DIR = "#{ENV["HOME"]}/Projects/dotfiles".freeze
 
 module Tty
   module_function
@@ -71,12 +72,14 @@ def provision_sshkey(id,name=nil)
   result.scan(/^(?<=\n)([A-Z ]+):\s+(.*?)(?=\n[A-Z ]+:|\Z)/mi) do |match|
     hash[match[0]] = match[1]
   end
+  name = "#{name}_rsa" if name
   pri = File.join(SSH_DIR,name || 'id_rsa')
   pub = File.join(SSH_DIR,(name || 'id_rsa') + '.pub')
   File.open(pri, 'w') { |file| file.write(hash["Private Key"] + "\n") }
   File.open(pub, 'w') { |file| file.write(hash["Public Key"] + "\n") }
   File.chmod(0644,pub)
   File.chmod(0600,pri)
+  system 'ssh-add',"-qK", File.join(Dir.home,'.ssh',name || 'id_rsa')
 end
 
 def getc
@@ -154,7 +157,7 @@ at_exit { Kernel.system "/usr/bin/sudo", "-k" } unless $?.success?
 Dir.chdir "/usr"
 
 ####################################################################### script
-abort "Already installed nothing to do" if Dir.exists?( File.join(Dir.home,"Projects","dotfiles") ) 
+#abort "Already installed nothing to do" if Dir.exists?( File.join(Dir.home,"Projects","dotfiles") ) 
 abort "This is the macOS installer, not Linux!" if RUBY_PLATFORM.to_s.downcase.include?("linux")
 abort "Mac OS X too old" if macos_version < "10.5"
 abort "Don't run this as root!" if Process.uid.zero?
@@ -190,18 +193,20 @@ list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
   elsif name == "Secure Env Vars"
     result = capture_system 'lpass', 'show', id
     if result =~ /Notes:\W+(.*?)\Z/m
-      secure_env = $1
+      File.open(File.join(CONFIG_DIR,'zsh','secure_env'),'w') do |f|
+	f.write($1)
+      end
     end
   elsif name =~ /\ASSH Key \((.*?)\)\Z/
-    #provision_sshkey(id,$1)
+    provision_sshkey(id,$1)
     #puts "SSH KEY: #{$1} #{id}"
   end
   found = true
   #puts "Found: #{match}" 
 end
 abort "No secure notes found in list SysConfig group on LastPass" unless found
+abort
 
-system 'ssh-add',"-qK", File.join(Dir.home,'.ssh','id_rsa')
 Dir.chdir(PROJECT_DIR) do
   system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
 end
