@@ -182,5 +182,7 @@
 	insteadOf = "gist:"
 
 [user]
-	email = scott@codezoom.com
-	name = Scott Hall
+      # These values are set in ~/.gitconfig_local
+
+[include]
+      path = ~/.config/.gitconfig.local

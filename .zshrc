@@ -133,10 +133,5 @@ for file in ~/.config/zsh/{exports,aliases,functions,secure_env}; do
 done;
 unset file;
 
-
-#Run after all the sourcing
-system 'git', 'config', '--global user.name', "$GIT_AUTHOR_NAME"
-system 'git', 'config', '--global user.email', "$GIT_AUTHOR_EMAIL"
-
 # SSH
 eval "$(ssh-agent -s)" &> /dev/null
