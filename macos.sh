@@ -681,6 +681,9 @@ defaults write com.apple.dock no-bouncing -boolean true
 # Safari & WebKit 
 ##################################################################################
 
+# Get rid of keybinds to email page
+defaults write com.apple.Safari NSUserKeyEquivalents -dict-add 'Email Link to This Page' '\0' 'Email This Page' '\0'
+
 # Privacy: don’t send search queries to Apple
 defaults write com.apple.Safari UniversalSearchEnabled -bool false
 defaults write com.apple.Safari SuppressSearchSuggestions -bool true
@@ -865,18 +868,36 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 open "${HOME}/.config/init/Dracula.itermcolors"
 
 # Load iTerm2 settings
-defaults write com.googlecode.iterm2 PrefsCustomFolder "/Users/scott/.config"
+defaults write com.googlecode.iterm2 PrefsCustomFolder "${HOME}/.config"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 
 ##################################################################################
 # Alfred 3 
 ##################################################################################
-defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "/Users/scott/.config"
+defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "${HOME}/.config"
 
+##################################################################################
 # Chrome
-
-# Bring up Chrome Extensions via ⌘E (Window → Extensions)
+##################################################################################
+# Bring up Chrome Extensions via Shift + ⌘E (Window → Extensions)
 defaults write com.google.Chrome NSUserKeyEquivalents '{ Extensions = "@$e"; }'
+
+# Get rid of binds to email
+defaults write com.google.Chrome NSUserKeyEquivalents -dict-add 'Email Page Location' '\0'
+defaults write com.google.Chrome.canary NSUserKeyEquivalents -dict-add 'Email Page Location' '\0'
+
+# Remap Developer Tools to Command + Shift + I as that is more natural and it avoids the stupid email
+# BetterTouchTool redirects Command + Option + I to this new shortcut
+defaults write com.google.Chrome NSUserKeyEquivalents -dict-add 'Developer Tools' '@$i'
+
+####################################################################################
+# XCode
+####################################################################################
+mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes
+ln -s ~/.config/init/Dracula.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Dracula.xccolortheme
+
+
+
 
 for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
 	"Dock" "Finder" "Google Chrome" "Google Chrome Canary" "Mail" "Messages" \
@@ -884,9 +905,5 @@ for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
 	"Transmission" "Tweetbot" "Twitter" "iCal"; do
 	killall "${app}" &> /dev/null
 done
-
-# USR=`ls -l /dev/console | awk '{print $3}'`
-# chown $USR /Users/$USR/Library/Preferences/.GlobalPreferences.plist
-# unset USR
 
 echo "Done. Note that some of these changes require a restart to take effect."
