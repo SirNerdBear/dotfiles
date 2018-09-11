@@ -664,7 +664,7 @@ defaults write com.apple.dock wvous-br-modifier -int 0
 #Hide the Dock and Set a Very Long Delay AKA Remove the Dock for Good
 defaults write com.apple.dock autohide-delay -float 1000
 defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-time-modifier -float 20000000000; killall Dock
+defaults write com.apple.dock autohide-time-modifier -float 20000000000
 defaults write com.apple.dock tilesize -int 1 #tiny size
 defaults write com.apple.dock magnification -boolean false
 defaults write com.apple.dock contents-immutable -boolean true
