@@ -75,6 +75,13 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
+if [[ ! -f /Library/Keychains/FileVaultMaster.keychain ]]; then
+  sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain /Library/Keychains/FileVaultMaster.keychain
+fi
+if [[ ! `sudo fdesetup status | grep 'FileVault is On'` ]] && [[ `sudo fdesetup showdeferralinfo | grep 'Not found'` ]]; then
+  sudo fdesetup enable -defer /dev/null -keychain –norecoverykey -forceatlogin 0 –dontaskatlogout
+fi
+
 ##################################################################################
 # General UI/UX 
 ##################################################################################
