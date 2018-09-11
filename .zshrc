@@ -133,13 +133,9 @@ for file in ~/.config/zsh/{exports,aliases,functions,secure_env}; do
 done;
 unset file;
 
-
-for file in ~/.ssh/*_rsa; do
-  [ -r "$file" ] && [ -f "$file" ] && ssh-add -qK $file
-done;
-unset file;
+# SSH
+eval "$(ssh-agent -s)" &> /dev/null
 ssh-add -A &> /dev/null
 
 
-# SSH
-eval "$(ssh-agent -s)" &> /dev/null
+
