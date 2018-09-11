@@ -261,7 +261,7 @@ fdesetup enable -defer -forceatlogin 0 -dontaskatlogout -keychain -norecoverykey
 ###############################################################################
 
 #Make function keys work like function keys by default
-defaults write -g com.apple.keyboard.fnState true
+defaults write -g com.apple.keyboard.fnState -bool true
 
 #add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
 defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
