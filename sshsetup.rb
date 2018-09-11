@@ -175,6 +175,17 @@ system 'brew', 'install', 'lastpass-cli', '--with-pinentry'
 mkdir_p(0700,SSH_DIR)
 mkdir_p(0700,PROJECT_DIR)
 
+config = File.join(ENV["HOME"], ".ssh", "config")
+unless File.exists?(config)
+  File.open(config, 'w') do |f|
+    f.write("Host *\n")
+    f.write("\tAddKeysToAgent yes\n")
+    f.write("\tUseKeychain yes\n")
+    f.write("\tIdentityFile ~/.ssh/id_rsa\n")
+  end
+end
+File.chmod(0600, config)
+
 ohai "Login to LastPass to Retrieve SSH Keys"
 
 print "LastPass Login Email: "
@@ -213,6 +224,8 @@ end
 
 #install Oh My ZSH
 system "sh", "-c", `curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh`
+
+
 
 
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
