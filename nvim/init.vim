@@ -191,13 +191,13 @@ let g:vimshell_force_overwrite_statusline = 0
 syntax on
 color dracula       " For some reason both color and colorscheme need to be set to work???
 colorscheme dracula " Set the colorscheme
+highlight Comment cterm=italic
 
 " make the highlighting of tabs and other non-text less annoying
 highlight SpecialKey ctermbg=none ctermfg=8
 highlight NonText ctermbg=none ctermfg=8
 
 " make comments and HTML attributes italic
-highlight Comment cterm=italic
 highlight htmlArg cterm=italic
 
 set number                  " show line numbers
