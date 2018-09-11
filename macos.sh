@@ -668,14 +668,14 @@ defaults write com.apple.dock autohide-time-modifier -float 20000000000; killall
 defaults write com.apple.dock tilesize -int 1 #tiny size
 defaults write com.apple.dock magnification -boolean false
 defaults write com.apple.dock contents-immutable -boolean true
-defaults write com.apple.dock static-only -bool TRUE #only show open apps
+defaults write com.apple.dock static-only -bool true #only show open apps
 defaults write com.apple.dock size-immutable -boolean true
 defaults write com.apple.dock magnify-immutable -boolean true
 defaults write com.apple.dock autohide-immutable -boolean true
 defaults write com.apple.dock position-immutable -boolean true
 defaults write com.apple.dock min-effect-immutable -boolean true
 defaults write com.apple.dock min-in-place-immutable -boolean true
-defaults write com.apple.dock no-bouncing -boolean-neg true
+defaults write com.apple.dock no-bouncing -boolean true
 
 ##################################################################################
 # Safari & WebKit 
@@ -765,6 +765,7 @@ defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 ##################################################################################
 
 # Hide Spotlight tray-icon (and subsequent helper)
+# Doesn't want with SIP enabled
 sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 
 # Disable Spotlight indexing for any volume that gets mounted and has not yet been indexed before.
@@ -861,16 +862,16 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 defaults write com.apple.Terminal ShowLineMarks -int 0
 
 # Install the Solarized Dark theme for iTerm
-open "${HOME}/init/Solarized Dark.itermcolors"
+open "${HOME}/.config/init/Dracula.itermcolors"
 
 # Load iTerm2 settings
-defaults write com.googlecode.iterm2 PrefsCustomFolder "/Users/scott/.dotfiles"
+defaults write com.googlecode.iterm2 PrefsCustomFolder "/Users/scott/.config"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 
 ##################################################################################
 # Alfred 3 
 ##################################################################################
-defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "/Users/scott/.dotfiles"
+defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "/Users/scott/.config"
 
 # Chrome
 

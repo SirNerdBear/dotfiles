@@ -216,10 +216,11 @@ list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
   #puts "Found: #{match}" 
 end
 abort "No secure notes found in list SysConfig group on LastPass" unless found
-abort
 
-Dir.chdir(PROJECT_DIR) do
-  system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
+unless Dir.exists?( File.join(Dir.home,"Projects","dotfiles") ) 
+  Dir.chdir(PROJECT_DIR) do
+    system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
+  end
 end
 
 #install Oh My ZSH
@@ -231,10 +232,8 @@ system "sh", "-c", `curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/macos.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/symlinks.sh"
-
-
-abort "NOT DONE YET"
 
 ohai "Installation successful!"
 puts
