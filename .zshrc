@@ -17,6 +17,7 @@ ZSH_THEME='spaceship'
 
 SPACESHIP_CHAR_COLOR_FAILURE="green"
 SPACESHIP_CHAR_SYMBOL=" "
+SPACESHIP_BATTERY_SHOW=false
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -92,7 +93,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vim="nvim"
-alias nano="nvim" #training wheels
 alias ssh="TERM=xterm-256color ssh" #remote hosts don't have xterm-256color-italic by default
 
 eval "$(rbenv init -)"
