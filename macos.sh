@@ -214,6 +214,10 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 defaults write -g AppleInterfaceStyle "Dark"
 defaults write -g AppleAquaColorVariant -int 6
 
+# Reudce motion enable to change space switching to a fade and not a swipe
+defaults write com.apple.universalaccess reduceMotion -bool true
+defaults write com.apple.dock expose-animation-duration -float 0.1 #doesn't work in 10.12+
+
 
 # Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
 # all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
@@ -931,6 +935,24 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 ####################################################################################
 mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes
 ln -s ~/.config/init/Dracula.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Dracula.xccolortheme
+
+#set thtme to Dracula
+defaults write com.apple.dt.Xcode XCFontAndColorCurrentTheme -string Dracula.xccolortheme
+
+#show line numbers
+defaults write com.apple.dt.Xcode DVTTextShowLineNumbers -bool true
+
+#multi core CPU
+defaults write com.apple.dt.Xcode IDEBuildOperationMaxNumberOfConcurrentCompileTasks `sysctl -n hw.ncpu`
+
+#fuzzy complete
+defaults write com.apple.dt.Xcode IDECodeCompletionFuzzyMode 3
+defaults write com.apple.dt.Xcode IDEWorkaroundForRadar6288283 3
+
+#show built time
+defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES
+
+
 
 ###############################################################################
 # Time Machine                                                                #
