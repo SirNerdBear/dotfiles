@@ -93,6 +93,8 @@ unset LATEST_RUBY
 brew install neovim/neovim/neovim
 pip2 install neovim
 gem install neovim
+gem install tmuxinator
+
 #TODO python 3
 
 brew install foremost #data carving/recovery
