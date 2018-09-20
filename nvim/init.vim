@@ -296,3 +296,10 @@ let g:tmux_navigator_disable_when_zoomed = 1
 " Prevent NerdTree from blocking tmux pane navigation on J and K
 let g:NERDTreeMapJumpPrevSibling=""
 let g:NERDTreeMapJumpNextSibling=""
+
+" Show relative lines only when a buffer is focused and not in insert mode
+augroup numbertoggle
+      autocmd!
+      autocmd BufEnter,FocusGained,InsertLeave * if &ft!="nerdtree"|set relativenumber|endif
+      autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
