@@ -35,6 +35,8 @@ brew cask install bettertouchtool #NOT WORKING
 brew cask install visual-studio-code
 brew cask install discord
 #brew cask install scrivener #Must manually install until I get 3.0 (assholes)
+#canary chrome
+#opera
 
 
 brew cask install imageoptim #Reduce size of images https://imageoptim.com/mac
@@ -47,24 +49,21 @@ brew install homebrew/completions/docker-compose-completion
 
 brew tap caskroom/cask
 #brew cask install atom
-brew cask install dashlane
 brew cask install docker
 brew cask install dropbox
 brew cask install firefox
 brew cask install google-chrome
 brew cask install google-drive
 brew cask install iterm2
-#brew cask install kindle
+brew cask install kindle
 brew cask install monolingual
-brew cask install sequel-pro
 brew cask install sketch
 brew cask install sketch-toolbox
-brew cask install sky-fonts
-brew cask install skype
+#brew cask install skype
 brew cask install soulver
 brew cask install transmit
 brew cask install vlc
-brew cask install wifi-explorer
+brew cask install karabiner-elements #key remapping
 
 #tap caskroom/fonts
 #cask font-inconsolata
