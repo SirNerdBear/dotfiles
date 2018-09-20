@@ -71,6 +71,11 @@ brew install postgresql
 brew install rbenv ruby-build node
 brew install cmatrix sl cowsay pinentry-mac gpg
 brew install python python3 curl fontforge reattach-to-user-namespace htop screenfetch tmux
+brew install tmux-xpanes #https://github.com/greymd/tmux-xpanes/blob/master/README.md
+brew install vitetris #time wasting
+
+#needed for tmux status line connecing to python deamon
+brew install socat #used to connect to sockets via terminal command
 
 LATEST_RUBY=$(rbenv install -l | grep -v - | tail -1)
 rbenv install LATEST_RUBY
@@ -90,7 +95,7 @@ pip2 install neovim
 gem install neovim
 #TODO python 3
 
-
+brew install foremost #data carving/recovery
 
 # Install some CTF tools; see https://github.com/ctfs/write-ups.
 # brew install aircrack-ng
@@ -101,7 +106,6 @@ gem install neovim
 # brew install dex2jar
 # brew install dns2tcp
 # brew install fcrackzip
-# brew install foremost
 # brew install hashpump
 # brew install hydra
 # brew install john
