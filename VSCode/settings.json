@@ -1,6 +1,7 @@
 {
-    "editor.fontFamily": "'Hack Nerd Font Mono', Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace",
-    "editor.fontSize": 12,
+    "editor.fontFamily": "'Fira Code','FuraCode Nerd Font Mono', Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace",
+    "editor.fontSize": 14,
     "editor.minimap.enabled": false,
-    "workbench.colorTheme": "Dracula At Night"
+    "workbench.colorTheme": "Dracula At Night",
+    "editor.fontLigatures": true
 }
