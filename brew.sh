@@ -95,7 +95,16 @@ pip2 install neovim
 gem install neovim
 gem install tmuxinator
 
-#TODO python 3
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+
+#pip will be python 3 from brew once PATH is evaled
+#pip2 will be the system python /usr/local/bin
+
+pip3 install pyobjc-framework-ScriptingBridge
+pip3 install -U pyobjc
+pip3 install neovim
+
+npm install -g neovim
 
 brew install foremost #data carving/recovery
 
