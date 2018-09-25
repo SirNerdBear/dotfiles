@@ -25,3 +25,6 @@ zsh/secure_env
 
 #no emails in a public repo please
 .gitconfig.local
+
+# doesn't need to be in repo
+configstore
