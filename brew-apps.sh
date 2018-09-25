@@ -64,7 +64,7 @@ brew cask install soulver
 brew cask install transmit
 brew cask install vlc
 brew cask install karabiner-elements #key remapping
-
+brew cask install virtualbox #vms
 #tap caskroom/fonts
 #cask font-inconsolata
 #cask font-fira-mono
