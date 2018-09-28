@@ -28,3 +28,5 @@ zsh/secure_env
 
 # doesn't need to be in repo
 configstore
+
+cmus
