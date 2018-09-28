@@ -43,10 +43,6 @@ brew install gnu-sed --with-default-names
 #install zsh shell
 brew install zsh
 
-# Install oh-my-zsh
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-
 #CLI for AppStore https://github.com/mas-cli/mas
 brew install mas
 
