@@ -527,7 +527,7 @@ def safe_bytes(o, encoding="utf-8"):
 
 def get_answer(req, is_daemon, argparser, state):
 	try:
-		match = re.match(r'(\S+)-(\d+)',req)
+		match = re.match(r'(\S+)-(\d+)',req.decode("utf-8"))
 		if match:
 			return safe_bytes(state.status_line.render( int(match.group(2)), match.group(1) ))
 		else:
