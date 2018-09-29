@@ -4,7 +4,7 @@
     "disableScrollingIf3" : true,
     "BTTForceNormalClickPressure5F" : 200,
     "disableScrollingIf2" : true,
-    "BTTDidRegisterForUpdateStats" : "2.636",
+    "BTTDidRegisterForUpdateStats" : "2.641",
     "BTTShowControlStrip" : true,
     "BTTShowControlStripItem" : true,
     "BTTForceForceClickPressure5F" : 600,
@@ -15,7 +15,7 @@
     "BTTTouchBarHapticFeedback" : 0,
     "BTTForceNormalClickPressure" : 150,
     "BSTSnapAreaDefaultHighlightColor" : "92.624286, 122.650411, 161.665578, 56.100000",
-    "BTTLastClamshellState" : true,
+    "BTTLastClamshellState" : false,
     "BSTSnapAreaDefaultShowPictogram" : false,
     "BTTAllowThumbIfAllFingersArePlacedSimultaneously" : true,
     "BTTShowESCWhenControlStripHidden" : true,
@@ -32,8 +32,8 @@
     "BTTAutoSwitchToOldKeyboardImplementation" : true,
     "BTTMinDrawingMovement" : 2,
     "BSTSnapAreaDefaultBackgroundColor" : "129.988836, 201.126536, 227.013985, 104.550000",
-    "batteryWarning" : false,
     "SIRIScrollSpeed" : 1,
+    "batteryWarning" : false,
     "pluginDictionary" : {
       "1" : {
         "Apple Remote Plugin" : {
@@ -62,6 +62,7 @@
     "BTRScrollSpeed" : 1,
     "showBTTRemoteTab" : true,
     "BSTSnapAreaDefaultInvisible" : false,
+    "BTTTouchBarKeepIconRatio" : true,
     "BTTEnablePalmRecognition" : true,
     "BTTFreeSpaceAfterESC" : 10,
     "singleFingerTapLeft" : 0.44999998807907104,
@@ -105,12 +106,13 @@
     "showSiriRemoteTab" : true,
     "BTTForceNormalClickPressure2F" : 140,
     "cornerSnap" : true,
+    "BTTTouchBarSupportEnabled" : true,
     "showDrawingsTab" : true,
     "BTTDrawingRightMouse" : true,
     "BSTCornerRoundness" : 40,
     "BTTDismissIfNothingToShow" : true,
     "BSTPreventTopMissionControl" : true,
-    "BTTNumberOfStarts" : 3,
+    "BTTNumberOfStarts" : 73,
     "BTTHTTPServerEncrypted" : false,
     "showKeyboardTab" : true,
     "BTTConvertedDevices" : true,
@@ -127,7 +129,7 @@
     "BTTTouchBarVisible" : false,
     "BTTTouchBarUseMonoSpacedFont" : true
   },
-  "BTTPresetUUID" : "4FF19AF1-B01B-4C64-BD46-EE69ABC98CF6",
+  "BTTPresetUUID" : "5317C3C1-B2A1-4873-9045-60346129A91A",
   "BTTPresetContent" : [
     {
       "BTTAppBundleIdentifier" : "com.google.Chrome",
@@ -139,6 +141,7 @@
       },
       "BTTTriggers" : [
         {
+          "BTTTriggerType" : -1,
           "BTTTriggerClass" : "BTTTriggerTypeKeyboardShortcut",
           "BTTPredefinedActionType" : -1,
           "BTTPredefinedActionName" : "No Action",
@@ -167,6 +170,43 @@
       "BTTAppSpecificSettings" : {
 
       },
+      "BTTTriggers" : [
+        {
+          "BTTTriggerClass" : "BTTTriggerTypeKeyboardShortcut",
+          "BTTPredefinedActionType" : 172,
+          "BTTPredefinedActionName" : "Run Apple Script (blocking)",
+          "BTTInlineAppleScript" : "if application \"iTerm\" is not running then\r\ttell application \"iTerm\" to activate\rend if",
+          "BTTAdditionalConfiguration" : "8388608",
+          "BTTEnabled2" : 1,
+          "BTTUUID" : "521CC46F-461A-411D-B11A-64CD18CB7B8B",
+          "BTTTriggerOnDown" : 1,
+          "BTTEnabled" : 1,
+          "BTTShortcutKeyCode" : 79,
+          "BTTShortcutModifierKeys" : 8388608,
+          "BTTOrder" : 0,
+          "BTTAdditionalActions" : [
+            {
+              "BTTTriggerType" : -1,
+              "BTTTriggerClass" : "BTTTriggerTypeKeyboardShortcut",
+              "BTTPredefinedActionType" : -1,
+              "BTTPredefinedActionName" : "No Action",
+              "BTTShortcutToSend" : "80",
+              "BTTEnabled2" : 1,
+              "BTTUUID" : "576292AB-E186-4C10-8BBE-18BC89F5EB38",
+              "BTTEnabled" : 1,
+              "BTTShortcutKeyCode" : -1,
+              "BTTShortcutModifierKeys" : -1,
+              "BTTOrder" : 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "BTTAppBundleIdentifier" : "com.googlecode.iterm2",
+      "BTTAppName" : "iTerm2",
+      "BTTAppProcessMatchMode" : 2,
+      "BTTAppProcessName" : "iTerm2",
       "BTTTriggers" : [
 
       ]
