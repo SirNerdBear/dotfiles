@@ -12,8 +12,12 @@ fi
 unlink ~/.config > /dev/null 2>&1
 ln -s ~/Projects/dotfiles ~/.config
 
+# Disables: system, copyright notice, last login timestamp, motd,etc.
+# See `man login`.
+touch ~/.hushlogin
+
 for file in .*; do
-  if [[ $file == "." || $file == ".." || $file == ".gitignore" || -d $file ]]; then
+  if [[ $file == "." || $file == ".." || $file == ".DS_Store" || $file == ".gitignore" || -d $file ]]; then
     continue
   fi
   echo "Linking ~/$file"
