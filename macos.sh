@@ -85,6 +85,9 @@ fi
 ##################################################################################
 # General UI/UX 
 ##################################################################################
+#Allow "Open from Anywhere" 
+spctl --master-disable
+
 #Always boot in verbose mode
 sudo nvram boot-args="-v"
 
