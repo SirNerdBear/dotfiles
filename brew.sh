@@ -1,25 +1,4 @@
 #!/usr/bin/env bash
-# Install command-line tools using Homebrew.
-
-#Things I code in:
-#Rails(Ruby,HAML,SASS,JS,CoffeeScript,IRB)
-#React(JS,Reacthingmabob)
-#C, C++, C#
-#Kotlin(Android Dev)
-#Swift(macOS, iOS, and watchOS Dev)
-#Ardreno(Pretty much C)
-#Python
-#NodeJS
-#Perl
-
-
-#Things to play with
-#Java
-#Elixar
-#Rust
-#PHP (been awhile good to refresh, YII looks cool)
-
-
 
 # Make sure we’re using the latest Homebrew.
 brew update
@@ -39,9 +18,6 @@ brew install findutils
 
 # Install GNU `sed`, overwriting the built-in `sed`.
 brew install gnu-sed --with-default-names
-
-#install zsh shell
-brew install zsh
 
 #CLI for AppStore https://github.com/mas-cli/mas
 brew install mas
@@ -73,6 +49,10 @@ brew install vitetris #time wasting
 #needed for tmux status line connecing to python deamon
 brew install socat #used to connect to sockets via terminal command
 
+#always install rails and bundler gems
+git clone https://github.com/rbenv/rbenv-default-gems.git $(rbenv root)/plugins/rbenv-default-gems
+echo -e "rails\nbundler\n" > $(rbenv root)/default-gems
+
 LATEST_RUBY=$(rbenv install -l | grep -v - | tail -1)
 rbenv install LATEST_RUBY
 rbenv global LATEST_RUBY
@@ -80,26 +60,22 @@ eval "$(rbenv init -)"
 rbenv rehash
 unset LATEST_RUBY
 
-#TODO Install other versions of ruby here that we use
-
-#TODO sourse shell
-# then gem install rails bundler
-
-# Neovim because I'm one of the cool kids
+# Neovim
 brew install neovim/neovim/neovim
 pip2 install neovim
 gem install neovim
 gem install tmuxinator
 
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-
-#pip will be python 3 from brew once PATH is evaled
+#pip will now be python 3
 #pip2 will be the system python /usr/local/bin
 
+#or be explict and use pip3
 pip3 install pyobjc-framework-ScriptingBridge
 pip3 install -U pyobjc
 pip3 install neovim
 
+#npm support for neovim
 npm install -g neovim
 
 brew install foremost #data carving/recovery
@@ -120,7 +96,6 @@ brew install foremost #data carving/recovery
 # brew install netpbm
 # brew install nmap
 # brew install pngcheck
-# brew install socat
 # brew install sqlmap
 # brew install tcpflow
 # brew install tcpreplay
