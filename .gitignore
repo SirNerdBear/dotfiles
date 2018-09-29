@@ -30,3 +30,6 @@ zsh/secure_env
 configstore
 
 cmus
+
+# ignore this so it isn't a symlink in the repo
+oh-my-zsh/themes/spaceship.zsh-themes
