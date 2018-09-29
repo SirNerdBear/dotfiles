@@ -193,6 +193,7 @@ email = gets.chomp
 abort "Must provide login to continue!" unless email != ""
 system 'lpass', 'login', email
 
+#lpass show {id} | sed -r -n 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain
 
 list = capture_system 'lpass','ls','SysConfig'
 found = false
