@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/scott/.config/oh-my-zsh
+export ZSH=~/.oh-my-zsh
 export TERM="xterm-256color-italic"
 #export TERM="st-256color"
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
