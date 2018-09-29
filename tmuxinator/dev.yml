@@ -41,6 +41,7 @@ root: ~/
 
 # Runs after everything. Use it to attach to tmux with custom options etc.
 # post: tmux -CC attach -t dev
+on_project_start: ~/.config/zsh/tmuxinit.sh
 
 windows:
   - dev:
