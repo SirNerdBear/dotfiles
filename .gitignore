@@ -21,7 +21,7 @@ nvim/plugged
 nvim/autoload/plug.vim
 
 #secure env vars shouldn't go into repo
-oh-my-zsh/custom/secure_env.zsh
+oh-my-zsh/secure_env.zsh
 
 #no emails in a public repo please
 .gitconfig.local
