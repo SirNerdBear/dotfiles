@@ -45,6 +45,7 @@ brew install cmatrix sl cowsay pinentry-mac gpg
 brew install python python3 curl fontforge reattach-to-user-namespace htop screenfetch tmux
 brew install tmux-xpanes #https://github.com/greymd/tmux-xpanes/blob/master/README.md
 brew install vitetris #time wasting
+brew install zsh #better shell
 
 #needed for tmux status line connecing to python deamon
 brew install socat #used to connect to sockets via terminal command

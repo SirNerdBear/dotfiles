@@ -224,14 +224,6 @@ unless Dir.exists?( File.join(Dir.home,"Projects","dotfiles") )
   end
 end
 
-#install Oh My ZSH
-system "sh", "-c", `curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh`
-#git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-#git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
-
-
-
-
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"

@@ -1,6 +1,10 @@
 #!/bin/bash
 # Symlink all .dotfiles to the home directory
 
+### TODO: Instead this should be a ruby script so it can more effectivly test links are pointing right
+### some files like .gitconfig can be in $XDG_CONFIG_HOME and no symlink needed
+### we could use $XDG_DATA_HOME for things like zsh history
+
 cd ~/Projects/dotfiles
 
 now=$(date +"%Y.%m.%d.%H.%M.%S")
