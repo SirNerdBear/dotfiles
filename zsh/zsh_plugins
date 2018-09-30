@@ -1,0 +1,23 @@
+#https://getantibody.github.io/usage/
+
+#this file is used to generate a static antibody plugin file _plugins.zsh
+#plug (alias for):
+#antibody bundle < ~/.config/zsh/zsh_plugins > ~/.config/zsh/_plugins.zsh
+
+mafredri/zsh-async
+
+#sexy prompt
+denysdovhan/spaceship-prompt
+
+#fish like auto suggestions and arrow searching (as opposed to Control-R)
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+
+#colorize commands as typed
+zsh-users/zsh-syntax-highlighting
+
+#expandable aliases so we can see the full command
+momo-lab/zsh-abbrev-alias
+
+#gpg agent starting
+robbyrussell/oh-my-zsh folder:plugins/gpg-agent
