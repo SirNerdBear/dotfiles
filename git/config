@@ -185,4 +185,4 @@
       # These values are set in ~/.gitconfig_local
 
 [include]
-      path = ~/.config/.gitconfig.local
+      path = ~/.config/git/config.local

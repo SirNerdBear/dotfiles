@@ -28,7 +28,7 @@ zsh/_plugins.zsh
 
 
 #no emails in a public repo please
-.gitconfig.local
+git/config.local
 
 # doesn't need to be in repo
 configstore

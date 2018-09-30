@@ -4,6 +4,8 @@
 ### TODO: Instead this should be a ruby script so it can more effectivly test links are pointing right
 ### some files like .gitconfig can be in $XDG_CONFIG_HOME and no symlink needed
 ### we could use $XDG_DATA_HOME for things like zsh history
+#https://wiki.archlinux.org/index.php/XDG_Base_Directory
+
 
 cd ~/Projects/dotfiles
 
