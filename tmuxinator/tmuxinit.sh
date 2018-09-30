@@ -5,4 +5,4 @@ if [ -f /tmp/powerline-ipc-`id -u`.pid ]; then
     fi
 fi
 
-~/.config/zsh/tmuxstatus
+~/.config/tmux/tmuxstatus
