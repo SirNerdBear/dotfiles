@@ -205,7 +205,7 @@ list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
   elsif name == "Secure Env Vars"
     result = capture_system 'lpass', 'show', id
     if result =~ /Notes:\W+(.*?)\Z/m
-      File.open(File.join(CONFIG_DIR,'zsh','secure_env'),'w') do |f|
+      File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
 	f.write($1)
       end
     end

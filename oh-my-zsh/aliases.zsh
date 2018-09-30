@@ -160,3 +160,9 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Quicklook
 alias ql='qlmanage -p &> /dev/null'
+
+# Alias vim to neovim
+alias vim="nvim"
+
+# Remote hosts don't have  xterm-256color-italic by default
+alias ssh="TERM=xterm-256color ssh"
