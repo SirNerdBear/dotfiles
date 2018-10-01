@@ -33,7 +33,9 @@ git/config.local
 # doesn't need to be in repo
 configstore
 
-cmus
+cmus/*
+!cmus/autosave
+!cmus/*.theme
 
 VSCode/user-data/*
 VSCode/extensions
