@@ -34,3 +34,8 @@ git/config.local
 configstore
 
 cmus
+
+VSCode/user-data/*
+VSCode/extensions
+!VSCode/user-data/User
+VSCode/user-data/User/workspaceStorage
