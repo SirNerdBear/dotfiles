@@ -16,17 +16,23 @@ import subprocess
 import re
 import time
 
-from subprocess import Popen, PIPE 
+
+try:
+    from subprocess import DEVNULL # py3k
+except ImportError:
+    import os
+    DEVNULL = open(os.devnull, 'wb')
+
+from subprocess import Popen, PIPE , STDOUT
 from argparse import ArgumentParser
 from select import select
 from signal import signal, SIGTERM
 from time import sleep
 from functools import partial
-from io import BytesIO
-from threading import Event
-from threading import Thread
+from threading import Event, Thread
 from itertools import chain
-from logging import StreamHandler
+from datetime import datetime
+
 try:
 	try:
 		from time import clock_gettime
@@ -114,11 +120,11 @@ except ImportError:
 		from time import time as monotonic  # NOQA
 
 def get_argparser():
-	parser = ArgumentParser(description='Daemon that improves powerline performance.')
+	parser = ArgumentParser(description='Daemon that improves tmuxstatus performance.')
 	parser.add_argument(
 		'--quiet', '-q', action='store_true',
 		help='Without other options: do not complain about already running '
-			 'powerline-daemon instance. '
+			 'tmuxstatus-daemon instance. '
 			 'Will still exit with 1. '
 			 'With `--kill\' and `--replace\': do not show any messages. '
 			 'With `--foreground\': ignored. '
@@ -136,9 +142,7 @@ USE_FILESYSTEM = not sys.platform.lower().startswith('linux')
 
 def run_cmd(cmd, stdin=None, strip=True):
 	'''Run command and return its stdout, stripped
-	If running command fails returns None and logs failure to ``pl`` argument.
-	:param PowerlineLogger pl:
-		Logger used to log failures.
+	If running command fails returns None
 	:param list cmd:
 		Command which will be run.
 	:param str stdin:
@@ -147,13 +151,13 @@ def run_cmd(cmd, stdin=None, strip=True):
 		True if the result should be stripped.
 	'''
 	try:
-		p = Popen(cmd, shell=False, stdout=PIPE, stdin=PIPE)
-	except OSError as e:
-		#pl.exception('Could not execute command ({0}): {1}', e, cmd)
-		return None
+		p = Popen(cmd, shell=False, stdout=PIPE, stdin=PIPE,stderr=DEVNULL)
+	except OSError:
+		raise
 	else:
 		stdout, err = p.communicate(
 			stdin if stdin is None else stdin.encode("utf-8"))
+		assert p.returncode == 0
 		stdout = stdout.decode("utf-8")
 	return stdout.strip() if strip else stdout
 
@@ -175,16 +179,22 @@ class ThreadedSegment(Thread):
 	def do_work(self):
 		pass #override
 
+	def render(self):
+		pass #override
+
 	def run(self,interval=1):
 		while not self.thread_shutdown_event.is_set():
 			start_time = monotonic()
-			self.do_work()
+			try:
+				self.do_work()
+			except:
+				self.data = None
 			self.thread_shutdown_event.wait(max(interval - (monotonic() - start_time), 0.1))
 
 class StaticSegment:
 	__slots__ = ()
 
-	def render(self,cols=75,tty=None):
+	def render(self,cols=75,tty=None,utc=False):
 		pass
 
 	def __str__(self):
@@ -252,12 +262,9 @@ class ITunesPlayerSegment(ThreadedSegment):
 			return
 		icons = { u'play': 'ﱘ', u'pause': '' }
 		playerState['icon'] = icons.get(playerState['state'],'')
-		
-		self.data = playerState#"%s %s - %s" % (playIcon, playerState['artist'], playerState['title'])
+		self.data = playerState
 
-	def render(self,cols=75,tty=None):
-		#need instead to shorten the song, etc.
-		#if (self.data is not None and cols - len(self.data) <= 15): return None
+	def render(self,cols=75,tty=None,utc=False):
 		if self.data is not None:
 			if cols <= 5: return self.data['icon']
 			info = self.data['title']
@@ -269,47 +276,38 @@ class ITunesPlayerSegment(ThreadedSegment):
 
 
 class VMachines(ThreadedSegment):
-	def render(self,cols=75,tty=None):
+	def render(self,cols=75,tty=None,utc=False):
 		return self.data
 	
 	def do_work(self):
-		raw = subprocess.check_output(['VBoxManage','list', 'runningvms']).decode('utf-8')
+		raw = run_cmd(['VBoxManage','list', 'runningvms'])
 		vms = sum([1 for i in raw.split("\n") if i.strip()])
 		self.data = "⧉ %d" % vms
 
 class Dockers(ThreadedSegment):
-	def render(self,cols=75,tty=None):
+	def render(self,cols=75,tty=None,utc=False):
 		return self.data
 
 	def do_work(self):
-		raw = subprocess.check_output(['docker','ps','-a','--format', '"{{.ID}}: {{.Status}}"']).decode('utf-8')
+		raw = run_cmd(['docker','ps','-a','--format', '"{{.ID}}: {{.Status}}"'])
 		match = re.findall(r'^"\w+:\s*(\w*?)\s',raw,re.MULTILINE)
 		if match:
 			downcase = operator.methodcaller('lower')
 			docks = list(map(downcase,match))
 			total = len(docks)
 			up = [d for d in docks if d in ('up','running','restarting')]
-			
-			#  
-			self.data = " %d#[nobold]/#[bold]%d" % ( len(up), total - len(up) )
-		#created, restarting, running, removing, paused, exited, or dead
-		# `docker ps -aq -f status=created -f status=paused -f status=exited -f status=dead | wc -l | bc`
+			self.data = " %d#[nobold]/#[bold]%d" % ( len(up), total - len(up) ) #  
 
-#TODO get pane pid and lookup process to see if it's ssh, parsing options
 class Host(StaticSegment):
 	ssh_regex = re.compile(r'^\s*(\d+)\s((ssh|docker)\s.*?)$',re.MULTILINE)
 
-	def render(self,cols=75,tty=None):
-		if tty is not None:
-			ps = subprocess.check_output(['ps', '-o', 'pid=,command=', '-t', tty]).decode("utf-8")
-			#print(ps)
-			
-
-
+	def render(self,cols=75,tty=None,utc=False):
+		try:
+			assert tty is not None
+			ps = run_cmd(['ps', '-o', 'pid=,command=', '-t', tty])
 			m = Host.ssh_regex.search(ps)
 			if m is not None:
 				cmd = m.group(2).strip()
-				#pid = m.group(1).strip()
 				if cmd.startswith("ssh"):
 					h = parse_ssh(cmd)
 					host = h.get('host',None)
@@ -322,26 +320,27 @@ class Host(StaticSegment):
 				elif cmd.startswith("docker"):
 					m = re.search(r'exec -it\s(\w*?)\s\/bin\/bash\s*$',cmd)
 					if m:
-						ps = subprocess.check_output(["docker inspect --format '{{.Name}},{{.Config.Hostname}}' %s" % m.group(1)],shell=True).decode("utf-8")
+						ps = run_cmd(["docker inspect --format '{{.Name}},{{.Config.Hostname}}' %s" % m.group(1)])
 						(name,container) = ps.strip().split(",",1)
 						return " %s:%s" % (name,container)
-
-
+		except:
+			pass
 		return " #h"
 
-#should be a StaticSegment instead where it's always rendered in real-time
 class Date(StaticSegment):
-	def render(self,cols=75,tty=None):
-		return " " + time.strftime('%x')
+	def render(self,cols=75,tty=None,utc=False):
+		dt = datetime.utcnow() if utc else time
+		return " " + dt.strftime('%x')
 
 #TODO detect timezone as option and do UTC or local
 class Time(StaticSegment):
-	def render(self,cols=75,tty=None):
-		return " " + time.strftime('%H:%M')
+	def render(self,cols=75,tty=None,utc=False):
+		dt = datetime.utcnow() if utc else time
+		return " " + dt.strftime('%H:%M')
 
 class TimeZone(StaticSegment):
-	def render(self,cols=75,tty=None):
-		return "PDT"
+	def render(self,cols=75,tty=None,utc=False):
+		return "UTC" if utc else time.strftime("%Z")
 
 def start_segment_thread(seg, state):
 	seg_name = seg.__name__
@@ -376,21 +375,20 @@ class StatusLine():
 		"""Get length of segement by ignoring the #[stuff]"""
 		return len(re.sub(r'#\[.*?\]','',str))
 
-	def render(self,cols=75,tty=None):
+	def render(self,cols=75,tty=None,utc=False):
 		cols = min(cols-35,140) #140 is set as max status right size in tmux.conf
 		color = 0
 		out = []
 		for seg in reversed(self.segments):
-
 			if seg is None: continue
 			rendered = []
 			if isinstance(seg,(ThreadedSegment,StaticSegment)):
-				s = seg.render(cols,tty)
+				s = seg.render(cols,tty,utc)
 				if s is None: continue
 				cols -= self.true_length(s) + 3
 				rendered.append(s)
 			elif isinstance(seg, (list, tuple)):
-				s = ' #[nobold]#[bold] '.join( filter(None,[s.render(cols,tty) for s in seg]) )
+				s = ' #[nobold]#[bold] '.join( filter(None,[s.render(cols,tty,utc) for s in seg]) )
 				if len(s) > 0:
 					cols -= self.true_length(s) + 3
 					rendered.append( s )
@@ -429,11 +427,6 @@ class State(object):
 
 
 HOME = os.path.expanduser('~')
-
-
-# class NonDaemonShellPowerline(ShellPowerline):
-# 	def get_log_handler(self):
-# 		return StreamHandler()
 
 def parse_ssh(cmd):
 	#store for parsed values
@@ -527,9 +520,10 @@ def safe_bytes(o, encoding="utf-8"):
 
 def get_answer(req, is_daemon, argparser, state):
 	try:
-		match = re.match(r'(\S+)-(\d+)',req.decode("utf-8"))
+		match = re.match(r'(\S+)-(\d+)-(1|0)',req.decode("utf-8"))
 		if match:
-			return safe_bytes(state.status_line.render( int(match.group(2)), match.group(1) ))
+			utc = ( int(match.group(3)) > 0 )
+			return safe_bytes(state.status_line.render( int(match.group(2)), match.group(1), utc ))
 		else:
 			return safe_bytes('invalid args passed')
 	except Exception as e:
@@ -589,9 +583,7 @@ def shutdown(sock, read_sockets, write_sockets, state):
 	Specifically it
 
 	#. Closes all sockets.
-	#. Notifies segments based on 
-	  :py:class:`powerline.lib.threaded.ThreadedSegment` and WM-specific 
-	  threads that daemon is shutting down.
+	#. Notifies segments
 	#. Waits for threads to finish, but no more then 2 seconds total.
 	#. Waits so that total execution time of this function is 2 seconds in order 
 	   to allow ThreadedSegments to finish.
@@ -756,11 +748,11 @@ def main():
 			address = '\0' + address
 	else:
 		if USE_FILESYSTEM:
-			address = '/tmp/powerline-ipc-%d'
+			address = '/tmp/tmuxstatus-ipc-%d'
 		else:
 			# Use the abstract namespace for sockets rather than the filesystem
 			# (Available only in linux)
-			address = '\0powerline-ipc-%d'
+			address = '\0tmuxstatus-ipc-%d'
 
 		address = address % os.getuid()
 
