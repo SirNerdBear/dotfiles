@@ -4,7 +4,7 @@
     "disableScrollingIf3" : true,
     "BTTForceNormalClickPressure5F" : 200,
     "disableScrollingIf2" : true,
-    "BTTDidRegisterForUpdateStats" : "2.641",
+    "BTTDidRegisterForUpdateStats" : "2.645",
     "BTTShowControlStrip" : true,
     "BTTShowControlStripItem" : true,
     "BTTForceForceClickPressure5F" : 600,
@@ -112,7 +112,7 @@
     "BSTCornerRoundness" : 40,
     "BTTDismissIfNothingToShow" : true,
     "BSTPreventTopMissionControl" : true,
-    "BTTNumberOfStarts" : 73,
+    "BTTNumberOfStarts" : 82,
     "BTTHTTPServerEncrypted" : false,
     "showKeyboardTab" : true,
     "BTTConvertedDevices" : true,
@@ -129,7 +129,7 @@
     "BTTTouchBarVisible" : false,
     "BTTTouchBarUseMonoSpacedFont" : true
   },
-  "BTTPresetUUID" : "5317C3C1-B2A1-4873-9045-60346129A91A",
+  "BTTPresetUUID" : "4E6F3E27-8BEC-40AB-8D6F-AC73725DB0C4",
   "BTTPresetContent" : [
     {
       "BTTAppBundleIdentifier" : "com.google.Chrome",
@@ -155,13 +155,6 @@
           "BTTShortcutModifierKeys" : 1572864,
           "BTTOrder" : 0
         }
-      ]
-    },
-    {
-      "BTTAppBundleIdentifier" : "com.apple.finder",
-      "BTTAppName" : "Finder",
-      "BTTTriggers" : [
-
       ]
     },
     {
@@ -200,6 +193,13 @@
             }
           ]
         }
+      ]
+    },
+    {
+      "BTTAppBundleIdentifier" : "com.apple.finder",
+      "BTTAppName" : "Finder",
+      "BTTTriggers" : [
+
       ]
     },
     {
