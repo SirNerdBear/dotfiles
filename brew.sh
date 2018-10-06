@@ -48,6 +48,8 @@ brew install python python3 curl fontforge reattach-to-user-namespace htop scree
 brew install tmux-xpanes #https://github.com/greymd/tmux-xpanes/blob/master/README.md
 brew install vitetris #time wasting
 brew install zsh #better shell
+brew install cmus
+
 
 #needed for tmux status line connecing to python deamon
 brew install socat #used to connect to sockets via terminal command
@@ -85,7 +87,7 @@ brew install foremost #data carving/recovery
 
 # Install some CTF tools; see https://github.com/ctfs/write-ups.
 # brew install aircrack-ng
-# brew install bfg
+brew install bfg #scubing files from a gitrepo, etc.
 # brew install binutils
 # brew install binwalk
 # brew install cifer
@@ -95,7 +97,7 @@ brew install foremost #data carving/recovery
 # brew install hashpump
 # brew install hydra
 # brew install john
-# brew install knock
+brew install knock #port knocking
 # brew install netpbm
 # brew install nmap
 # brew install pngcheck
