@@ -5,7 +5,7 @@ export XDG_DATA_HOME="$HOME/Library"
 export XDG_CACHE_HOME="$HOME/Library/Caches"
 export PYLINTHOME="$XDG_CACHE_HOME"/pylint
 export PYTHONSTARTUP=$XDG_CONFIG_HOME/pythonstartup.py
-export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 alias wget="wget --hsts-file ~/.config/wget/wget-hsts"
 alias curl='curl --config "$XDG_CONFIG_HOME/curl/curlrc"'
 alias gdb='gdb -nh -x "$XDG_CONFIG_HOME"/gdb/init'
@@ -40,6 +40,7 @@ SPACESHIP_CHAR_COLOR_SUCCESS="048"
 SPACESHIP_CHAR_COLOR_FAILURE="208"
 SPACESHIP_CHAR_SYMBOL="❯ "
 SPACESHIP_BATTERY_SHOW=false
+SPACESHIP_VI_MODE_SHOW=false
 
 for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
