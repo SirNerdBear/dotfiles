@@ -118,7 +118,7 @@
                         "key_code": "f7"
                     },
                     "to": {
-                        "consumer_key_code": "rewind"
+                        "shell_command": "/usr/local/bin/cmus-remote -r"
                     }
                 },
                 {
@@ -126,7 +126,7 @@
                         "key_code": "f8"
                     },
                     "to": {
-                        "consumer_key_code": "play_or_pause"
+                        "shell_command": "/usr/local/bin/cmus-remote -u"
                     }
                 },
                 {
@@ -134,7 +134,7 @@
                         "key_code": "f9"
                     },
                     "to": {
-                        "consumer_key_code": "fastforward"
+                        "shell_command": "/usr/local/bin/cmus-remote -n"
                     }
                 },
                 {
