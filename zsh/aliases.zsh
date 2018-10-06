@@ -114,6 +114,11 @@ alias plistbuddy="/usr/libexec/PlistBuddy"
 # Airport CLI alias
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
+# https://github.com/KittyKatt/screenFetch/issues/456
+alias screenfetch="screenfetch -E"
+
+alias ct="python ~/.config/colortest.py"
+
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
