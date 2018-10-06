@@ -75,18 +75,20 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
-if [[ ! -f /Library/Keychains/FileVaultMaster.keychain ]]; then
+if [ ! -f /Library/Keychains/FileVaultMaster.keychain ]; then
   sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain /Library/Keychains/FileVaultMaster.keychain
 fi
-if [[ ! `sudo fdesetup status | grep 'FileVault is On'` ]] && [[ `sudo fdesetup showdeferralinfo | grep 'Not found'` ]]; then
+if sudo fdesetup status | grep -q 'FileVault is Off' && sudo fdesetup showdeferralinfo | grep -q 'Not found'; then
   sudo fdesetup enable -defer /dev/null -keychain –norecoverykey -forceatlogin 0 –dontaskatlogout
 fi
+
+# TODO need to get Dropbox fonts somehow first but we can't make licensed fonts public
+find ~/Dropbox/Fonts -type f -exec cp \{\} ~/Library/Fonts \;
+chmod 0600 ~/Library/Fonts/*
 
 ##################################################################################
 # General UI/UX 
 ##################################################################################
-#Allow "Open from Anywhere" 
-spctl --master-disable
 
 #Always boot in verbose mode
 sudo nvram boot-args="-v"
@@ -204,9 +206,6 @@ sudo systemsetup -setrestartfreeze on
 # Never go into computer sleep mode
 sudo systemsetup -setcomputersleep Off > /dev/null
 
-# Disable Notification Center and remove the menu bar icon
-# launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
-
 # Disable smart quotes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
@@ -221,12 +220,14 @@ defaults write -g AppleAquaColorVariant -int 6
 defaults write com.apple.universalaccess reduceMotion -bool true
 defaults write com.apple.dock expose-animation-duration -float 0.1 #doesn't work in 10.12+
 
-
+# Mojave.heic
 # Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
 # all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
 #rm -rf ~/Library/Application Support/Dock/desktoppicture.db
 #sudo rm -rf /System/Library/CoreServices/DefaultDesktop.jpg
 #sudo ln -s /path/to/your/image /System/Library/CoreServices/DefaultDesktop.jpg
+#sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$IMAGE'"
+
 
 ###############################################################################
 # SSD-specific tweaks                                                         #
@@ -270,11 +271,43 @@ fdesetup enable -defer -forceatlogin 0 -dontaskatlogout -keychain -norecoverykey
 #Make function keys work like function keys by default
 defaults write -g com.apple.keyboard.fnState -bool true
 
-#add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
-defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
-
-#add US standard keyboard input
-defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>0</integer><key>KeyboardLayout Name</key><string>U.S.</string></dict>'
+cnt=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources" ~/Library/Preferences/com.apple.HIToolbox.plist | grep "Dict" | wc -l | tr -d '[:space:]'`
+cnt=`expr "$cnt" '-' '1'`
+US=0
+UNICODE=0
+REMOVE=()
+foreach idx (`seq 0 $cnt`)
+    val=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:InputSourceKind" ~/Library/Preferences/com.apple.HIToolbox.plist`
+    if [ "$val" = "Keyboard Layout" ]; then
+        input=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:KeyboardLayout\ Name" ~/Library/Preferences/com.apple.HIToolbox.plist`
+        if [ "$input" = "U.S." ]; then
+            if [ "$US" -gt 0 ]; then
+                REMOVE+=($idx)
+            fi
+            US=1;
+        elif [ "$input" = "Unicode Hex Input" ]; then
+            if [ "$UNICODE" -gt 0 ]; then
+                REMOVE+=($idx)
+            fi
+            UNICODE=1;
+        else
+            REMOVE+=(idx)
+            echo "${input}"
+        fi
+    fi
+end
+if [ "$US" -lt 1 ]; then
+    #add US standard keyboard input
+    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>0</integer><key>KeyboardLayout Name</key><string>U.S.</string></dict>'
+fi
+if [ "$UNICODE" -lt 1 ]; then
+    #add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
+    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
+fi
+foreach idx ($REMOVE)
+    #remove inputs that are dups or not U.S. / Unicode
+    /usr/libexec/PlistBuddy -c "delete AppleEnabledInputSources:${idx}" ~/Library/Preferences/com.apple.HIToolbox.plist
+end
 
 # Trackpad: enable tap to click for this user and for the login screen
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
@@ -385,7 +418,15 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 33 '<dic
 
 #118 - kSHKSwitchToDesktop1 - Ctrl, 1
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 118 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>18</integer><integer>262144</integer></array><key>type</key><string>standard</string></dict></dict>'
-#TODO spaces 2,3,4
+
+#119 - kSHKSwitchToDesktop2 - Ctrl, 2
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 119 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>19</integer><integer>262144</integer></array><key>type</key><string>standard</string></dict></dict>'
+
+#120 - kSHKSwitchToDesktop3 - Ctrl, 3
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 120 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>20</integer><integer>262144</integer></array><key>type</key><string>standard</string></dict></dict>'
+
+#121 - kSHKSwitchToDesktop5 - Ctrl, 4
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 121 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>21</integer><integer>262144</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 #25 - kSHKIncreaseContrast - Ctrl, Opt, Cmd, .
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 25 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>46</integer><integer>47</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
@@ -468,7 +509,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 11 '<dic
 
 # Rquire password 5 seconds after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 05
+defaults write com.apple.screensaver askForPasswordDelay -int 5
 
 # Save screenshots to the desktop
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
@@ -495,10 +536,10 @@ sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutio
 # Finder: disable window animations and Get Info animations
 defaults write com.apple.finder DisableAllAnimations -bool true
 
-# Set ~/Code as the default directory for new Finder windows
-mkdir -p ~/Code
+# Set ~/Projects as the default directory for new Finder windows
+mkdir -p ~/Projects
 defaults write com.apple.finder NewWindowTarget -string "PfDe"
-defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Code/"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Projects/"
 
 # Remove icons for hard drives, servers, and removable media on the desktop
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
@@ -937,9 +978,9 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 # XCode
 ####################################################################################
 mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes
-ln -s ~/.config/init/Dracula.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Dracula.xccolortheme
+ln -s ~/.config/init/Dracula.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Dracula.xccolortheme 2> /dev/null
 
-#set thtme to Dracula
+#set theme to Dracula
 defaults write com.apple.dt.Xcode XCFontAndColorCurrentTheme -string Dracula.xccolortheme
 
 #show line numbers
