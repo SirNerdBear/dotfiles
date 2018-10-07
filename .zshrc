@@ -18,8 +18,9 @@ export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
 export GEMRC="$XDG_CONFIG_HOME"/rubygems/config
 export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
-#ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
-#need to make the dir above, move from the cache, del the ignore in CleanMyMac, and set installer to make dir
+export ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
+export LPASS_HOME=""
+
 
 #TODO detect OS and source scripts accoringly
 #https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
@@ -34,6 +35,20 @@ export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 #https://wiki.archlinux.org/index.php/XDG_Base_Directory
 #.gem and .gemrc
 #.tmux / .tmux.config
+#.docker
+#.zsh_history, .zshrc
+#.tmux -> XDG_DATA_HOME
+#.tmux.conf
+#.bash_prompt .bashrc .bash_history
+#.gnupg
+#.lpass https://github.com/lastpass/lastpass-cli/issues/13
+#$XDG_RUNTIME_DIR
+
+#.npm
+#.rbenv
+#.terminfo
+#.jenv
+#.sqlite_history
 
 #wont move/touch
 #.cups
@@ -41,6 +56,8 @@ export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 #.DS_Store
 #.dropbox
 #.editorconfig
+#.ssh
+#.local
 
 
 SPACESHIP_CHAR_COLOR_SUCCESS="048"
@@ -53,6 +70,10 @@ for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
+
+if [ ! -d $ANTIBODY_HOME ] || [ ! "$(ls -A $ANTIBODY_HOME)" ]; then
+  plug
+fi
 
 abbrev-alias -i
 
