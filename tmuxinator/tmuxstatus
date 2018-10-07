@@ -24,7 +24,7 @@ except ImportError:
     DEVNULL = open(os.devnull, 'wb')
 
 from subprocess import Popen, PIPE , STDOUT
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Action
 from select import select
 from signal import signal, SIGTERM
 from time import sleep
@@ -119,6 +119,15 @@ except ImportError:
 	except:
 		from time import time as monotonic  # NOQA
 
+def get_preferred_arguments_encoding():
+	return "utf-8"
+
+def parse_args(req, parser, encoding=get_preferred_arguments_encoding()):
+	args = re.split(r'\s+',req.decode(encoding).strip())
+	#need to make it support quotes http://regexlib.com/REDetails.aspx?regexp_id=3425
+	shell_args = parser.parse_args(args)
+	return shell_args
+
 def get_argparser():
 	parser = ArgumentParser(description='Daemon that improves tmuxstatus performance.')
 	parser.add_argument(
@@ -128,7 +137,6 @@ def get_argparser():
 			 'Will still exit with 1. '
 			 'With `--kill\' and `--replace\': do not show any messages. '
 			 'With `--foreground\': ignored. '
-			 'Does not silence exceptions in any case.'
 	)
 	parser.add_argument('--socket', '-s', help='Specify socket which will be used for connecting to daemon.')
 	exclusive_group = parser.add_mutually_exclusive_group()
@@ -136,6 +144,27 @@ def get_argparser():
 	replace_group = exclusive_group.add_argument_group()
 	replace_group.add_argument('--foreground', '-f', action='store_true', help='Run in the foreground (don’t daemonize).')
 	replace_group.add_argument('--replace', '-r', action='store_true', help='Replace an already running instance.')
+	return parser
+
+class WidthAction(Action):
+	def __init__(self, option_strings, dest, nargs=None, **kwargs):
+		if nargs is not None:
+			raise ValueError("nargs not allowed")
+		super(WidthAction, self).__init__(option_strings, dest, **kwargs)
+
+	def __call__(self, parser, namespace, values, option_string=None):
+		if (not isinstance(values,int) or values < 1):
+			raise ValueError("invalid width")
+		setattr(namespace, self.dest, min(values-40,160) )
+
+def get_pipeparser():
+	parser = NonInteractiveArgParser(add_help=False,prog='')
+	parser.add_argument('-t', '--tty',type=str, required=True,metavar="/dev/ttyX")
+	parser.add_argument('-w', '--width', type=int, action=WidthAction)
+	parser.add_argument('-u', '--utc', action='store_true')
+	parser.add_argument('-p', '--prefix', action='store_true')
+	parser.add_argument('-k', '--keys', type=str, default="root")
+	parser.add_argument('-c', '--copy', action='store_true')
 	return parser
 
 USE_FILESYSTEM = not sys.platform.lower().startswith('linux')
@@ -173,15 +202,15 @@ class ThreadedSegment(Thread):
 		self.data=None
 		self.thread_shutdown_event = thread_shutdown_event or Event()
 
-	def __str__(self):
-		return self.render()
-
 	def do_work(self):
 		pass #override
 
-	def render(self):
+	def render(self,args):
 		pass #override
-
+	
+	def color(self):
+		return None
+	
 	def run(self,interval=1):
 		while not self.thread_shutdown_event.is_set():
 			start_time = monotonic()
@@ -194,11 +223,10 @@ class ThreadedSegment(Thread):
 class StaticSegment:
 	__slots__ = ()
 
-	def render(self,cols=75,tty=None,utc=False):
+	def render(self,args):
 		pass
-
-	def __str__(self):
-		return self.render()
+	def color(self):
+		return None
 
 def _convert_state(state):
 	'''Guess player state'''
@@ -264,19 +292,20 @@ class ITunesPlayerSegment(ThreadedSegment):
 		playerState['icon'] = icons.get(playerState['state'],'')
 		self.data = playerState
 
-	def render(self,cols=75,tty=None,utc=False):
+	def render(self,args,cols):
 		if self.data is not None:
-			if cols <= 5: return self.data['icon']
+			min_cols = 13 if args.prefix or args.copy or args.keys == 'off' else 9
+			if cols <= min_cols: return self.data['icon']
 			info = self.data['title']
 			if (cols - len(info)) < 0:
-				info = info[0:(cols)]
+				info = info[0:(cols-1)] + '…'
 			if (len(self.data['artist']) + len(info) + 6) <= cols:
 				info = self.data['artist'] + ' - ' + info
 			return self.data['icon'] + ' ' + info
 
 
 class VMachines(ThreadedSegment):
-	def render(self,cols=75,tty=None,utc=False):
+	def render(self,args,cols):
 		return self.data
 	
 	def do_work(self):
@@ -285,7 +314,7 @@ class VMachines(ThreadedSegment):
 		self.data = "⧉ %d" % vms
 
 class Dockers(ThreadedSegment):
-	def render(self,cols=75,tty=None,utc=False):
+	def render(self,args,cols):
 		return self.data
 
 	def do_work(self):
@@ -301,10 +330,9 @@ class Dockers(ThreadedSegment):
 class Host(StaticSegment):
 	ssh_regex = re.compile(r'^\s*(\d+)\s((ssh|docker)\s.*?)$',re.MULTILINE)
 
-	def render(self,cols=75,tty=None,utc=False):
+	def render(self,args,cols):
 		try:
-			assert tty is not None
-			ps = run_cmd(['ps', '-o', 'pid=,command=', '-t', tty])
+			ps = run_cmd(['ps', '-o', 'pid=,command=', '-t', args.tty])
 			m = Host.ssh_regex.search(ps)
 			if m is not None:
 				cmd = m.group(2).strip()
@@ -328,19 +356,38 @@ class Host(StaticSegment):
 		return " #h"
 
 class Date(StaticSegment):
-	def render(self,cols=75,tty=None,utc=False):
-		dt = datetime.utcnow() if utc else time
+	def render(self,args,cols):
+		dt = datetime.utcnow() if args.utc else time
 		return " " + dt.strftime('%x')
 
 #TODO detect timezone as option and do UTC or local
 class Time(StaticSegment):
-	def render(self,cols=75,tty=None,utc=False):
-		dt = datetime.utcnow() if utc else time
+	def render(self,args,cols):
+		dt = datetime.utcnow() if args.utc else time
 		return " " + dt.strftime('%H:%M')
 
 class TimeZone(StaticSegment):
-	def render(self,cols=75,tty=None,utc=False):
-		return "UTC" if utc else time.strftime("%Z")
+	def render(self,args,cols):
+		return "UTC" if args.utc else time.strftime("%Z")
+
+class PrefixMode(StaticSegment):
+	def render(self,args,cols):
+		if not args.prefix and args.copy:
+			return "#[fg=black]C"
+		if args.keys == 'off':
+			return "OFF"
+		if not args.prefix:
+			return None 
+		
+		return "[PREFIX]" if cols >= 11 else "^A"
+	
+	def color(self,args=None):
+		if args is not None:
+			if args.keys == 'off':
+				return 88
+			if not args.prefix and args.copy:
+				return 227
+		return 39
 
 def start_segment_thread(seg, state):
 	seg_name = seg.__name__
@@ -353,7 +400,7 @@ def start_segment_thread(seg, state):
 	return thread
 
 class StatusLine():
-	__segments__ = ( ITunesPlayerSegment, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
+	__segments__ = ( PrefixMode, ITunesPlayerSegment, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
 	__colors__ = (242,235,237,240)
 
 	def _instantiate_segments(self,lst):
@@ -375,43 +422,46 @@ class StatusLine():
 		"""Get length of segement by ignoring the #[stuff]"""
 		return len(re.sub(r'#\[.*?\]','',str))
 
-	def render(self,cols=75,tty=None,utc=False):
-		cols = min(cols-35,140) #140 is set as max status right size in tmux.conf
+	def render(self,args):
+		
+		cols = args.width
 		color = 0
 		out = []
 		for seg in reversed(self.segments):
 			if seg is None: continue
 			rendered = []
+			colour = StatusLine.__colors__[color]
 			if isinstance(seg,(ThreadedSegment,StaticSegment)):
-				s = seg.render(cols,tty,utc)
+				s = seg.render(args,cols)
 				if s is None: continue
+				if seg.color() is not None:
+					colour = seg.color(args)
+				else:
+					color = (color + 1) % len(StatusLine.__colors__)
 				cols -= self.true_length(s) + 3
 				rendered.append(s)
 			elif isinstance(seg, (list, tuple)):
-				s = ' #[nobold]#[bold] '.join( filter(None,[s.render(cols,tty,utc) for s in seg]) )
+				s = ' #[nobold]#[bold] '.join( filter(None,[s.render(args,cols) for s in seg]) )
 				if len(s) > 0:
 					cols -= self.true_length(s) + 3
 					rendered.append( s )
+					color = (color + 1) % len(StatusLine.__colors__)
 			if len(rendered) <= 0: continue
-			colour = StatusLine.__colors__[color]
+			
 			rendered = ''.join(rendered)
 			out.insert(0," #[fg=colour{colour}]#[fg=white,bold,bg=colour{colour}] {rendered}".format(**locals()) )
-			color = (color + 1) % len(StatusLine.__colors__)
 		return ''.join(out)
 
 
 class NonInteractiveArgParser(ArgumentParser):
 	def print_usage(self, file=None):
-		raise Exception(self.format_usage())
-
-	def print_help(self, file=None):
-		raise Exception(self.format_help())
+		return ' '.join( re.split(r"\n\s*", self.format_usage() ) )
 
 	def exit(self, status=0, message=None):
 		pass
 
 	def error(self, message):
-		raise Exception(self.format_usage())
+		raise Exception(self.print_usage())
 
 
 EOF = b'EOF\0\0'
@@ -519,13 +569,10 @@ def safe_bytes(o, encoding="utf-8"):
 		return safe_bytes(str(e), encoding)
 
 def get_answer(req, is_daemon, argparser, state):
+	parser = get_pipeparser()	
 	try:
-		match = re.match(r'(\S+)-(\d+)-(1|0)',req.decode("utf-8"))
-		if match:
-			utc = ( int(match.group(3)) > 0 )
-			return safe_bytes(state.status_line.render( int(match.group(2)), match.group(1), utc ))
-		else:
-			return safe_bytes('invalid args passed')
+		args = parse_args(req, parser)
+		return safe_bytes( state.status_line.render(args) )
 	except Exception as e:
 		return safe_bytes(str(e))
 
