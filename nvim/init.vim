@@ -42,8 +42,11 @@ endif
 if (has("termguicolors"))
   set termguicolors
 endif
+let g:dracula_colorterm = 0
+" let g:dracula_italic = 1
+highlight Normal ctermbg=None
+set cursorline
 
-let g:onedark_terminal_italics=1 " Requires support in terminal emulator: 
 
 set laststatus=2
 let g:lightline = {
@@ -192,6 +195,8 @@ syntax on
 color dracula       " For some reason both color and colorscheme need to be set to work???
 colorscheme dracula " Set the colorscheme
 highlight Comment cterm=italic
+hi CursorLine term=bold cterm=bold guibg=Gray15
+
 
 " make the highlighting of tabs and other non-text less annoying
 highlight SpecialKey ctermbg=none ctermfg=8
@@ -288,7 +293,8 @@ else
   let g:gitgutter_sign_column_always = 1
 endif
 
-hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg " hide ~ on empty lines
+" hi! EndOfBuffer ctermbg=None ctermfg=None guibg=None guifg=None " hide ~ on empty lines
+set fcs=eob:\ 
 
 " Disable tmux navigator when zooming the Vim pane
 let g:tmux_navigator_disable_when_zoomed = 1
