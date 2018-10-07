@@ -18,6 +18,13 @@ export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
 export GEMRC="$XDG_CONFIG_HOME"/rubygems/config
 export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
+#ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
+#need to make the dir above, move from the cache, del the ignore in CleanMyMac, and set installer to make dir
+
+#TODO detect OS and source scripts accoringly
+#https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
+
+
 
 #https://stackoverflow.com/questions/21162988/how-to-make-zsh-search-configuration-in-xdg-config-home
 #zsh_history
