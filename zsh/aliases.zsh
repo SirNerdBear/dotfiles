@@ -173,6 +173,6 @@ abbrev-alias -g plug="antibody bundle < ~/.config/zsh/zsh_plugins > ~/.config/zs
 # Current branch
 abbrev-alias -f B="git symbolic-ref --short HEAD"
 
-# IP good to remember the magic thought
+# IP good to remember the magic though
 abbrev-alias -g ip="dig +short myip.opendns.com @resolver1.opendns.com"
 abbrev-alias -g localip="ipconfig getifaddr en0"
