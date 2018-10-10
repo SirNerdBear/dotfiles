@@ -159,20 +159,26 @@ alias vim="nvim"
 alias ssh="TERM=xterm-256color ssh"
 
 ## ABREV ALIASES ##
+local cmd='abbrev-alias'
+if ! type abbrev-alias > /dev/null; then
+	cmd='alias' 
+else
+	#define function aliases here as they don't make sense without space expantion
+	$cmd -f B="git symbolic-ref --short HEAD"
+fi
 
 # Flush Directory Service cache
-abbrev-alias -g flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+$cmd -g flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
 
 # View HTTP traffic
-abbrev-alias -g sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-abbrev-alias -g httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+$cmd -g sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+$cmd -g httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
 # Update plugins
-abbrev-alias -g plug="antibody bundle < ~/.config/zsh/zsh_plugins > ~/.config/zsh/_plugins.zsh"
+$cmd -g plug="antibody bundle < ~/.config/zsh/zsh_plugins > ~/.config/zsh/_plugins.zsh"
 
 # Current branch
-abbrev-alias -f B="git symbolic-ref --short HEAD"
 
 # IP good to remember the magic though
-abbrev-alias -g ip="dig +short myip.opendns.com @resolver1.opendns.com"
-abbrev-alias -g localip="ipconfig getifaddr en0"
+$cmd -g ip="dig +short myip.opendns.com @resolver1.opendns.com"
+$cmd -g localip="ipconfig getifaddr en0"

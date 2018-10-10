@@ -9,14 +9,10 @@ mafredri/zsh-async
 #sexy prompt
 denysdovhan/spaceship-prompt
 
-#fish like auto suggestions and arrow searching (as opposed to Control-R)
+#fish like auto suggestions
 zsh-users/zsh-autosuggestions
-zsh-users/zsh-history-substring-search
 
-#colorize commands as typed
-zsh-users/zsh-syntax-highlighting
-
-#expandable aliases so we can see the full command
+#expandable some aliases so we can see the full command
 momo-lab/zsh-abbrev-alias
 
 #gpg agent starting
