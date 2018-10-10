@@ -1,49 +1,50 @@
 #!/usr/bin/env bash
 
-#TODO pass email to $1 but if $1 isn't set prompt for it
-
-#AppStore https://github.com/mas-cli/mas
-#mas signin --dialog #NEED EMAIL#
-mas install 409203825 #Numbers
-mas install 409203825 #XCoode
-mas install 497799835 #Pages
-mas install 409201541 #The Archive Browser
-mas install 409183694 #Keynote
-mas install 425424353 #The Unarchiver
-#Bandwith+
-#Blackmagic Disk Speed Test
-
 # Manually Installed apps
 # Adobe Photoshop
 # Adobe Illustrator
 # Adobe Acrobat DC
 # Adobe InDesign
-# Airmail 3
 # Artstudio Pro
 # Pop Dot Comics
 # CleanMyMac X
 #   -- Also need to add ~/Library/Caches/antibody to ignore list
-# Fireplace Live HD+
 # Sidify Apple Music Converter
 
 brew tap caskroom/cask
 
 brew cask install java #needed for arduno and others
 brew cask install arduino #dev IDE used for compiling within NeoVIM/VSCode
-brew cask install iterm2 #terminal replacement
 
-brew cask install alfred #GUI fuzzy finder and more (replaces spotlight interface)
-open /Applications/Alfred\ 3.app
+##################################################################################
+# iTerm2  — Terminal replacement
+##################################################################################
+brew cask install iterm2 #terminal replacement
+defaults write com.googlecode.iterm2 PrefsCustomFolder "${HOME}/.config"
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
+
+
+##################################################################################
+# Alfred 3 — GUI fuzzy finder and more (replaces spotlight interface)
+##################################################################################
+brew cask install alfred
+defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "${HOME}/.config"
+! $(pgrep -q "Alfred 3") && open /Applications/Alfred\ 3.app
+
 
 brew cask install dropbox 
 brew cask install google-drive
 
-ln -s ~/.config/init/Default.bttpreset ~/.btt_autoload_preset.json
 #TODO copy license file
 brew cask install bettertouchtool #touchbar, remapping mice, keyboard shortcuts, window management
-open /Applications/BetterTouchTool.app
-sleep 4
-rm ~/.btt_autoload_preset.json
+
+if [ ! $(pgrep -q "BetterTouchTool") ]; then
+	ln -s ~/.config/init/Default.bttpreset ~/.btt_autoload_preset.json
+	open /Applications/BetterTouchTool.app
+	sleep 4
+	rm ~/.btt_autoload_preset.json
+	#open license_goes_here (pulled from lpass)
+fi
 
 brew cask install visual-studio-code #VSCode is a GUI text editor (not used much anymore)
 brew cask install discord #Chatting sexyness

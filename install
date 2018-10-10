@@ -224,11 +224,32 @@ unless Dir.exists?( File.join(Dir.home,"Projects","dotfiles") )
   end
 end
 
+#CLI for AppStore https://github.com/mas-cli/mas
+system "brew","install","mas"
+system "mas","signin","--dialog",email
+system "mas","install","409203825" #Numbers
+system "mas","install","409203825" #XCoode
+system "mas","install","497799835" #Pages
+system "mas","install","409201541" #The Archive Browser
+system "mas","install","409183694" #Keynote
+system "mas","install","425424353" #The Unarchiver
+system "mas","install","490461369" #Bandwidth+
+system "mas","install","425264550" #Blackmagic Disk Speed Test
+
+
+system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
+
+#an idea is to make a bunch of install.sh scripts and glob them in a loop
+#this works only if install order doesn't matter and it does =(
+#could make it dotfiles.sh that does the critical stuff 
+#or could do install_first.sh as another glob
+#or mas could be installed here in this script (might be easier)
+#as we could do the login here as well
+
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/macos.sh"
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/symlinks.sh"
 
 ohai "Installation successful!"
 puts

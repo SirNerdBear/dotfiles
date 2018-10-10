@@ -857,7 +857,7 @@ sudo mdutil -i on / > /dev/null
 sudo mdutil -E / > /dev/null
 
 ##################################################################################
-# Terminal & iTerm 2 
+# Terminal 
 ##################################################################################
 
 #Support 256 colors and italics
@@ -914,15 +914,6 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 
 # Install the Solarized Dark theme for iTerm
 open "${HOME}/.config/init/Dracula.itermcolors"
-
-# Load iTerm2 settings
-defaults write com.googlecode.iterm2 PrefsCustomFolder "${HOME}/.config"
-defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
-
-##################################################################################
-# Alfred 3 
-##################################################################################
-defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "${HOME}/.config"
 
 ##################################################################################
 # Chrome
