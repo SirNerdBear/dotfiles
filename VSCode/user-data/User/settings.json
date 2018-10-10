@@ -3,5 +3,6 @@
     "editor.fontSize": 14,
     "editor.minimap.enabled": false,
     "workbench.colorTheme": "Dracula At Night",
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "window.zoomLevel": 0
 }
