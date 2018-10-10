@@ -325,7 +325,7 @@ class Dockers(ThreadedSegment):
 			docks = list(map(downcase,match))
 			total = len(docks)
 			up = [d for d in docks if d in ('up','running','restarting')]
-			self.data = " %d#[nobold]/#[bold]%d" % ( len(up), total - len(up) ) #  
+			self.data = " %d#[nobold]/#[bold]%d" % ( len(up), total - len(up) ) #   ⧉
 
 class Host(StaticSegment):
 	ssh_regex = re.compile(r'^\s*(\d+)\s((ssh|docker)\s.*?)$',re.MULTILINE)
