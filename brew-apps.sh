@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+#TODO pass email to $1 but if $1 isn't set prompt for it
 
 #AppStore https://github.com/mas-cli/mas
 #mas signin --dialog #NEED EMAIL#
@@ -30,14 +31,20 @@ brew tap caskroom/cask
 brew cask install java #needed for arduno and others
 brew cask install arduino #dev IDE used for compiling within NeoVIM/VSCode
 brew cask install iterm2 #terminal replacement
+
 brew cask install alfred #GUI fuzzy finder and more (replaces spotlight interface)
+open /Applications/Alfred\ 3.app
+
 brew cask install dropbox 
 brew cask install google-drive
+
 ln -s ~/.config/init/Default.bttpreset ~/.btt_autoload_preset.json
+#TODO copy license file
 brew cask install bettertouchtool #touchbar, remapping mice, keyboard shortcuts, window management
 open /Applications/BetterTouchTool.app
 sleep 4
 rm ~/.btt_autoload_preset.json
+
 brew cask install visual-studio-code #VSCode is a GUI text editor (not used much anymore)
 brew cask install discord #Chatting sexyness
 #brew cask install scrivener #Writing prose. Must manually install until I get 3.0 (assholes)
@@ -54,7 +61,7 @@ brew cask install imagealpha #PNG24 to PNG8 with alpha channel support https://p
 brew cask install docker #containers are sexy
 
 brew cask install kindle 
-brew cask install monolingual #Reduce HDD waste by removing unused lanaugages
+#brew cask install monolingual #Reduce HDD waste by removing unused lanaugages
 brew cask install sketch 
 brew cask install sketch-toolbox
 brew cask install soulver #Text driven calcuations on-the-fly
