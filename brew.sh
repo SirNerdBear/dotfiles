@@ -59,7 +59,6 @@ brew install bfg #scubing files from a gitrepo, etc.
 
 brew install pinentry-mac gpg #signing git commits and such
 #gpg --import ~/Dropbox/gpgkey.asc
-killall gpg-agent && gpg-agent --daemon --pinentry-program /usr/local/bin/pinentry
 
 brew install multitail grc lnav #colores log tools
 brew install tree #visual file tree in terminal
