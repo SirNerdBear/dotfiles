@@ -47,9 +47,17 @@ brew install cmatrix sl cowsay pinentry-mac gpg
 brew install python python3 curl fontforge reattach-to-user-namespace htop screenfetch tmux
 brew install tmux-xpanes #https://github.com/greymd/tmux-xpanes/blob/master/README.md
 brew install vitetris #time wasting
+
 brew install zsh #better shell
+sudo cp ~/.config/init/zshrc /etc
+sudo cp ~/.config/init/xdg_env /etc
+sudo chmod 0444 /etc/zshrc /etc/xdg_env
+rm -f ~/.bash_profile ~/.bash_history ~/.bashrc 2> /dev/null #ugly bash files bye bye
+
+
 brew install cmus
 
+brew install multitail grc
 
 #needed for tmux status line connecing to python deamon
 brew install socat #used to connect to sockets via terminal command
@@ -69,7 +77,7 @@ unset LATEST_RUBY
 brew install neovim/neovim/neovim
 pip2 install neovim
 gem install neovim
-gem install tmuxinator
+sudo gem install tmuxinator #system wide install
 
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 #pip will now be python 3

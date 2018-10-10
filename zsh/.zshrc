@@ -1,10 +1,4 @@
 export TERM="xterm-256color-italic"
-
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/Library/Caches"
-export XDG_RUNTIME_DIR="/private/tmp"
-
 export PYLINTHOME="$XDG_CACHE_HOME"/pylint
 export PYTHONSTARTUP=$XDG_CONFIG_HOME/pythonstartup.py
 
@@ -40,7 +34,7 @@ then
     rm -r ~/.oracle_jre_usage/
 fi
 
-setopt appendhistory autocd beep extendedglob nomatch notify
+setopt appendhistory extendedglob nomatch notify
 #history
 HISTFILE="$XDG_DATA_HOME"/zsh/history
 HISTSIZE=100000000
@@ -53,7 +47,9 @@ setopt hist_ignore_space
 setopt hist_verify
 setopt inc_append_history
 setopt share_history # share command history data
-
+setopt COMPLETE_ALIASES
+unsetopt LIST_BEEP
+setopt VI
 #stop pissing me off when using ! in line
 unsetopt banghist 
 
@@ -75,12 +71,12 @@ unsetopt banghist
 #.bash_prompt .bashrc .bash_history
 
 
-
 SPACESHIP_CHAR_COLOR_SUCCESS="048"
 SPACESHIP_CHAR_COLOR_FAILURE="208"
-SPACESHIP_CHAR_SYMBOL="❯ "
+SPACESHIP_CHAR_SYMBOL="" #❯ removed normal prompt for a VI status prompt
 SPACESHIP_BATTERY_SHOW=false
-SPACESHIP_VI_MODE_SHOW=false
+SPACESHIP_VI_MODE_INSERT="%F{237}%K{2}I%F{2}%k%f"
+SPACESHIP_VI_MODE_NORMAL="%F{237}%K{176}N%F{176}%k%f"
 
 for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
@@ -88,12 +84,15 @@ done;
 unset file;
 
 if [ ! -d $ANTIBODY_HOME ] || [ ! "$(ls -A $ANTIBODY_HOME)" ]; then
-  # this won't work becasue aliases.zsh contains abbred-alias calls
-  plug
+  #install plugsin and then (if successful) resourse this file
+  plug && source $ZDOTDIR/.zshrc
 fi
 
-abbrev-alias -i
+if type abbrev-alias > /dev/null && type abbrev-alias | grep -q function; then
+  abbrev-alias -i
+fi
 
+export PATH="/usr/local/var/rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 # SSH
@@ -101,4 +100,24 @@ eval "$(ssh-agent -s)" &> /dev/null
 ssh-add -A &> /dev/null
 
 
+bindkey -v
 
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+function zle-line-init zle-keymap-select {
+   #redraw prompt on vi-mode change
+   zle reset-prompt
+}
+
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=zle-keymap-select
+
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+export KEYTIMEOUT=1
