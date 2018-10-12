@@ -14,10 +14,9 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 let g:python_host_prog = '/usr/local/bin/python'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
-" }}}
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
-" ESC key on keyboard is disabled (remapped to capslock) training wheels to stop myself from old habbits
-:map! <F19> <Nop> 
+" }}}
 
 " Section User Interface {{{
 
@@ -71,39 +70,39 @@ let g:lightline = {
       \   'lineinfo': 'LightlineLineinfo'
       \ },
       \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag', 
-      \ }, 
-      \ 'component_type': { 
-      \   'syntastic': 'error', 
-      \ }, 
+      \   'syntastic': 'SyntasticStatuslineFlag',
+      \ },
+      \ 'component_type': {
+      \   'syntastic': 'error',
+      \ },
       \ 'component_visible_condition': {
-      \   'lineinfo': 'LightlineLineinfoShow', 
-      \ }, 
-      \ 'separator': { 'left': '', 'right': '' }, 
-      \ 'subseparator': { 'left': '', 'right': '' } 
+      \   'lineinfo': 'LightlineLineinfoShow',
+      \ },
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' }
       \ }
 
-function! LightlineModified() 
+function! LightlineModified()
   return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
 function! LightlineReadonly()
-  return &ft !~? 'help' && &readonly ? '⭤' : '' 
+  return &ft !~? 'help' && &readonly ? '⭤' : ''
 endfunction
 
 function! LightlineLineinfo()
-  return LightlineLineinfoShow() ? (line('.').':'.col('.')) : '' 
+  return LightlineLineinfoShow() ? (line('.').':'.col('.')) : ''
 endfunction
 
 function! LightlineLineinfoShow()
-  let fname = expand('%:t') 
+  let fname = expand('%:t')
   let _ = fname =~ '__Tagbar__' || fname == 'CtrlP' || fname =~ 'NERD_tree'
   return !_
 endfunction
 
-function! LightlineFilename() 
-  let fname = expand('%:t') 
-  return fname == 'CtrlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item : 
+function! LightlineFilename()
+  let fname = expand('%:t')
+  return fname == 'CtrlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
     \ fname =~ '__Tagbar__' ? g:lightline.fname :
     \ fname =~ '__Gundo\|NERD_tree' ? '' :
     \ ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
@@ -293,8 +292,7 @@ else
   let g:gitgutter_sign_column_always = 1
 endif
 
-" hi! EndOfBuffer ctermbg=None ctermfg=None guibg=None guifg=None " hide ~ on empty lines
-set fcs=eob:\ 
+set fcs=eob:\ " a blank space instead of a ~
 
 " Disable tmux navigator when zooming the Vim pane
 let g:tmux_navigator_disable_when_zoomed = 1

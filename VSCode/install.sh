@@ -15,3 +15,4 @@ code --install-extension idleberg.applescript
 code --install-extension ms-python.python
 code --install-extension ms-vscode.cpptools
 code --install-extension vsciot-vscode.vscode-arduino
+code --install-extension EditorConfig.EditorConfig

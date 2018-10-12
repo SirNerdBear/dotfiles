@@ -11,7 +11,8 @@ Plug 'ctrlpvim/ctrlp.vim'                      "fuzzy finder simular to command-
 Plug 'majutsushi/tagbar' " TODO setup keybinds, etc.
 Plug 'tpope/vim-rails' "TODO custom keybinds and learn this inside and out
 Plug 'tpope/vim-fugitive' " Git awesomeness
-Plug 'airblade/vim-gitgutter' " Git notations in the gutter 
+Plug 'airblade/vim-gitgutter' " Git notations in the gutter
 Plug 'christoomey/vim-tmux-navigator' " Navigte tmux and vim with the same binds
+Plug 'editorconfig/editorconfig-vim' " https://editorconfig.org/
 call plug#end()
 
