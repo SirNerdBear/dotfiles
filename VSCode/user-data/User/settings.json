@@ -4,5 +4,6 @@
     "editor.minimap.enabled": false,
     "workbench.colorTheme": "Dracula At Night",
     "editor.fontLigatures": true,
-    "window.zoomLevel": 0
+    "window.zoomLevel": 0,
+    "python.pythonPath": "/usr/local/opt/python/bin/python3.7"
 }
