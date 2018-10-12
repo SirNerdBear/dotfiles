@@ -155,13 +155,17 @@ alias ql='qlmanage -p &> /dev/null'
 # Alias vim to neovim
 alias vim="nvim"
 
+alias tron="ssh sshtron.zachlatta.com"
+alias tetris="vitetris"
+
+
 # Remote hosts don't have  xterm-256color-italic by default
 alias ssh="TERM=xterm-256color ssh"
 
 ## ABREV ALIASES ##
 local cmd='abbrev-alias'
 if ! type abbrev-alias > /dev/null; then
-	cmd='alias' 
+	cmd='alias'
 else
 	#define function aliases here as they don't make sense without space expantion
 	$cmd -f B="git symbolic-ref --short HEAD"
