@@ -34,6 +34,7 @@ defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "${HOME}/.
 
 brew cask install dropbox 
 brew cask install google-drive
+brew cask install docker #containers are sexy
 
 #TODO copy license file
 brew cask install bettertouchtool #touchbar, remapping mice, keyboard shortcuts, window management
@@ -50,7 +51,6 @@ brew cask install visual-studio-code #VSCode is a GUI text editor (not used much
 brew cask install discord #Chatting sexyness
 #brew cask install scrivener #Writing prose. Must manually install until I get 3.0 (assholes)
 
-#canary chrome
 brew cask install google-chrome
 #opera
 brew cask install firefox
@@ -58,11 +58,8 @@ brew cask install firefox
 brew cask install imageoptim #Reduce size of images https://imageoptim.com/mac
 brew cask install imagealpha #PNG24 to PNG8 with alpha channel support https://pngmini.com/ 
 
-
-brew cask install docker #containers are sexy
-
 brew cask install kindle 
-#brew cask install monolingual #Reduce HDD waste by removing unused lanaugages
+#brew cask install monolingual #broken
 brew cask install sketch 
 brew cask install sketch-toolbox
 brew cask install soulver #Text driven calcuations on-the-fly
@@ -74,8 +71,6 @@ brew cask install virtualbox #vms
 brew tap homebrew/completions
 brew install homebrew/completions/docker-completion
 brew install homebrew/completions/docker-compose-completion
-
-
 
 brew tap homebrew/cask-fonts 
 #not sure why but ligatures don't work with font-firacode-nerd-font-mono
@@ -115,7 +110,6 @@ brew cask install
 	font-lalezar \
 	font-unica-one \
 	font-cagliostro \
-	
 	font-unkempt \
 	font-noto-serif \
 	font-marmelad \
@@ -124,7 +118,6 @@ brew cask install
 	font-geostar \
 	font-smythe \
 	font-barlow \
-	font-wenquanyi-zen-hei \
 	font-sancreek \
 	font-benchnine \
 	font-rochester \
@@ -138,24 +131,20 @@ brew cask install
 	font-seymour-one \
 	font-ranchers \
 	font-tulpen-one \
-	font-gveret-levin \
 	font-coustard \
 	font-handlee \
 	font-lustria \
 	font-petit-formal-script \
 	font-xkcd \
 	font-leckerli-one \
-	font-migmix-2m \
 	font-tex-gyre-termes \
 	font-stoke \
 	font-doppio-one \
 	font-italianno \
 	font-freehand \
-	font-namdhinggo-sil \
-	font-fresca \
+]	font-fresca \
 	font-twitter-color-emoji \
 	font-space-mono \
-	font-iosevka-slab \
 	font-cutive \
 	font-linux-libertine \
 	font-encodesans-semiexpanded \
@@ -170,12 +159,10 @@ brew cask install
 	font-adamina \
 	font-goblin-one \
 	font-lancelot \
-	font-kaushan-script \
 	font-rokkitt \
 	font-diplomata-sc \
 	font-league-gothic \
 	font-allerta-stencil \
-	font-tex-gyre-pagella-math \
 	font-skranji \
 	font-inter-ui \
 	font-junge \
@@ -187,15 +174,12 @@ brew cask install
 	font-colus \
 	font-oxygen-mono \
 	font-stix \
-	font-inconsolata-g \
 	font-ruge-boogie \
 	font-swanky-and-moo-moo \
-	font-iranian-serif \
 	font-balthazar \
 	font-karla-tamil-upright \
 	font-marck-script \
 	font-playfair-display \
-	font-han-nom-a \
 	font-snippet \
 	font-amaranth \
 	font-spicy-rice \
@@ -206,14 +190,13 @@ brew cask install
 	font-jacques-francois-shadow \
 	font-condiment \
 	font-kelly-slab \
-	font-iosevka \
 	font-lisutzimu \
 	font-noto-mono \
 	font-keep-calm \
 	font-paytone-one \
 	font-happy-monkey \
-	font-khmer \
 	font-aileron \
+	
 	font-alegreya-sans \
 	font-bokor \
 	font-faster-one \
