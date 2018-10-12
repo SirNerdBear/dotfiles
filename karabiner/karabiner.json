@@ -48,8 +48,7 @@
                                 "to": [
                                     {
                                         "key_code": "left_control",
-                                        "modifiers": [
-                                        ]
+                                        "modifiers": []
                                     }
                                 ],
                                 "to_if_alone": [
@@ -118,7 +117,7 @@
                         "key_code": "f7"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote -r"
+                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -r"
                     }
                 },
                 {
@@ -126,7 +125,7 @@
                         "key_code": "f8"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote -u"
+                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -u"
                     }
                 },
                 {
@@ -134,7 +133,7 @@
                         "key_code": "f9"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote -n"
+                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -n"
                     }
                 },
                 {
@@ -175,8 +174,8 @@
                 }
             ],
             "virtual_hid_keyboard": {
-                "country_code": 0,
-                "caps_lock_delay_milliseconds": 0
+                "caps_lock_delay_milliseconds": 0,
+                "country_code": 0
             }
         }
     ]

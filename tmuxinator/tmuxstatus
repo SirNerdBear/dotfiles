@@ -207,10 +207,10 @@ class ThreadedSegment(Thread):
 
 	def render(self,args):
 		pass #override
-	
+
 	def color(self):
 		return None
-	
+
 	def run(self,interval=1):
 		while not self.thread_shutdown_event.is_set():
 			start_time = monotonic()
@@ -303,11 +303,50 @@ class ITunesPlayerSegment(ThreadedSegment):
 				info = self.data['artist'] + ' - ' + info
 			return self.data['icon'] + ' ' + info
 
+class CMUS(StaticSegment):
+    def pretty_time(self,duration,position):
+        htotal = duration / 3600
+        mtotal = (duration % 3600) / 60
+        stotal = (duration % 60)
+        hcurrent = position/3600
+        mcurrent = (position % 3600) / 60
+        scurrent = (position % 60)
+
+        if htotal < 1:
+            return "[%02d:%02d/%02d:%02d]" % (mcurrent,scurrent,mtotal,stotal)
+        else:
+            return "[%02d:%02d:%02d/%02d:%02d:%02d]" % (hcurrent,mcurrent,scurrent,htotal, mtotal,stotal)
+
+    def render(self,args,cols):
+        try:
+            raw = run_cmd(['cmus-remote','-Q'])
+            tags = re.findall(r'^tag (\w+) (.*?)$',raw, flags=re.MULTILINE)
+            status = re.search(r'^status (\w+)$',raw,flags=re.MULTILINE)
+            if status and tags:
+                #duration = int(re.search(r'^duration (\d+)$',raw,flags=re.MULTILINE)[1])
+                #position = int(re.search(r'^position (\d+)$',raw,flags=re.MULTILINE)[1])
+                status = status[1]
+                meta = {}
+                for tag in tags:
+                    meta[tag[0]] = tag[1]
+                icon = { u'playing': 'ﱘ', u'paused': '' }.get(status,None)
+                if icon is None: return
+                min_cols = 13 if args.prefix or args.copy or args.keys == 'off' else 9
+                if cols <= min_cols: return icon
+                info = meta.get('title','')
+                if (cols - len(info)) < 0:
+                    info = info[0:(cols-1)] + '…'
+                if (len(meta.get('artist')) + len(info) + 6) <= cols:
+                    info = meta.get('artist') + ' - ' + info
+                return icon + ' ' + info #+ ' ' + self.pretty_time(duration,position)
+        except:
+            return None
+
 
 class VMachines(ThreadedSegment):
 	def render(self,args,cols):
 		return self.data
-	
+
 	def do_work(self):
 		raw = run_cmd(['VBoxManage','list', 'runningvms'])
 		vms = sum([1 for i in raw.split("\n") if i.strip()])
@@ -339,7 +378,7 @@ class Host(StaticSegment):
 				if cmd.startswith("ssh"):
 					h = parse_ssh(cmd)
 					host = h.get('host',None)
-					if host is None: return None 
+					if host is None: return None
 					if (h.get('port','22') != '22'):
 						host += ":%s" % h['port']
 					if ('user' in h and (cols - len(host)) >= 90):
@@ -377,10 +416,10 @@ class PrefixMode(StaticSegment):
 		if args.keys == 'off':
 			return "OFF"
 		if not args.prefix:
-			return None 
-		
+			return None
+
 		return "[PREFIX]" if cols >= 11 else "^A"
-	
+
 	def color(self,args=None):
 		if args is not None:
 			if args.keys == 'off':
@@ -400,7 +439,7 @@ def start_segment_thread(seg, state):
 	return thread
 
 class StatusLine():
-	__segments__ = ( PrefixMode, ITunesPlayerSegment, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
+	__segments__ = ( PrefixMode, CMUS, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
 	__colors__ = (242,235,237,240)
 
 	def _instantiate_segments(self,lst):
@@ -423,7 +462,7 @@ class StatusLine():
 		return len(re.sub(r'#\[.*?\]','',str))
 
 	def render(self,args):
-		
+
 		cols = args.width
 		color = 0
 		out = []
@@ -447,7 +486,7 @@ class StatusLine():
 					rendered.append( s )
 					color = (color + 1) % len(StatusLine.__colors__)
 			if len(rendered) <= 0: continue
-			
+
 			rendered = ''.join(rendered)
 			out.insert(0," #[fg=colour{colour}]#[fg=white,bold,bg=colour{colour}] {rendered}".format(**locals()) )
 		return ''.join(out)
@@ -485,7 +524,7 @@ def parse_ssh(cmd):
 	#remove single character flags
 	flags = '|'.join(list("46AaCfGgKkMNnqsTtVvXxYy"))
 	cmd = re.sub(r"\s+-[%(flags)s]*[%(flags)s][%(flags)s]*" % locals(),'',cmd)
-	
+
 	#remove options
 	opts = '|'.join(list("bBcDEeFIiJLlmOoQRSWw"))
 	cmd = re.sub(r"\s+-[%s]\s+.*?(?=\s|$)" % opts,'',cmd)
@@ -558,18 +597,18 @@ def safe_bytes(o, encoding="utf-8"):
 			# We are assuming that o is a unicode object
 			return o.encode(encoding, 'replace')
 		except Exception:
-			# Object may have defined __bytes__ (python 3) or __str__ method 
+			# Object may have defined __bytes__ (python 3) or __str__ method
 			# (python 2)
-			# This also catches problem with non_ascii_bytes.encode('utf-8') 
-			# that first tries to decode to UTF-8 using ascii codec (and fails 
-			# in this case) and then encode to given encoding: errors= argument 
+			# This also catches problem with non_ascii_bytes.encode('utf-8')
+			# that first tries to decode to UTF-8 using ascii codec (and fails
+			# in this case) and then encode to given encoding: errors= argument
 			# is not used in the first stage.
 			return bytes(o)
 	except Exception as e:
 		return safe_bytes(str(e), encoding)
 
 def get_answer(req, is_daemon, argparser, state):
-	parser = get_pipeparser()	
+	parser = get_pipeparser()
 	try:
 		args = parse_args(req, parser)
 		return safe_bytes( state.status_line.render(args) )
@@ -632,7 +671,7 @@ def shutdown(sock, read_sockets, write_sockets, state):
 	#. Closes all sockets.
 	#. Notifies segments
 	#. Waits for threads to finish, but no more then 2 seconds total.
-	#. Waits so that total execution time of this function is 2 seconds in order 
+	#. Waits so that total execution time of this function is 2 seconds in order
 	   to allow ThreadedSegments to finish.
 	'''
 	total_wait_time = 2
