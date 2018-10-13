@@ -84,8 +84,8 @@
 [core]
 
 	# Use custom `.gitignore` and `.gitattributes`
-	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
+	excludesfile = ~/.config/git/gitignore_global
+	attributesfile = ~/.config/git/gitattributes
 
 	# Treat spaces before tabs and all kinds of trailing whitespace as an error
 	# [default] trailing-space: looks for spaces at the end of a line
@@ -181,7 +181,7 @@
 	insteadOf = "gist:"
 
 [user]
-      # These values are set in ~/.gitconfig_local
+      # These values are set in $XDG_CONFIG_HOME/git/config.local
 
 [gpg]
 	program = /usr/local/bin/gpg

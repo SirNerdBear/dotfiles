@@ -117,7 +117,7 @@ alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/C
 # https://github.com/KittyKatt/screenFetch/issues/456
 alias screenfetch="screenfetch -E"
 
-alias ct="python ~/.config/colortest.py"
+alias ct="colortest"
 
 # Intuitive map function
 # For example, to list all directories that contain a certain file:

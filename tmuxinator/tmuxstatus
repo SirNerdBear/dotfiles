@@ -375,6 +375,7 @@ class Host(StaticSegment):
 			m = Host.ssh_regex.search(ps)
 			if m is not None:
 				cmd = m.group(2).strip()
+                #TODO detect SCP and sshpass
 				if cmd.startswith("ssh"):
 					h = parse_ssh(cmd)
 					host = h.get('host',None)
@@ -392,14 +393,13 @@ class Host(StaticSegment):
 						return " %s:%s" % (name,container)
 		except:
 			pass
-		return " #h"
+		return " #h" #TODO detect OS
 
 class Date(StaticSegment):
 	def render(self,args,cols):
 		dt = datetime.utcnow() if args.utc else time
 		return " " + dt.strftime('%x')
 
-#TODO detect timezone as option and do UTC or local
 class Time(StaticSegment):
 	def render(self,args,cols):
 		dt = datetime.utcnow() if args.utc else time
@@ -441,6 +441,9 @@ def start_segment_thread(seg, state):
 class StatusLine():
 	__segments__ = ( PrefixMode, CMUS, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
 	__colors__ = (242,235,237,240)
+    # Segments to maybe add:
+    # Gmail counter https://github.com/erikw/tmux-powerline/blob/master/segments/mailcount.sh
+    # Battery life (there are sweet icons for this in http://nerdfonts.com/)
 
 	def _instantiate_segments(self,lst):
 		out = []
