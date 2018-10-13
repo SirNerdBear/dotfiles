@@ -59,6 +59,38 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Make old escape key open iTerm",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "escape",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                  {
+                                    "key_code": "f14"
+                                  }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "escape"
+                                },
+                                "to": [
+                                  {
+                                    "key_code": "f18"
+                                  }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
@@ -117,7 +149,7 @@
                         "key_code": "f7"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -r"
+                        "key_code": "f15"
                     }
                 },
                 {
@@ -125,7 +157,7 @@
                         "key_code": "f8"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -u"
+                        "key_code": "f16"
                     }
                 },
                 {
@@ -133,7 +165,7 @@
                         "key_code": "f9"
                     },
                     "to": {
-                        "shell_command": "/usr/local/bin/cmus-remote --server /private/tmp/cmus-socket -n"
+                        "key_code": "f17"
                     }
                 },
                 {
@@ -163,16 +195,7 @@
             ],
             "name": "Default profile",
             "selected": true,
-            "simple_modifications": [
-                {
-                    "from": {
-                        "key_code": "escape"
-                    },
-                    "to": {
-                        "key_code": "f18"
-                    }
-                }
-            ],
+            "simple_modifications": [],
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
                 "country_code": 0
