@@ -148,19 +148,25 @@ def mkdir_p(mode,dir)
   end
 end
 
-# Invalidate sudo timestamp before exiting (if it wasn't active before).
+# Avoid reprompting for sudo password
 Kernel.system "/usr/bin/sudo -n -v 2>/dev/null"
+
+# But invalidate sudo timestamp before exiting
 at_exit { Kernel.system "/usr/bin/sudo", "-k" } unless $?.success?
 
-# The block form of Dir.chdir fails later if Dir.CWD doesn't exist which I
-# guess is fair enough. Also sudo prints a warning message for no good reason
+# The block form of Dir.chdir fails if Dir.CWD doesn't exist.
 Dir.chdir "/usr"
+
+
 
 ####################################################################### script
 #abort "Already installed nothing to do" if Dir.exists?( File.join(Dir.home,"Projects","dotfiles") )
+
+#TODO work for linux as well because nix pride yo!
 abort "This is the macOS installer, not Linux!" if RUBY_PLATFORM.to_s.downcase.include?("linux")
+
 abort "Mac OS X too old" if macos_version < "10.5"
-abort "Don't run this as root!" if Process.uid.zero?
+abort "Don't run install as root!" if Process.uid.zero?
 abort <<-EOABORT unless `dsmemberutil checkmembership -U "#{ENV["USER"]}" -G admin`.include? "user is a member"
 This installer requires the user #{ENV["USER"]} to be an Administrator.
 EOABORT
@@ -171,6 +177,7 @@ end
 
 system 'brew', 'update'
 system 'brew', 'install', 'lastpass-cli', '--with-pinentry'
+system 'brew', 'upgrade'
 
 mkdir_p(0700,SSH_DIR)
 mkdir_p(0700,PROJECT_DIR)
