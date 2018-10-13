@@ -157,7 +157,7 @@ at_exit { Kernel.system "/usr/bin/sudo", "-k" } unless $?.success?
 Dir.chdir "/usr"
 
 ####################################################################### script
-#abort "Already installed nothing to do" if Dir.exists?( File.join(Dir.home,"Projects","dotfiles") ) 
+#abort "Already installed nothing to do" if Dir.exists?( File.join(Dir.home,"Projects","dotfiles") )
 abort "This is the macOS installer, not Linux!" if RUBY_PLATFORM.to_s.downcase.include?("linux")
 abort "Mac OS X too old" if macos_version < "10.5"
 abort "Don't run this as root!" if Process.uid.zero?
@@ -214,11 +214,11 @@ list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
     #puts "SSH KEY: #{$1} #{id}"
   end
   found = true
-  #puts "Found: #{match}" 
+  #puts "Found: #{match}"
 end
 abort "No secure notes found in list SysConfig group on LastPass" unless found
 
-unless Dir.exists?( File.join(Dir.home,"Projects","dotfiles") ) 
+unless Dir.exists?( File.join(Dir.home,"Projects","dotfiles") )
   Dir.chdir(PROJECT_DIR) do
     system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
   end
@@ -237,19 +237,46 @@ system "mas","install","490461369" #Bandwidth+
 system "mas","install","425264550" #Blackmagic Disk Speed Test
 
 
+#mas "Blackmagic Disk Speed Test", id: 425264550
+#mas "Compressor", id: 424390742
+#mas "Keynote", id: 409183694
+#mas "Numbers", id: 409203825
+#mas "Pages", id: 409201541
+#mas "Unsplash Wallpapers", id: 1284863847
+#mas "Xcode", id: 497799835
+
 system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
 
-#an idea is to make a bunch of install.sh scripts and glob them in a loop
-#this works only if install order doesn't matter and it does =(
-#could make it dotfiles.sh that does the critical stuff 
-#or could do install_first.sh as another glob
-#or mas could be installed here in this script (might be easier)
-#as we could do the login here as well
+# Make sure we’re using the latest Homebrew.
+#brew update
 
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
+# Upgrade any already-installed formulae.
+#brew upgrade
+
+
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh" #instead we install our brewfile
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh" #combined with above
+
+# Remove outdated versions from the cellar.
+# brew cleanup
+
+# mas installs done here?
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"
 system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/macos.sh"
+
+#**/install.sh glob here
+
+
+# Manually Installed apps
+# Adobe Photoshop
+# Adobe Illustrator
+# Adobe Acrobat DC
+# Adobe InDesign
+# Artstudio Pro
+# Pop Dot Comics
+# CleanMyMac X
+# Sidify Apple Music Converter
+
 
 ohai "Installation successful!"
 puts
