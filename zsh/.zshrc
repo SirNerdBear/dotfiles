@@ -30,7 +30,7 @@ export LPASS_HOME="$XDG_RUNTIME_DIR"/lpass
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 if [ -d ~/.oracle_jre_usage ]
-then 
+then
     rm -r ~/.oracle_jre_usage/
 fi
 
@@ -50,25 +50,19 @@ setopt share_history # share command history data
 setopt COMPLETE_ALIASES
 unsetopt LIST_BEEP
 setopt VI
-#stop pissing me off when using ! in line
-unsetopt banghist 
+unsetopt banghist #stop pissing me off when using ! in line
+
+
+# thic can be set and checked on by .zshrc
+# ~/.editorconfig -> ~/.config/.editorconfig
+# touch .hushlogin if it doesn't exist
 
 #TODO detect OS and source scripts accoringly
 #https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
 
 
-
-#https://stackoverflow.com/questions/21162988/how-to-make-zsh-search-configuration-in-xdg-config-home
-#zsh_history
-#zsh/bash
-
-
 #https://wiki.archlinux.org/index.php/XDG_Base_Directory
 #.tmux / .tmux.config
-#.zsh_history, .zshrc
-#.tmux -> XDG_DATA_HOME
-#.tmux.conf
-#.bash_prompt .bashrc .bash_history
 
 
 SPACESHIP_CHAR_COLOR_SUCCESS="048"
@@ -92,6 +86,8 @@ if type abbrev-alias > /dev/null && type abbrev-alias | grep -q function; then
   abbrev-alias -i
 fi
 
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/usr/local/opt/python/libexec/bin:$PATH" #/bin/env python -> python3
 export PATH="/usr/local/var/rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
