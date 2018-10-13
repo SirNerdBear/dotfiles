@@ -1,6 +1,6 @@
 export TERM="xterm-256color-italic"
 export PYLINTHOME="$XDG_CACHE_HOME"/pylint
-export PYTHONSTARTUP=$XDG_CONFIG_HOME/pythonstartup.py
+export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonstartup.py
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
 export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
