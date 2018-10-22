@@ -1,0 +1,23 @@
+\set QUIET 1
+\pset pager off
+\echo
+
+-- Prompt 3 is issued when you run an SQL COPY command ???
+\set PROMPT1 '\033[1;38;5;75;48;5;237m \033[38;5;255m  %m  %n@%/ \033[49;38;5;237m\033[0m '
+\set PROMPT2 '\033[1;38;5;75;48;5;237m  \033[39m…\033[49;38;5;237m\033[38;2;39;41;54;8m   %n@%/\033[0m'
+
+\set HISTFILE ~/.local/share/postgres/history- :DBNAME
+\set HISTCONTROL ignoredups
+
+\pset null '[NULL]'
+
+-- Don't display the "helpful" message on startup.
+
+-- Show how long each query takes to execute
+\timing
+
+-- Use best available output format
+\x auto
+\set VERBOSITY verbose
+\set COMP_KEYWORD_CASE upper
+\unset QUIET
