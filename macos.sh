@@ -1,70 +1,5 @@
 #!/bin/sh
 
-#Colors for use with cecho function
-black='\033[0;30m'
-white='\033[0;37m'
-red='\033[0;31m'
-green='\033[0;32m'
-yellow='\033[0;33m'
-blue='\033[0;34m'
-magenta='\033[0;35m'
-cyan='\033[0;36m'
-  
-#Resets the style
-reset=`tput sgr0`
- 
-#Bold
-bold=`tput bold`
-  
-cecho() {
-  echo "${2}${1}${reset}"
-  return
-}
- 
-cecho_bold() {
-  echo "${2}${bold}${1}${reset}"
-  return
-}
-
-# Set continue to false by default
-CONTINUE=false
-  
-echo ""
-
-
-cecho_bold ' ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄ ' $blue
-cecho_bold '▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌' $blue
-cecho_bold '▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌     ▐░▌▐░█▀▀▀▀▀▀▀▀▀  ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀ ' $blue
-cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌▐░▌    ▐░▌▐░▌               ▐░▌     ▐░▌          ' $blue
-cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌ ▐░▌   ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░▌     ▐░▌ ▄▄▄▄▄▄▄▄ ' $blue
-cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░▌     ▐░▌▐░░░░░░░░▌' $blue
-cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌   ▐░▌ ▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░▌     ▐░▌ ▀▀▀▀▀▀█░▌' $blue
-cecho_bold '▐░▌          ▐░▌       ▐░▌▐░▌    ▐░▌▐░▌▐░▌               ▐░▌     ▐░▌       ▐░▌' $blue
-cecho_bold '▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌     ▐░▐░▌▐░▌           ▄▄▄▄█░█▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌' $blue
-cecho_bold '▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌      ▐░░▌▐░▌          ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌' $blue
-cecho_bold ' ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀            ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀ ' $blue
-                                                                            
-                                        
-cecho_bold "                                                        .d88888b.   .d8888b.  " $blue
-cecho_bold '                                                       d88P" "Y88b d88P  Y88b ' $blue
-cecho_bold '                                                       888     888 Y88b.      ' $blue
-cecho_bold '                       88888b.d88b.   8888b.   .d8888b 888     888  "Y888b.   ' $blue
-cecho_bold '                       888 "888 "88b     "88b d88P"    888     888     "Y88b. ' $blue
-cecho_bold '                       888  888  888 .d888888 888      888     888       "888 ' $blue
-cecho_bold "                       888  888  888 888  888 Y88b.    Y88b. .d88P Y88b  d88P " $blue
-cecho_bold '                       888  888  888 "Y888888  "Y8888P  "Y88888P"   "Y8888P"  ' $blue
- 
-echo ""
-cecho_bold "Run config script and set macOS awesomeness to 11? (y/n)" $red
-read -r response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  CONTINUE=true
-fi
-  
-if ! $CONTINUE; then
-  exit
-fi
-
 # Ask for the administrator password upfront
 sudo -v
 
@@ -76,18 +11,24 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 osascript -e 'tell application "System Preferences" to quit'
 
 if [ ! -f /Library/Keychains/FileVaultMaster.keychain ]; then
-  sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain /Library/Keychains/FileVaultMaster.keychain
+  sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain \
+          /Library/Keychains/FileVaultMaster.keychain
 fi
-if sudo fdesetup status | grep -q 'FileVault is Off' && sudo fdesetup showdeferralinfo | grep -q 'Not found'; then
+if sudo fdesetup status | \
+   grep -q 'FileVault is Off' && sudo fdesetup showdeferralinfo | \
+   grep -q 'Not found'
+then
   sudo fdesetup enable -defer /dev/null -keychain –norecoverykey -forceatlogin 0 –dontaskatlogout
 fi
 
 # TODO need to get Dropbox fonts somehow first but we can't make licensed fonts public
+# move this to our finder extention or a cronjob
+# for now it could be a script?
 find ~/Dropbox/Fonts -type f -exec cp \{\} ~/Library/Fonts \;
 chmod 0600 ~/Library/Fonts/*
 
 ##################################################################################
-# General UI/UX 
+# General UI/UX
 ##################################################################################
 
 #Always boot in verbose mode
@@ -95,19 +36,6 @@ sudo nvram boot-args="-v"
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
-
-# Name this computer
-echo ""
-echo "Would you like to set your computer name (as done via System Preferences >> Sharing)?  (y/n)"
-read -r response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  echo "What would you like it to be?"
-  read COMPUTER_NAME
-  sudo scutil --set ComputerName $COMPUTER_NAME
-  sudo scutil --set HostName $COMPUTER_NAME
-  sudo scutil --set LocalHostName $COMPUTER_NAME
-  sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $COMPUTER_NAME
-fi
 
 # Set standby delay to 24 hours (default is 1 hour)
 sudo pmset -a standbydelay 86400
@@ -130,7 +58,6 @@ defaults write com.apple.systemuiserver menuExtras -array \
 sudo /usr/bin/defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool NO;
 sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool NO
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
-#sudo fdesetup remove -user Guest
 
 # Disabling OS X Gate Keeper
 # Install any app, not just Mac App Store apps
@@ -245,24 +172,6 @@ sudo chflags uchg /private/var/vm/sleepimage
 
 # Disable the sudden motion sensor as it’s not useful for SSDs
 sudo pmset -a sms 0
-
-# Turn on FileVault2 on next login
-fdesetup enable -defer -forceatlogin 0 -dontaskatlogout -keychain -norecoverykey 
-
-###############################################################################
-# Yucky external media from the darkages
-###############################################################################
-
-# For older MacBooks with Drives or a Mac with an external hooked up for reasons
-# beyond conventional fathoming…
-# not sure how to do this
-
-# defaults write com.apple.digihub.blank.cd.appeared -dict-add action 1
-# defaults write com.apple.digihub.blank.dvd.appeared -dict action 1
-# defaults write com.apple.digihub.cd.music.appeared -dict action 1
-# defaults write com.apple.digihub.cd.picture.appeared -dict action 1
-# defaults write com.apple.digihub.dvd.video.appeared -dict action 1
-
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
@@ -398,7 +307,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 7 '<dict
 #23 - kSHKTurnImageSmoothingOnOrOff - Opt, Cmd, Backslash "\"
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 23 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>92</integer><integer>42</integer><integer>1572864</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-#160 - kSHKShowLaunchpad - 
+#160 - kSHKShowLaunchpad -
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 160 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>65535</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 #32 - kSHKMissionControl - Ctrl, Arrow Up
@@ -443,7 +352,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 17 '<dic
 #26 - kSHKDecreaseContrast - Ctrl, Opt, Cmd, ,
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 26 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>44</integer><integer>43</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-#175 - kSHKTurnDoNotDisturbOnOrOff - 
+#175 - kSHKTurnDoNotDisturbOnOrOff -
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 175 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>65535</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 #52 - kSHKTurnDockHidingOnOrOff - Opt, Cmd, D
@@ -470,7 +379,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 28 '<dic
 #162 - kSHKShowAccessibilityControls - Opt, Cmd, F5
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 162 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>96</integer><integer>9961472</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-#163 - kSHKShowNotificationCenter - 
+#163 - kSHKShowNotificationCenter -
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 163 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>65535</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 #29 - kSHKCopyPictureOfScreenToTheClipboard - Ctrl, Shift, Cmd, 3
@@ -494,7 +403,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 57 '<dic
 #10 - kSHKMoveFocusToTheWindowToolbar - Ctrl, F5
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 10 '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>96</integer><integer>8650752</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-#179 - kSHKTurnFocusFollowingOnOrOff - 
+#179 - kSHKTurnFocusFollowingOnOrOff -
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 179 '<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>65535</integer><integer>0</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 #59 - kSHKTurnVoiceOverOnOrOff - Cmd, F5
@@ -726,7 +635,7 @@ defaults write com.apple.dock min-in-place-immutable -boolean true
 defaults write com.apple.dock no-bouncing -boolean true
 
 ##################################################################################
-# Safari & WebKit 
+# Safari & WebKit
 ##################################################################################
 
 # Get rid of keybinds to email page
@@ -812,12 +721,8 @@ defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 
 ##################################################################################
-# Spotlight 
+# Spotlight
 ##################################################################################
-
-# Hide Spotlight tray-icon (and subsequent helper)
-# Doesn't want with SIP enabled
-sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 
 # Disable Spotlight indexing for any volume that gets mounted and has not yet been indexed before.
 sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
@@ -857,7 +762,7 @@ sudo mdutil -i on / > /dev/null
 sudo mdutil -E / > /dev/null
 
 ##################################################################################
-# Terminal 
+# Terminal
 ##################################################################################
 
 #Support 256 colors and italics
@@ -986,8 +891,6 @@ defaults write com.apple.dt.Xcode IDEWorkaroundForRadar6288283 3
 
 #show built time
 defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES
-
-
 
 ###############################################################################
 # Time Machine                                                                #
