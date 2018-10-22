@@ -1,3 +1,7 @@
+let mapleader="\<SPACE>" " spacebar as map leader for more shortcuts
+nnoremap <Space> <Nop>
+
+
 source ~/.config/nvim/plugins.vim
 
 " Section General {{{
@@ -29,8 +33,6 @@ if &term =~ '256color'
    set t_Co=256
 endif
 
-
-
 if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -41,9 +43,12 @@ endif
 if (has("termguicolors"))
   set termguicolors
 endif
+" let g:onedark_terminal_italics = 1
 let g:dracula_colorterm = 0
-" let g:dracula_italic = 1
+let g:dracula_italic = 1
+" default background
 highlight Normal ctermbg=None
+
 set cursorline
 
 
@@ -190,24 +195,7 @@ endfunction
 
 let g:vimshell_force_overwrite_statusline = 0
 
-syntax on
-color dracula       " For some reason both color and colorscheme need to be set to work???
-colorscheme dracula " Set the colorscheme
-highlight Comment cterm=italic
-hi CursorLine term=bold cterm=bold guibg=Gray15
-
-
-" make the highlighting of tabs and other non-text less annoying
-highlight SpecialKey ctermbg=none ctermfg=8
-highlight NonText ctermbg=none ctermfg=8
-
-" make comments and HTML attributes italic
-highlight htmlArg cterm=italic
-
-set number                  " show line numbers
-set relativenumber          " make it easier to do motions (combined with above current line always shows the real linenumber)
-
-" easy split navigation
+" easy split navigation (incase not running in tmux)
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -280,17 +268,35 @@ let g:ctrlp_custom_ignore = {
 
 let g:tagbar_compact = 1
 
-let mapleader = ' ' " spacebar as map leader for more shortcuts
-
 nmap <leader><space> :set hlsearch! hlsearch?<cr>
 
 nmap <silent> <leader>rc :Econtroller<cr>
+
+" S = write
+
 
 if exists('&signcolumn')  " Vim 7.4.2201
   set signcolumn=yes
 else
   let g:gitgutter_sign_column_always = 1
 endif
+
+" Quickly edit/reload this configuration file
+nnoremap gev :e $MYVIMRC<CR>
+nnoremap gsv :so $MYVIMRC<CR>
+
+if has ('autocmd') " Remain compatible with earlier versions
+ augroup vimrc     " Source vim configuration upon save
+    autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+    autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | echom "Reloaded " . $MYGVIMRC | endif | redraw
+  augroup END
+endif " has autocmd
+
+
+" set a near zero delay on <ESC> while still allowing special keys
+" set timeoutlen=10 ttimeoutlen=0
+set notimeout
+set ttimeout
 
 set fcs=eob:\ " a blank space instead of a ~
 
@@ -301,9 +307,51 @@ let g:tmux_navigator_disable_when_zoomed = 1
 let g:NERDTreeMapJumpPrevSibling=""
 let g:NERDTreeMapJumpNextSibling=""
 
+
+set number                  " show line numbers
+set relativenumber          " make it easier to do motions (combined with above current line always shows the real linenumber)
+
 " Show relative lines only when a buffer is focused and not in insert mode
 augroup numbertoggle
       autocmd!
       autocmd BufEnter,FocusGained,InsertLeave * if &ft!="nerdtree"|set relativenumber|endif
       autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
+
+let g:ruby_operators = 1
+
+syntax on
+color dracula       " For some reason both color and colorscheme need to be set to work???
+colorscheme dracula " Set the colorscheme
+hi Comment cterm=italic gui=italic
+hi FoldColumn ctermfg=61 ctermbg=235 guifg=#6272a4 guibg=#282a36
+hi CursorLine term=bold cterm=bold guibg=Gray15
+autocmd Syntax ruby syn match rubyOperator "=[^begin|end]" " assignment
+autocmd Syntax ruby syn match rubyOperator "\S\@<=\." " dot
+autocmd Syntax ruby syn match rubyOperator "&\." " safe-access
+autocmd Syntax ruby syn match rubyOperator "\.equal?" " object id equality
+autocmd Syntax ruby syn match rubyOperator "\.eql?" " true equals
+autocmd Syntax ruby syn match rubyOperator "\s\@<=[?:]\s" " tur-op (needs spaces)
+autocmd Syntax ruby syn match rubyOperator "\S\@<=:\ze[[:space:],]\@="
+
+
+autocmd Syntax ruby syn match rubyStringEscape "\\u" contained display
+
+command! ToggleCC :let &cc = &cc == '' ? '+0' : ''
+
+nnoremap <leader>cc :ToggleCC<CR>
+nnoremap S :write<cr>
+function! NeatFoldText()
+    let line = ' ' . substitute(getline(v:foldstart), '^\s*["#]\s*\|--\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+    let lines_count = v:foldend - v:foldstart + 1
+    let lines_count_text = '┫ ' . printf("%10s", lines_count . ' lines') . ' ┣'
+    let foldchar = "━" " matchstr(&fillchars, 'fold:\zs.')
+  let foldtextstart = strpart('+ ━━┫░' . line . '░┣', 0, (winwidth(0)*2)/3)
+    let foldtextend = lines_count_text . repeat(foldchar, 8)
+    let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+    return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+endfunction
+
+set foldtext=NeatFoldText()
+
+set foldmethod=syntax
