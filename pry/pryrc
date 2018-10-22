@@ -1,0 +1,269 @@
+# vim: nowrap fdm=marker ft=ruby fenc=UTF-8
+
+PRY_BUMMERS = []
+
+# Color Scheme {{{
+class Dracula
+    attr_accessor :readline_mode
+
+    def initialize
+        @readline_mode = false
+    end
+
+    def method_missing(method, *args, &block)
+        proxy = TTYProxy.new()
+        if proxy.respond_to?(method)
+            proxy.send(method, *args, &block)
+            return proxy
+        end
+        raise
+    end
+
+    class TTYProxy
+        @@attr_codes = {
+            bold: 1,
+            underline: 4,
+            italic: 3
+        }
+        def initialize
+            @colors = {
+                green: "80;250;123",
+                cyan: "102;217;239",
+                pink: "255;121;198",
+                purple: "189;147;249",
+                white: "248;248;242",
+                red: "255;85;85",
+                orange: "255;184;108",
+                yellow: "241;250;140",
+                comment: "98;114;164"
+            }
+            @fg = nil
+            @bg = nil
+            @attrs = {bold: false, underline: false, italic: false}
+            @colors.each_key do |color|
+                self.class.send(:define_method, color) do
+                    @fg = color
+                    return self
+                end
+                self.class.send(:define_method, color.to_s + "_bg") do
+                    @bg = color
+                    return self
+                end
+
+            end
+            @attrs.each_key do |attrib|
+                self.class.send(:define_method, attrib) do |set=true|
+                    @attrs[attrib] = set
+                    return self
+                end
+            end
+        end
+
+        def to_s
+            fg_color = @colors.fetch(@fg,nil) ? "38;2;#{@colors[@fg]}" : nil
+            bg_color = @colors.fetch(@bg,nil) ? "48;2;#{@colors[@bg]}" : nil
+            attibs = @attrs.map { |a,set| set ? @@attr_codes[a] : nil }.compact.join(";") || nil
+            return "#{@readline_mode ? "\001" : ''}\e[0;" + \
+                   [fg_color,bg_color,attibs].compact.join(";").gsub(/;$/,'') + "m" + \
+                   (@readline_mode ? "\002" : '')
+        end
+
+        def reset
+            @fg = nil
+            @bg = nil
+            @attrs.each { |k,_| @attrs[k] = false }
+            return %Q!#{@readline_mode ? "\001" : ''}\e[0m#{@readline_mode ? "\002" : ''}!
+        end
+
+    end
+end
+
+CodeRay.scan("ruby", :ruby).term # preload files
+
+module CodeRay
+    module Encoders
+        class Terminal < Encoder
+            cs = Dracula.new()
+            {
+                :symbol => cs.green.bold,               # :symbols
+                :ident  => cs.white,                    # default
+                :debug => cs.red_bg,                    # not used?
+                :binary => {                            # not implemented
+                    :self => cs.purple,
+                    :char => "",
+                    :delimiter => "",
+                },
+                :key => {
+                    :self => cs.green.bold,             # symbols only
+                },
+                :instance_variable => cs.purple.italic, # @instance_var
+                :class => cs.cyan.bold.italic,          # class name
+                :class_variable => cs.cyan.italic,      # @@classvar
+                :comment => {
+                    :self => cs.comment.italic,         # just like this…
+                    :char => "",
+                    :delimiter => "",
+                },
+                :operator => cs.pink,                   # == => . ||= &&
+                :constant => cs.cyan.bold.italic,       # CONSTANT
+                :doctype => cs.pink,                    # shbang
+                :error => cs.red,                       # $^
+                :float => cs.purple,                    # 3.14
+                :method => cs.green.bold,               # method name
+                :global_variable => cs.purple,          # $var
+                :hex => cs.purple,                      # not implemented
+                :integer => cs.purple,                  # 0xF,0o1,0b1 & int
+                :octal => cs.purple,                    # not implemented
+                :regexp => {
+                    :self => "",                        # /[A-Z]/
+                    :delimiter => "",                   # the /'s
+                    :modifier => "",                    # multiline, etc.
+                    :char => "",                        # escaped characters
+                },
+                :keyword => cs.pink,                    # return, if, raise, …
+                :shell => {
+                    :self => "",                        # `shell commands`
+                    :char => "",                        # \e\n\001\u
+                    :delimiter => "",                   # the backticks
+                    :escape => "c",                     # `#$var #@var`
+                    :inline => "***",                   # `#{var}`
+                    :inline_delimiter => "\e[1m"        # the #{  and  }
+                },
+                :string => {
+                    :self => cs.yellow,                 # the base string
+                    :char => cs.pink,                   # \e\n\1\u3434
+                    :delimiter => cs.yellow.bold,       # the "
+                    :escape => cs.pink,                 # "#$var #@var"
+                    :inline => cs.reset,                # doesn't work?
+                    #XXX inline should be tokenized. Not supported by CodeRay
+                    :inline_delimiter => cs.pink        # the #{ } from inline
+                }
+            }.each_pair do |key, value|
+                if value.is_a?(Hash) then
+                    value.each { |k,c| value[k] = c.to_s }
+                else
+                    value = value.to_s
+                end
+                TOKEN_COLORS[key] = value
+            end
+            old_text_token = instance_method(:text_token)
+            define_method(:text_token) do |text,kind|
+                #puts "'#{text}'"
+                if (kind == :operator && ( text == "," or text == "(" or text == ")" ) ) then
+                    kind = :ident
+                end
+                old_text_token.bind(self).(text,kind)
+            end
+        end
+    end
+end
+#}}}
+
+%w(
+  hirb
+  awesome_print
+  awesome_print/ext/active_record
+  awesome_print/ext/active_support
+).each do |gem|
+  begin
+    require gem
+  rescue LoadError
+    PRY_BUMMERS << gem
+  end
+end
+
+Pry.editor = 'vim'
+#Pry.config.prompt_name = "pry" #rails name or Pry (purple for app names otherwise green)
+
+# TODO make the directory if needed
+if ENV.include?('XDG_DATA_HOME')
+  Pry.config.history.file = "#{ENV['XDG_DATA_HOME']}/pry/history"
+else
+  Pry.config.history.file = "~/.local/share/pry/history"
+end
+
+cs = Dracula.new()
+cs.readline_mode = true
+
+##{cs.green.bold}Dev#{cs.white}//   for rails apps
+
+_PS1 =  "#{false ? cs.purple : cs.green}#{Pry.config.prompt_name}"
+_PS1 += "#{cs.white}(#{cs.cyan.bold.italic}%s#{cs.white}):%03d#{cs.green} ❯ #{cs.reset}"
+
+Pry.prompt =
+    [
+        proc { |obj, _, pry|
+            _PS1 % [Pry.view_clip(obj),pry.input_array.size]
+        },
+        proc { |obj, _, pry|
+            _PS1.gsub(/❯/,"…") % [Pry.view_clip(obj), pry.input_array.size]
+        }
+    ]
+Pry.config.ls.separator = "\n"
+
+if defined? AwesomePrint
+    # not using .aprc  as ap doesn't respect XDG or offer configuration.
+    defaults = {
+        indent:        4,      # Number of spaces for indenting.
+        index:         true,   # Display array indices.
+        html:          false,  # Use ANSI color codes rather than HTML.
+        multiline:     true,   # Display in multiple lines.
+        plain:         false,  # Use colors.
+        raw:           false,  # Do not recursively format instance variables.
+        sort_keys:     false,  # Do not sort hash keys.
+        sort_vars:     true,   # Sort instance variables.
+        limit:         false,  # Limit arrays & hashes. Accepts bool or int.
+        ruby19_syntax: true,   # Use Ruby 1.9 hash syntax in output.
+        color: {
+            args:       :pale,
+            array:      :white,
+            bigdecimal: :blueish,
+            class:      :cyan,
+            date:       :purpleish,
+            falseclass: :cyan,
+            fixnum:     :blueish,
+            integer:    :blueish,
+            float:      :blueish,
+            hash:       :purpleish,
+            keyword:    :cyan,
+            method:     :blueish,
+            nilclass:   :cyan,
+            rational:   :blueish,
+            string:     :yellowish,
+            struct:     :pale,
+            symbol:     :green,
+            time:       :purpleish,
+            trueclass:  :cyan,
+            variable:   :pale
+        }
+    }
+    Pry.config.print = proc { |output, value|
+        formatted = value.ai(**defaults).split("\n").map { |line| "   #{line}" }
+        formatted[0].gsub!(/\A   /,"=> ")
+        Pry::Helpers::BaseHelpers.stagger_output(formatted.join("\n"), output)
+    }
+end
+
+#TODO add rails stuff https://github.com/jasoncodes/dotfiles/blob/master/config/pryrc
+#https://github.com/ches/dotfiles/blob/master/.pryrc#L27
+
+# https://gist.github.com/lfender6445/9919357
+# PRY CHEAT SHEET
+
+# Welcome message.
+Pry.hooks.add_hook(:before_session, "pryrc_start_hook") do |output, binding, pry|
+    ruby_version =
+        if defined? RUBY_VERSION && defined? RUBY_PATCHLEVEL
+            "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+        elsif defined? RUBY_DESCRIPTION
+            RUBY_DESCRIPTION.split(' ')[1].sub('p', '-p')
+        else
+            (`ruby -v` || '').split(' ')[1].sub('p', '-p')
+        end
+    output.print "\n#{cs.green}Pry session running on #{cs.red} #{ruby_version}#{cs.green} "
+    output.print "with RubyGems #{Gem::VERSION}" if defined? Gem::VERSION
+    output.puts "."
+    #output.puts "Rails 5.1.4 console envirorment loaded. Happy hacking!"
+    output.puts "#{cs.red}Opps! Unable to load gems: #{PRY_BUMMERS.join ', '}" unless PRY_BUMMERS.empty?
+    output.puts cs.reset
+end
