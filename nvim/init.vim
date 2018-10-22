@@ -333,6 +333,14 @@ autocmd Syntax ruby syn match rubyOperator "\.equal?" " object id equality
 autocmd Syntax ruby syn match rubyOperator "\.eql?" " true equals
 autocmd Syntax ruby syn match rubyOperator "\s\@<=[?:]\s" " tur-op (needs spaces)
 autocmd Syntax ruby syn match rubyOperator "\S\@<=:\ze[[:space:],]\@="
+" Ruby syntax file also being changed:
+" Should submit patch and/or fork repo
+" -  syn match  rubyOperator "[~!^|*/%+-]\|&\.\@!\|\%(class\s*\)\@<!<<\|<=>\|<=\|\%(<\|\<class\s\+\u\w*\s*\)\@<!<[^<]\@=\|===\|==\|=\~\|>>\|>=\|=\@1<!>\|\*\*\|\.\.\.\|\.\.\|::"
+" +  syn match  rubyOperator "[~!^|*/%+-]\|&\.\@!\|\%(class\s*\)\@<!<<\|<=>\|<=\|\%(<\|\<\s\+\u\w*\s*\)\@<!<[^<]\@=\|===\|==\|=\~\|>>\|>=\|=\@1<!>\|\*\*\|\.\.\.\|\.\.\|::"
+" -syn match  rubySymbol          "[]})\"':]\@1<!\<\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\=:[[:space:],]\@="he=e-1
+" +syn match  rubySymbol          "[]})\"':]\@1<!\<\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\=\ze:[[:space:],]\@="
+" -syn match  rubySymbol          "[[:space:],{(]\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\=:[[:space:],]\@="hs=s+1,he=e-1
+" +syn match  rubySymbol          "[[:space:],{(]\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\ze:[[:space:],]\@="
 
 
 autocmd Syntax ruby syn match rubyStringEscape "\\u" contained display
