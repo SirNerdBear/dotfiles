@@ -1,229 +1,1159 @@
-tap "homebrew/services"
-tap "caskroom/cask"
-tap "homebrew/cask-fonts"
-tap "heroku/brew"
+# https://github.com/Homebrew/homebrew-bundle
 
-tap "caskroom/drivers"
-#tap "caskroom/fonts"
-tap "homebrew/bundle"
-tap "homebrew/core"
-#tap "homebrew/fuse"
-tap "homebrew/science"
+tap "homebrew/services"    # Integrates brews with macOS' launchctl manager
+tap "caskroom/cask"        # For installing macOS GUI apps/packages
+tap "homebrew/cask-fonts"  # https://github.com/Homebrew/homebrew-cask-fonts
+tap "caskroom/drivers"     # https://github.com/Homebrew/homebrew-cask-drivers
+tap "homebrew/bundle"      # https://github.com/Homebrew/homebrew-bundle
+tap "homebrew/core"        # Majority of brews are in the core
+
+################################## LIBRARYS ##################################
+# Development dependencies used mostly in C projects.                        #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+brew "libevent"            # Lib for callback functions and events
+brew "libyaml"             # YAML 1.1 parser and emitter written in C
+brew "libgpg-error"        # Lib that defines common err values for all GnuPG
+brew "libksba"             # Library for working with X.509 certificates
+brew "pth"                 # Library for Unix platforms Pthreads
+brew "libtool"             # Hides the complexity of using shared libraries
+brew "libmemcached"        # C/C++ client library and tools for memcached
+brew "libusb-compat"       # Library for USB device access
+brew "libxml2"             # XML C parser and toolkit
+brew "sdl2"                # Lib. Low-level access to audio, keyboard,
+                           # mouse, joystick, and graphics.
+brew "utf8proc"            # C library for processing UTF-8 Unicode data
+brew "imagemagick",        # Programic image manipulation and creation
+  args: ["with-webp"]
+##############################  </END LIBRARYS>  #############################
 
 
-# Install GNU core utilities (those that come with macOS are outdated).
-# Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
-brew "coreutils"
+################################# CLI  TOOLS #################################
+# Tools to get the most out of the command-line. A lot of use-case utilties. #
+# Some are for fun. That is, unless, ASCII fish are critical to workflow.    #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+brew "automake"            # Tool to automatically generate Makefile.in
+brew "p7zip"               # A port of 7za.exe for POSIX systems
+brew "colordiff"           # CLI diff… Now in COLOR!
+brew "figlet"              # Text to ASCII art converter
+brew "icoutils"            # Extract & convert images in windows ico/cur files
+brew "speedtest-cli"       # CLI for https://speedtest.net bandwidth tests
+brew "tcpflow"             # TCP/IP packet demultiplexer
+brew "fontforge"           # Makes sexy fonts
+brew "asciinema"           # CLI Recording
+brew "cmus"                # CLI music player. Because iTunes is bloat-wear.
+brew "htop"                # Better and sexier than top by 9001%
+brew "screenfetch"         # Show system stats in terminal to be a 'cool kid.'
+brew "lynx"                # CLI browser, for "reasons."
+brew "curl"                # Newer curl than macOS system default
+brew "wget",               # Easier terminal downloads over curl
+  args: ["with-iri"]
+brew "tree"                # Visual file tree CLI
+brew "foremost"            # Data carving/recovery
+brew "binutils"            # https://www.gnu.org/software/binutils/binutils.html
+brew "knock"               # Port knocking (knock-knock. Who's there? Port 23)
+brew "netpbm"              # http://netpbm.sourceforge.net/
+brew "nmap"                # Network diagnostic tool
+brew "pngcheck"            # Validate images
+brew "exiv2"               # Manage image metadata
+brew "ssh-copy-id"         # Easier transfer of ssh key to remote hosts
+brew "cmatrix"             # Neo is the one
+brew "cowsay"              # Obligatory. Moo.
+brew "sl"                  # Ride the train
+brew "asciiquarium"        # Fishys. Nuff said.
+brew "multitail"           # Tail one or more logs with colors
+brew "grc"                 # Genetic colorizor for logs or other things
+brew "lnav"                # A different tailing log tool than multitail
+brew "fzf"                 # CLI fuzzy finder.
+brew "socat"               # Sockets via CLI
+brew "zsh"                 # Bash replacement
+brew "reattach-to-user-namespace" # Enable pbpaste/pbcopy in tmux
+brew "tmux"                # Terminal multiplexer
+brew "tmux-xpanes"         # https://github.com/greymd/tmux-xpanes
 
-# Install some other useful utilities like `sponge`.
-brew "moreutils"
-
-# Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
-brew "findutils"
-
-# Install GNU `sed`, overwriting the built-in `sed`.
-brew "gnu-sed", args: ["with-default-names"]
+brew "lastpass-cli",       # CLI interface for LastPass. Used to restore SSH
+  args: ['with-pinentry']  # keys & other sensative data, keeping repo clean.
+# TODO https://github.com/lastpass/lastpass-cli/issues/427
 
 # Install more recent versions of some macOS tools.
-brew "vim", args: ["with-override-system-vi"]
-brew "homebrew/dupes/grep"
-brew "homebrew/dupes/openssh"
+brew "coreutils"           # GNU core utilities
+brew "moreutils"           # Useful stuff like `vipe`, `vidir`, `chronic`.
+                           # https://joeyh.name/code/moreutils/
+brew "findutils",          # GNU `find`, `locate`, `updatedb`, and `xargs`.
+  args: ["with-default-names"]
+brew "gnu-sed",            # GNU `sed`
+  args: ["with-default-names"]
+brew "grep",               # GNU `grep`
+  args: ["with-default-names"]
+brew "openssh"             # Remote login with the SSH protocol. Key gen.
+brew "vim",                # Prefer NeoVim but a fallback is a good idea.
+  args: ["with-override-system-vi"]
 
 # Install font tools.
-tap "bramstein/webfonttools"
-brew "sfnt2woff"
-brew "sfnt2woff-zopfli"
-brew "woff2"
-brew "fontforge"
-
-########################################################################################
-# ZSH Shell — Bash? We don't need no stickin' Bashes!
-########################################################################################
-brew "zsh"
-sudo cp ~/.config/init/zshrc /etc #set zdot_dir
-sudo cp ~/.config/init/xdg_env /etc #sourced by /etc/zshrc sets up XDG envirorment vars
-sudo chmod 0444 /etc/zshrc /etc/xdg_env #read only for all
-rm -f ~/.bash_profile ~/.bash_history ~/.bashrc 2> /dev/null #bash files bye bye
-chsh -s $(which zsh) #set default shell
-
-brew "asciinema" #terminal recording
-brew "autoconf"  #create config shell scripts
-
-#games
-brew "angband"
-brew "nethack"
-#zangband??
-brew "ninvaders"
-brew "moon-buggy"
-brew "pacman4console"
-brew "myman"
-brew "vitetris"
-#text based adventures
+tap "bramstein/webfonttools" # adds cask for font tools below
+brew "sfnt2woff"           # TrueType and OpenType fonts -> WOFF
+brew "sfnt2woff-zopfli"    # sfnt2woff with Zopfli compression (2-5% smaller)
+brew "woff2"               # WOFF2 (de)compression utilities by Google
+#############################  </END CLI TOOLS>  #############################
 
 
-brew "autojump"
-brew "automake"
-brew "p7zip"
-brew "ssdeep"
-brew "colordiff"
-brew "libevent"
-brew "libyaml"
-brew "libgpg-error"
-brew "libksba"
-brew "pth"
-brew "dirmngr"
-brew "ettercap"
-brew "ffmpeg", args: ["with-sdl2"]
-brew "figlet"
-brew "fzf"
-brew "gettext"
-brew "gist"
-brew "git-flow"
-brew "git-standup"
-brew "gnupg"
-brew "go"
-brew "gx"
-brew "gx-go"
-brew "hub"
-brew "icecast"
-brew "icoutils"
-brew "libtool"
-brew "ipfs"
-brew "memcached"
-brew "libmemcached"
-brew "libusb-compat"
-brew "libxml2"
-brew "mitmproxy"
-brew "mosh"
-brew "mtr"
-brew "mysql"
-brew "nmap"
-brew "nvm"
-brew "openssl@1.1"
-brew "ossp-uuid"
-brew "pkg-config"
-brew "qemu"
-brew "ripgrep"
-brew "sdl2"
-brew "speedtest-cli"
-brew "sshfs"
-brew "sslsplit"
-brew "tcpflow"
-brew "the_silver_searcher"
-brew "utf8proc"
-brew "yarn"
-brew "heroku/brew/heroku"
-brew "rcmdnk/file/brew-file" #?????????????????????
-cask "docker-toolbox"
-
-# Comand line awesome
-brew "cmus" #terminal based music player
-brew "htop" #better than top
-brew "screenfetch" #show system stats in terminal
-brew "lynx" #terminal based browser
-brew "curl" #newer curl than macOS system default
-brew "wget", args: ["with-iri"] #easier terminal downloads over curl
-brew "tree" #visual file tree in terminal
-brew "foremost" #data carving/recovery
-brew "binutils" #https://www.gnu.org/software/binutils/binutils.html
-brew "knock" #port knocking
-brew "netpbm" #http://netpbm.sourceforge.net/
-brew "nmap" #network diagnostic tool
-brew "pngcheck" #validate images
-brew "exiv2" #manage image metadata
-brew "ssh-copy-id" #easier transfer of ssh key to remote hosts
-brew "webkit2png" #Python script that takes screenshots (browsershots) using webkit
-brew "cmatrix" #Neo is the one
-brew "cowsay" #moo
-brew "sl" #train
-#aquarium
-
-#colored log tailing
-brew "multitail"
-brew "grc"
-brew "lnav"
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ BEGIN GAMES! @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+# Why? Because: https://xkcd.com/303/                                        #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+brew "angband"             # http://www.roguebasin.com/index.php?title=Angband
+brew "nethack"             #
+#zangband??                # Anabang clone not in the tolken universe.
+brew "ninvaders"           # Space invaders is a classic yo!
+brew "moon-buggy"          # Oddly soothing during fits of debug rage.
+brew "myman"               # Pacman with proper Vi movement keys.
+brew "vitetris"            # DA DA DA DA DUM DUM DUM DA DA DA DO DO DO DA DA…
+#TODO text based adventures
+###############################  </END GAMES>  ###############################
 
 
-# Development
-brew "git" #more up to date than the one that comes with xcode command line tools
-brew install git-lfs #???????
-brew "bfg" #scubing files from a gitrepo, etc.
-brew "gpg" #signing git commits and such
-brew "pinentry-mac" #GUI interface for GPG passphrases, allows macOS keychain use
-brew "socat" #sockets via terminal command (required by tmuxstatus deamon)
-brew "reattach-to-user-namespace" #enable pbpaste/pbcopy support in tmux
-brew "tmux" #terminal multiplexer
-brew "tmux-xpanes" #https://github.com/greymd/tmux-xpanes/blob/master/README.md
-cask "java" #needed for arduno and others
-cask "arduino" #dev IDE used for compiling within NeoVIM/VSCode
-cask "docker" #containers are sexy
-cask "virtualbox" #vms
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ macOS APPS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+# General use applications not directly tied to development                  #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+cask "discord"             # Chatting sexyness
+#cask "scrivener"          # Writing prose. TODO: Need 3.0 license upgrade.
+cask "kindle"              # I was elected to lead, not to read
+#cask "monolingual"        # Broken. Suppose to remove unused language files.
+cask "sketch"              # Drawing stuff
+cask "sketch-toolbox"      # Now with toolbox awesome
+cask "soulver"             # Text driven calcuations on-the-fly
+cask "transmit"            # For the occational FTP need. LAWL.
+cask "vlc"                 # Playing videos and such
+cask "karabiner-elements"  # Key remapping
+cask "dropbox"             # Much cloud
+cask "alfred"              # GUI fuzzy finder and more (replaces spotlight)
+cask "iterm2"              # Terminal replacement
+cask "bettertouchtool"     # Touchbar, mouse/keyboard binds, window snapping
 
+cask "firefox"             # Better
+cask "google-chrome"       # Best
+#opera                     # Meh
+
+mas "Numbers", 409203825
+mas "XCoode", 497799835
+mas "Pages", 409201541
+mas "The Archive Browser", 510232205
+mas "Keynote", 409183694
+mas "The Unarchiver", 425424353
+mas "Bandwidth+", 490461369
+mas "Blackmagic Disk Speed Test", 425264550
+#24 Hour Wallpaper (WTB$)
+
+#############################  </END macOS APPS>  ############################
+
+
+############################### DEV ENVIRONMENT ##############################
+# Install a whole bunch of non-restrictive license fonts. Licenced fonts are #
+# added elsewhere (via custom finder extention) and synced with Dropbox.     #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+cask "java"                # Needed for arduno and others
+cask "arduino"             # Used for compiling/uploading arduino
+brew "go"                  # Twice as good as stop… j/k… https://golang.org/
+brew "gx"                  # Package manager (used by Go projects)
+brew "gx-go"               # Tool to use with the gx package manager in go
+brew "python"              # Python 2.x
+brew "python3"             # Python 3.x
+brew "node"                # NodeJS
+brew "rbenv"               # Better than RVM
+brew "ruby-build"          # Allow rbenv to install Ruby versions
+brew "yarn"                # Mostly used in React projects. And for cats.
+brew "nvm"                 # Multiple versions of node and iojs (rbenv for js)
+
+cask "visual-studio-code"  # VSCode is a GUI text editor… Fallback if VIM dies?
+cask "imageoptim"          # Reduce size of images https://imageoptim.com/mac
+cask "imagealpha"          # PNG24->PNG8 /w alpha channel https://pngmini.com/
+
+cask "docker"              # Containers are HOT!
+cask "virtualbox"          # Oracle's VirtualBox (VMs)
+brew "qemu"                # CLI VMs
+brew "vagrent"             # Building VMs from config file
+
+brew "postgresql",
+  restart_service: true    # For local non-docker dbs
+brew "redis",
+  restart_service: true    # Local object storage (key value store)
+brew "mysql"               # local mySQL db support (not auto started)
+brew "memcached"           # An in-memory key-value store for small chunks
+                           # of arbitrary data (strings, objects) from results
+                           # of database calls, API calls, or page rendering.
+
+brew "git"                 # More up to date than XCode installed default
+brew "git-flow"            # https://github.com/nvie/gitflow
+brew "git-standup"         # Get quick git commit history
+brew "gist"                # CLI for uploading Gists
+brew "hub"                 # Githubs wrapper for git https://hub.github.com/
+brew "git-lfs"             # GIT large file storage https://git-lfs.github.com
+brew "bfg"                 # Scubing files from a gitrepo, etc.
+brew "ripgrep"             # grep but respects .gitignore
+brew "gpg"                 # Signing git commits and such
+brew "pinentry-mac"        # GUI interface for GPG passphrase (macOS keychain)
+
+brew "autoconf"            # Create config shell scripts
+brew "mitmproxy"           # https://mitmproxy.org/
+brew "ossp-uuid"           # ISO-C API and CLI for generating UUIDs
+brew "pkg-config"          # helper tool used in compiling
+brew "webkit2png"          # Python script that takes screenshots using webkit
+
+# Add CLI completions for docker
 tap "homebrew/completions"
 brew "homebrew/completions/docker-completion"
 brew "homebrew/completions/docker-compose-completion"
-# Coding Font
+
+# CODING FONT
 # Ligatures don't work with font-firacode-nerd-font-mono
-# Therefore utilizing the non-acsii font for iTerm to support ligatures AND powerline+ symbols
-cask "font-fira-code" #ligature font for development sexyness
-cask "font-firacode-nerd-font-mono" # includes powerline and many others
+# Therefore utilizing the non-acsii font for iTerm to support both.
+cask "font-fira-code"      # Ligature font for development sexyness
+cask "font-firacode-nerd-font-mono" # Includes powerline symbols and much more
+
+brew "neovim/neovim/neovim"#Neovim > VIM (for now)
+brew "the_silver_searcher" # Runs searches real fast. Get it? Ahahaha! NEEERD!
+                           # Used in vim with Ag (replaces <Ctrl-P>).
+###########################  </END DEV ENVIRONMENT>  #########################
 
 
-cask "visual-studio-code" #VSCode is a GUI text editor (not used much anymore)
-cask "discord" #Chatting sexyness
-#cask "scrivener" #Writing prose. Must manually install until I get 3.0 (assholes)
+############################### ALL THE FONTS! ###############################
+# Install a whole bunch of non-restrictive license fonts. Licenced fonts are #
+# added elsewhere (via custom finder extention) and synced with Dropbox.     #
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+cask "font-permanent-marker"
+cask "font-indie-flower"
+cask "font-text-me-one"
+cask "font-contrail-one"
+cask "font-krona-one"
+cask "font-noto-emoji"
+cask "font-esteban"
+cask "font-advent-pro"
+cask "font-oldenburg"
+cask "font-opendyslexic"
+cask "font-warnes"
+cask "font-tenor-sans"
+cask "font-piedra"
+cask "font-courier-new"
+cask "font-damion"
+cask "font-coming-soon"
+cask "font-chango"
+cask "font-shanti"
+cask "font-supermercado-one"
+cask "font-mako"
+cask "font-fjalla-one"
+cask "font-mr-bedfort"
+cask "font-gilda-display"
+cask "font-karla-tamil-inclined"
+cask "font-knewave"
+cask "font-abel"
+cask "font-londrina-outline"
+cask "font-lalezar"
+cask "font-unica-one"
+cask "font-cagliostro"
+cask "font-unkempt"
+cask "font-noto-serif"
+cask "font-marmelad"
+cask "font-lusitana"
+cask "font-sofadi-one"
+cask "font-geostar"
+cask "font-smythe"
+cask "font-barlow"
+cask "font-sancreek"
+cask "font-benchnine"
+cask "font-rochester"
+cask "font-lobster-two"
+cask "font-averia-gruesa-libre"
+cask "font-rozha-one"
+cask "font-fruktur"
+cask "font-germania-one"
+cask "font-bubbler-one"
+cask "font-oskidakelh"
+cask "font-seymour-one"
+cask "font-ranchers"
+cask "font-tulpen-one"
+cask "font-coustard"
+cask "font-handlee"
+cask "font-lustria"
+cask "font-petit-formal-script"
+cask "font-xkcd"
+cask "font-leckerli-one"
+cask "font-tex-gyre-termes"
+cask "font-stoke"
+cask "font-doppio-one"
+cask "font-italianno"
+cask "font-freehand"
+cask "font-fresca"
+cask "font-twitter-color-emoji"
+cask "font-space-mono"
+cask "font-cutive"
+cask "font-linux-libertine"
+cask "font-encodesans-semiexpanded"
+cask "font-silent-lips"
+cask "font-volkhov"
+cask "font-playball"
+cask "font-butcherman"
+cask "font-signika-negative"
+cask "font-antic"
+cask "font-almendra"
+cask "font-encodesans-expanded"
+cask "font-adamina"
+cask "font-goblin-one"
+cask "font-lancelot"
+cask "font-rokkitt"
+cask "font-diplomata-sc"
+cask "font-league-gothic"
+cask "font-allerta-stencil"
+cask "font-skranji"
+cask "font-inter-ui"
+cask "font-junge"
+cask "font-nova-oval"
+cask "font-nova-mono"
+cask "font-courier-prime-code"
+cask "font-la-belle-aurore"
+cask "font-anonymous-pro"
+cask "font-colus"
+cask "font-oxygen-mono"
+cask "font-stix"
+cask "font-ruge-boogie"
+cask "font-swanky-and-moo-moo"
+cask "font-balthazar"
+cask "font-karla-tamil-upright"
+cask "font-marck-script"
+cask "font-playfair-display"
+cask "font-snippet"
+cask "font-amaranth"
+cask "font-spicy-rice"
+cask "font-rosario"
+cask "font-yeseva-one"
+cask "font-viga"
+cask "font-shojumaru"
+cask "font-jacques-francois-shadow"
+cask "font-condiment"
+cask "font-kelly-slab"
+cask "font-lisutzimu"
+cask "font-noto-mono"
+cask "font-keep-calm"
+cask "font-paytone-one"
+cask "font-happy-monkey"
+cask "font-aileron"
 
-cask "google-chrome"
-#opera
-cask "firefox"
-
-cask "imageoptim" #Reduce size of images https://imageoptim.com/mac
-cask "imagealpha" #PNG24 to PNG8 with alpha channel support https://pngmini.com/
-
-cask "kindle"
-#cask "monolingual" #broken
-cask "sketch"
-cask "sketch-toolbox"
-cask "soulver" #Text driven calcuations on-the-fly
-cask "transmit" #For the occational FTP need
-cask "vlc" #Playing videos and such
-cask "karabiner-elements" #key remapping
-cask "dropbox"
-cask "google-drive"
-cask "alfred" #GUI fuzzy finder and more (replaces spotlight interface)
-cask "iterm2" #terminal replacement
-cask "bettertouchtool" #touchbar, remapping mice, keyboard shortcuts, window snapping
-
-
-sudo gem install tmuxinator #system wide install <- TODO MOVE TO install.sh for tmuxinator
-
-
-brew "neovim/neovim/neovim" # Neovim > VIM (for now)
-
-
-# brew install homebrew/php/php56 --with-gmp
-brew "imagemagick", args: ["with-webp"] #programic image manipulation/creation
-brew "postgresql", restart_service: true #for local non-docker dbs
-brew "redis", restart_service: true #local kvs
-brew "python" #python 2.x
-brew "python3" #python 3.x
-brew "node" #NodeJS
-brew "rbenv" #Better than RVM
-brew "ruby-build" #Allow rbenv to install Ruby versions
-
-#always install rails and bundler gems
-git clone https://github.com/rbenv/rbenv-default-gems.git $(rbenv root)/plugins/rbenv-default-gems
-echo -e "rails\nbundler\n" > $(rbenv root)/default-gems
-LATEST_RUBY=$(rbenv install -l | grep -v - | tail -1)
-rbenv install LATEST_RUBY
-rbenv global LATEST_RUBY
-eval "$(rbenv init -)"
-rbenv rehash
-unset LATEST_RUBY
-
-# Python stuff
-pip3 install pyobjc-framework-ScriptingBridge
-pip3 install -U pyobjc
-pip3 install ipython #debugging
-pip2 install ipython #debugging
-
+cask "font-alegreya-sans"
+cask "font-bokor"
+cask "font-faster-one"
+cask "font-tex-gyre-adventor"
+cask "font-cutive-mono"
+cask "font-trykker"
+cask "font-tibetan-machine-uni"
+cask "font-overpass"
+cask "font-dukor"
+cask "font-sinkin-sans"
+cask "font-satisfy"
+cask "font-varela-round"
+cask "font-chapbook"
+cask "font-source-han-code-jp"
+cask "font-ruthie"
+cask "font-icomoon"
+cask "font-aubrey"
+cask "font-scheherazade"
+cask "font-koruri"
+cask "font-comic-sans-ms"
+cask "font-bigshot-one"
+cask "font-cookie"
+cask "font-armata"
+cask "font-migmix-1p"
+cask "font-digohweli-old-do"
+cask "font-inconsolata"
+cask "font-belgrano"
+cask "font-oskidenes"
+cask "font-eeyek-unicode"
+cask "font-petrona"
+cask "font-ultra"
+cask "font-stalemate"
+cask "font-margarine"
+cask "font-gruppo"
+cask "font-prociono"
+cask "font-overlock-sc"
+cask "font-press-start2p"
+cask "font-kreon"
+cask "font-buenard"
+cask "font-yiddishkeit"
+cask "font-noto-color-emoji"
+cask "font-carme"
+cask "font-andagii"
+cask "font-cooper-hewitt"
+cask "font-aleo"
+cask "font-fontdiner-swanky"
+cask "font-caesar-dressing"
+cask "font-open-sans-hebrew"
+cask "font-oleo-script-swash-caps"
+cask "font-libre-baskerville"
+cask "font-sarina"
+cask "font-syncopate"
+cask "font-genshingothic"
+cask "font-lora"
+cask "font-siemreap"
+cask "font-carrois-gothic-sc"
+cask "font-source-han-serif-sb-h"
+cask "font-african-serif"
+cask "font-actor"
+cask "font-metal"
+cask "font-buda"
+cask "font-telex"
+cask "font-combo"
+cask "font-migmix-2p"
+cask "font-corben"
+cask "font-tex-gyre-pagella"
+cask "font-bitstream-vera"
+cask "font-webdings"
+cask "font-allura"
+cask "font-almendra-display"
+cask "font-medula-one"
+cask "font-inika"
+cask "font-stint-ultra-condensed"
+cask "font-latin-modern"
+cask "font-waiting-for-the-sunrise"
+cask "font-aguafina-script"
+cask "font-monoisome"
+cask "font-delius-swash-caps"
+cask "font-kacstone"
+cask "font-go-mono"
+cask "font-edlo"
+cask "font-rancho"
+cask "font-cwtex-q"
+cask "font-trocchi"
+cask "font-arial"
+cask "font-monoton"
+cask "font-tienne"
+cask "font-roboto"
+cask "font-elsie-swash-caps"
+cask "font-code2000"
+cask "font-dynalight"
+cask "font-encodesans"
+cask "font-cormorant"
+cask "font-karla"
+cask "font-voces"
+cask "font-cantarell"
+cask "font-maiden-orange"
+cask "font-erica-one"
+cask "font-purple-purse"
+cask "font-mystery-quest"
+cask "font-love-ya-like-a-sister"
+cask "font-battambang"
+cask "font-latin-modern-math"
+cask "font-vibur"
+cask "font-andada-sc"
+cask "font-questrial"
+cask "font-average-sans"
+cask "font-days-one"
+cask "font-allerta"
+cask "font-courier-prime-medium-and-semi-bold"
+cask "font-kalam"
+cask "font-michroma"
+cask "font-geo"
+cask "font-homenaje"
+cask "font-adinatha-tamil-brahmi"
+cask "font-odor-mean-chey"
+cask "font-humor-sans"
+cask "font-profontx"
+cask "font-devonshire"
+cask "font-flamenco"
+cask "font-squada-one"
+cask "font-galdeano"
+cask "font-berkshire-swash"
+cask "font-karma"
+cask "font-ionicons"
+cask "font-moulpali"
+cask "font-roboto-mono"
+cask "font-domine"
+cask "font-alex-brush"
+cask "font-gentium-book-basic"
+cask "font-donegal-one"
+cask "font-nexa-rust"
+cask "font-fanwood-text"
+cask "font-eagle-lake"
+cask "font-dosis"
+cask "font-skola-sans"
+cask "font-belleza"
+cask "font-arimo"
+cask "font-englebert"
+cask "font-jim-nightshade"
+cask "font-penuturesu"
+cask "font-stardos-stencil"
+cask "font-everson-mono"
+cask "font-laila"
+cask "font-yellowtail"
+cask "font-metamorphous"
+cask "font-share"
+cask "font-habibi"
+cask "font-vt323"
+cask "font-pt-mono"
+cask "font-work-sans"
+cask "font-schoolbell"
+cask "font-bf-tiny-hand"
+cask "font-carter-one"
+cask "font-niconne"
+cask "font-fenix"
+cask "font-forum"
+cask "font-audiowide"
+cask "font-euphoria-script"
+cask "font-macondo"
+cask "font-exo"
+cask "font-pt-serif"
+cask "font-bigelow-rules"
+cask "font-mouse-memoirs"
+cask "font-antic-didone"
+cask "font-wakor"
+cask "font-impact"
+cask "font-crafty-girls"
+cask "font-mfizz"
+cask "font-original-surfer"
+cask "font-input"
+cask "font-charter"
+cask "font-uncial-antiqua"
+cask "font-computer-modern"
+cask "font-meslo-lg"
+cask "font-inconsolata-dz"
+cask "font-oxygen"
+cask "font-dana-yad"
+cask "font-alike"
+cask "font-gnu-unifont"
+cask "font-rambla"
+cask "font-digohweli"
+cask "font-saira"
+cask "font-monoid"
+cask "font-px437-pxplus"
+cask "font-comfortaa"
+cask "font-crushed"
+cask "font-fascinate"
+cask "font-montserrat-subrayada"
+cask "font-angkor"
+cask "font-hanamina"
+cask "font-allan"
+cask "font-orbitron"
+cask "font-acme"
+cask "font-ubuntu"
+cask "font-nova-cut"
+cask "font-glober"
+cask "font-verdana"
+cask "font-preahvihear"
+cask "font-noto-sans-display"
+cask "font-grand-hotel"
+cask "font-antinoou"
+cask "font-sniglet"
+cask "font-emblema-one"
+cask "font-sintony"
+cask "font-ewert"
+cask "font-kopub"
+cask "font-amiri"
+cask "font-philosopher"
+cask "font-oskidenea"
+cask "font-give-you-glory"
+cask "font-gloria-hallelujah"
+cask "font-share-tech-mono"
+cask "font-kisiska"
+cask "font-awesome-terminal-fonts"
+cask "font-marvel"
+cask "font-macondo-swash-caps"
+cask "font-merriweather"
+cask "font-nova-square"
+cask "font-homemade-apple"
+cask "font-ligature-symbols"
+cask "font-merienda"
+cask "font-raleway"
+cask "font-miltonian-tattoo"
+cask "font-archivo-black"
+cask "font-neucha"
+cask "font-dawning-of-a-new-day"
+cask "font-the-girl-next-door"
+cask "font-fira-sans"
+cask "font-lateef"
+cask "font-masinahikan"
+cask "font-source-han-serif-el-m"
+cask "font-nova-flat"
+cask "font-poiret-one"
+cask "font-basic"
+cask "font-foundation-icons"
+cask "font-metrophobic"
+cask "font-inconsolata-lgc"
+cask "font-rotinonhsonni-sans"
+cask "font-righteous"
+cask "font-pinyon-script"
+cask "font-share-tech"
+cask "font-federo"
+cask "font-sonsie-one"
+cask "font-frijole"
+cask "font-voltaire"
+cask "font-fantasque-sans-mono"
+cask "font-arapey"
+cask "font-engagement"
+cask "font-just-another-hand"
+cask "font-mr-de-haviland"
+cask "font-masinahikan-dene"
+cask "font-pirata-one"
+cask "font-cherry-swash"
+cask "font-bree-serif"
+cask "font-concert-one"
+cask "font-news-cycle"
+cask "font-code2001"
+cask "font-francois-one"
+cask "font-federant"
+cask "font-ricty-diminished"
+cask "font-chicle"
+cask "font-wenquanyi-micro-hei-lite"
+cask "font-rouge-script"
+cask "font-thabit"
+cask "font-quando"
+cask "font-calligraffitti"
+cask "font-phetsarath"
+cask "font-bentham"
+cask "font-caudex"
+cask "font-rock-salt"
+cask "font-life-savers"
+cask "font-arbutus-slab"
+cask "font-arvo"
+cask "font-bukyvede-bold"
+cask "font-crimson-text"
+cask "font-gentium-basic"
+cask "font-cuprum"
+cask "font-im-fell-english"
+cask "font-archivo-narrow"
+cask "font-finger-paint"
+cask "font-passero-one"
+cask "font-go-medium"
+cask "font-freesans"
+cask "font-genjyuugothic"
+cask "font-palemonas"
+cask "font-hasklig"
+cask "font-playfair-display-sc"
+cask "font-cedarville-cursive"
+cask "font-patua-one"
+cask "font-anka-coder"
+cask "font-cabin-condensed"
+cask "font-nova-slim"
+cask "font-kayases"
+cask "font-nova-script"
+cask "font-imprima"
+cask "font-vazir"
+cask "font-racing-sans-one"
+cask "font-sirin-stencil"
+cask "font-spinnaker"
+cask "font-im-fell-dw-pica"
+cask "font-unifrakturmaguntia"
+cask "font-nosifer"
+cask "font-fontawesome"
+cask "font-coda"
+cask "font-wenquanyi-micro-hei"
+cask "font-black-ops-one"
+cask "font-keania-one"
+cask "font-libre-franklin"
+cask "font-lemon"
+cask "font-fredericka-the-great"
+cask "font-mate"
+cask "font-sans-forgetica"
+cask "font-miltonian"
+cask "font-pontano-sans"
+cask "font-nyashi"
+cask "font-cabin-sketch"
+cask "font-migu-1p"
+cask "font-jacques-francois"
+cask "font-doulos-sil"
+cask "font-headland-one"
+cask "font-istok-web"
+cask "font-glass-antiqua"
+cask "font-oskideneb"
+cask "font-roboto-slab"
+cask "font-chewy"
+cask "font-baloo"
+cask "font-titan-one"
+cask "font-tex-gyre-cursor"
+cask "font-rajdhani"
+cask "font-poly"
+cask "font-inder"
+cask "font-russo-one"
+cask "font-play"
+cask "font-quantico"
+cask "font-plaster"
+cask "font-qataban"
+cask "font-boogaloo"
+cask "font-symbola"
+cask "font-convergence"
+cask "font-average"
+cask "font-teko"
+cask "font-noto-sans"
+cask "font-wendy-one"
+cask "font-monda"
+cask "font-rammetto-one"
+cask "font-port-lligat-sans"
+cask "font-hanalei-fill"
+cask "font-shadows-into-light-two"
+cask "font-abeezee"
+cask "font-tai-le-valentinium"
+cask "font-hammersmith-one"
+cask "font-kameron"
+cask "font-noto-sans-symbols"
+cask "font-architects-daughter"
+cask "font-qwigley"
+cask "font-creepster"
+cask "font-nanumgothic"
+cask "font-wire-one"
+cask "font-luckiest-guy"
+cask "font-anton"
+cask "font-nixie-one"
+cask "font-slackey"
+cask "font-idealist-sans"
+cask "font-wellfleet"
+cask "font-anaheim"
+cask "font-bevan"
+cask "font-mate-sc"
+cask "font-genjyuugothic-x"
+cask "font-sunshiney"
+cask "font-fzshusong-z01"
+cask "font-irish-grover"
+cask "font-bitter"
+cask "font-didact-gothic"
+cask "font-coda-caption"
+cask "font-aladin"
+cask "font-lato"
+cask "font-devicons"
+cask "font-alef"
+cask "font-underdog"
+cask "font-lilita-one"
+cask "font-conakry"
+cask "font-bungee"
+cask "font-code"
+cask "font-code2002"
+cask "font-bukyvede-italic"
+cask "font-snowburst-one"
+cask "font-open-sans"
+cask "font-libertinus"
+cask "font-alice"
+cask "font-ribeye-marrow"
+cask "font-monofett"
+cask "font-fredoka-one"
+cask "font-arbutus"
+cask "font-ropa-sans"
+cask "font-ceviche-one"
+cask "font-yanone-kaffeesatz"
+cask "font-nova-round"
+cask "font-amarante"
+cask "font-office-code-pro"
+cask "font-quattrocento"
+cask "font-tex-gyre-termes-math"
+cask "font-cantora-one"
+cask "font-nanumgothiccoding"
+cask "font-myricam"
+cask "font-flavors"
+cask "font-mrs-sheppards"
+cask "font-redressed"
+cask "font-sail"
+cask "font-merienda-one"
+cask "font-molle"
+cask "font-rum-raisin"
+cask "font-alegreya"
+cask "font-norican"
+cask "font-codystar"
+cask "font-eater"
+cask "font-nika"
+cask "font-3270"
+cask "font-bravura"
+cask "font-kite-one"
+cask "font-prata"
+cask "font-geostar-fill"
+cask "font-canter"
+cask "font-andika"
+cask "font-arial-black"
+cask "font-milonga"
+cask "font-zeyada"
+cask "font-vollkorn"
+cask "font-quivira"
+cask "font-baumans"
+cask "font-source-code-pro"
+cask "font-quintessential"
+cask "font-lovers-quarrel"
+cask "font-oskiblackfoot"
+cask "font-amethysta"
+cask "font-electrolize"
+cask "font-courier-prime"
+cask "font-gidole"
+cask "font-proza-libre"
+cask "font-zilla-slab"
+cask "font-rationale"
+cask "font-just-me-again-down-here"
+cask "font-materialdesignicons-webfont"
+cask "font-quattrocento-sans"
+cask "font-exo2"
+cask "font-della-respira"
+cask "font-noticia-text"
+cask "font-langdon"
+cask "font-averia-serif-libre"
+cask "font-kristi"
+cask "font-walter-turncoat"
+cask "font-lily-script-one"
+cask "font-vazir-code"
+cask "font-hyppolit"
+cask "font-tangerine"
+cask "font-rosarivo"
+cask "font-trirong"
+cask "font-dhyana"
+cask "font-covered-by-your-grace"
+cask "font-mr-dafoe"
+cask "font-nobile"
+cask "font-fondamento"
+cask "font-trebuchet-ms"
+cask "font-italiana"
+cask "font-bangers"
+cask "font-josefin-sans"
+cask "font-prince-valiant"
+cask "font-oswald"
+cask "font-patrick-hand-sc"
+cask "font-courgette"
+cask "font-tex-gyre-chorus"
+cask "font-im-fell-dw-pica-sc"
+cask "font-spectral"
+cask "font-brawler"
+cask "font-shadows-into-light"
+cask "font-overlock"
+cask "font-kotta-one"
+cask "font-aldrich"
+cask "font-signika"
+cask "font-migu-1m"
+cask "font-sevillana"
+cask "font-sofia"
+cask "font-carrois-gothic"
+cask "font-maven-pro"
+cask "font-bonbon"
+cask "font-titillium-web"
+cask "font-trade-winds"
+cask "font-sarpanch"
+cask "font-im-fell-great-primer"
+cask "font-smokum"
+cask "font-tinos"
+cask "font-urw-base35"
+cask "font-tillana"
+cask "font-bebas-neue"
+cask "font-capriola"
+cask "font-quicksand"
+cask "font-cousine"
+cask "font-hind"
+cask "font-duru-sans"
+cask "font-andale-mono"
+cask "font-open-iconic"
+cask "font-new-rocker"
+cask "font-georgia"
+cask "font-montez"
+cask "font-cardo"
+cask "font-modern-antiqua"
+cask "font-kranky"
+cask "font-myrica"
+cask "font-libre-caslon-display"
+cask "font-revalia"
+cask "font-libre-caslon-text"
+cask "font-orienta"
+cask "font-miao-unicode"
+cask "font-pitabek"
+cask "font-khand"
+cask "font-akronim"
+cask "font-iceland"
+cask "font-noto-sans-mono"
+cask "font-chenla"
+cask "font-nexa"
+cask "font-astloch"
+cask "font-ruda"
+cask "font-dancing-script"
+cask "font-noto-serif-display"
+cask "font-dashicons"
+cask "font-alike-angular"
+cask "font-koulen"
+cask "font-samim"
+cask "font-vast-shadow"
+cask "font-sacramento"
+cask "font-xits"
+cask "font-nokora"
+cask "font-oskidenec"
+cask "font-tauri"
+cask "font-free-hk-kai"
+cask "font-asul"
+cask "font-unlock"
+cask "font-constructium"
+cask "font-passion-one"
+cask "font-megrim"
+cask "font-changa-one"
+cask "font-aegean"
+cask "font-babelstone-han"
+cask "font-league-script"
+cask "font-rubik"
+cask "font-hack"
+cask "font-asap"
+cask "font-jsmath-cmbx10"
+cask "font-loved-by-the-king"
+cask "font-junction"
+cask "font-ruluko"
+cask "font-migu-2m"
+cask "font-rufina"
+cask "font-bayon"
+cask "font-joti-one"
+cask "font-over-the-rainbow"
+cask "font-noto-sans-symbols2"
+cask "font-marko-one"
+cask "font-special-elite"
+cask "font-vidaloka"
+cask "font-strait"
+cask "font-aclonica"
+cask "font-sigmar-one"
+cask "font-hanuman"
+cask "font-metropolis"
+cask "font-camingocode"
+cask "font-sansita-one"
+cask "font-bilbo"
+cask "font-oranienbaum"
+cask "font-londrina-solid"
+cask "font-peralta"
+cask "font-linden-hill"
+cask "font-molengo"
+cask "font-bilbo-swash-caps"
+cask "font-comic-neue"
+cask "font-varela"
+cask "font-candal"
+cask "font-oskiwest"
+cask "font-scada"
+cask "font-emilys-candy"
+cask "font-chela-one"
+cask "font-arizonia"
+cask "font-pathway-gothic-one"
+cask "font-trochut"
+cask "font-josefin-slab"
+cask "font-meddon"
+cask "font-redacted"
+cask "font-chivo"
+cask "font-ia-writer-duospace"
+cask "font-wallpoet"
+cask "font-monofur"
+cask "font-ostrich-sans"
+cask "font-elsie"
+cask "font-nunito"
+cask "font-waltograph"
+cask "font-source-serif-pro"
+cask "font-baron"
+cask "font-bad-script"
+cask "font-kdam-thmor"
+cask "font-parisienne"
+cask "font-gafata"
+cask "font-kantumruy"
+cask "font-accordance"
+cask "font-tex-gyre-schola"
+cask "font-dorsa"
+cask "font-unna"
+cask "font-fira-mono"
+cask "font-courier-prime-sans"
+cask "font-tex-gyre-bonum"
+cask "font-content"
+cask "font-spirax"
+cask "font-fugaz-one"
+cask "font-ocr"
+cask "font-miniver"
+cask "font-prosto-one"
+cask "font-artifika"
+cask "font-asset"
+cask "font-source-sans-pro"
+cask "font-autour-one"
+cask "font-nothing-you-could-do"
+cask "font-fascinate-inline"
+cask "font-rounded-m-plus"
+cask "font-pompiere"
+cask "font-galindo"
+cask "font-julee"
+cask "font-montserrat"
+cask "font-aboriginal-sans"
+cask "font-sadagolthina"
+cask "font-eb-garamond"
+cask "font-african-sans"
+cask "font-gudea"
+cask "font-tex-gyre-heros"
+cask "font-oskieast"
+cask "font-freckle-face"
+cask "font-ledger"
+cask "font-croissant-one"
+cask "font-terminus"
+cask "font-material-icons"
+cask "font-gentium-plus"
+cask "font-londrina-sketch"
+cask "font-romanesco"
+cask "font-stalinist-one"
+cask "font-envy-code-r"
+cask "font-charis-sil"
+cask "font-abril-fatface"
+cask "font-seaweed-script"
+cask "font-butler"
+cask "font-cabin"
+cask "font-sorts-mill-goudy"
+cask "font-offside"
+cask "font-butterfly-kids"
+cask "font-gandom"
+cask "font-magra"
+cask "font-im-fell-english-sc"
+cask "font-ruslan-display"
+cask "font-pacifico"
+cask "font-tuffy"
+cask "font-gochi-hand"
+cask "font-stroke"
+cask "font-gabriela"
+cask "font-et-book"
+cask "font-sarasa-gothic"
+cask "font-bukyvede-regular"
+cask "font-simple-line-icons"
+cask "font-six-caps"
+cask "font-ibm-plex"
+cask "font-muli"
+cask "font-henny-penny"
+cask "font-meie-script"
+cask "font-aboriginal-serif"
+cask "font-miss-fajardose"
+cask "font-cinzel-decorative"
+cask "font-roboto-condensed"
+cask "font-open-sans-hebrew-condensed"
+cask "font-short-stack"
+cask "font-clicker-script"
+cask "font-copse"
+cask "font-takaoex"
+cask "font-red-october"
+cask "font-clear-sans"
+cask "font-alfa-slab-one"
+cask "font-sue-ellen-francisco"
+cask "font-d2coding"
+cask "font-hermit"
+cask "font-seoulhangangcondensed"
+cask "font-dejavu-sans"
+cask "font-amatic-sc"
+cask "font-cambo"
+cask "font-encodesans-semicondensed"
+cask "font-rye"
+cask "font-reenie-beanie"
+cask "font-go"
+cask "font-fauna-one"
+cask "font-goudy-bookletter1911"
+cask "font-radley"
+cask "font-new-athena-unicode"
+cask "font-puritan"
+cask "font-averia-sans-libre"
+cask "font-parastoo"
+cask "font-dr-sugiyama"
+cask "font-halant"
+cask "font-numans"
+cask "font-monsieur-la-doulaise"
+cask "font-im-fell-double-pica-sc"
+cask "font-oregano"
+cask "font-rupakara"
+cask "font-junicode"
+cask "font-ribeye"
+cask "font-stint-ultra-expanded"
+cask "font-neuton"
+cask "font-crete-round"
+cask "font-economica"
+cask "font-times-new-roman"
+cask "font-im-fell-great-primer-sc"
+cask "font-glegoo"
+cask "font-mountains-of-christmas"
+cask "font-londrina-shadow"
+cask "font-liberation-sans"
+cask "font-montaga"
+cask "font-cinzel"
+cask "font-jaapokki"
+cask "font-great-vibes"
+cask "font-n-gage"
+cask "font-im-fell-french-canon-sc"
+cask "font-annie-use-your-telescope"
+cask "font-vampiro-one"
+cask "font-lekton"
+cask "font-bowlby-one-sc"
+cask "font-prime"
+cask "font-paprika"
+cask "font-poller-one"
+cask "font-fjord-one"
+cask "font-enriqueta"
+cask "font-im-fell-double-pica"
+cask "font-average-mono"
+cask "font-mrs-saint-delafield"
+cask "font-griffy"
+cask "font-diplomata"
+cask "font-sanchez"
+cask "font-jockey-one"
+cask "font-fairfax"
+cask "font-chau-philomene-one"
+cask "font-league-spartan"
+cask "font-port-lligat-slab"
+cask "font-taprom"
+cask "font-herr-von-muellerhoff"
+cask "font-delius"
+cask "font-graduate"
+cask "font-simonetta"
+cask "font-oleo-script"
+cask "font-kavoon"
+cask "font-gfs-neohellenic"
+cask "font-fasthand"
+cask "font-cherry-cream-soda"
+cask "font-unifrakturcook"
+cask "font-raleway-dots"
+cask "font-ahuramzda"
+cask "font-open-sans-condensed"
+cask "font-patrick-hand"
+cask "font-norwester"
+cask "font-mukti-narrow"
+cask "font-encodesans-condensed"
+cask "font-jolly-lodger"
+cask "font-felipa"
+cask "font-padauk"
+cask "font-andada"
+cask "font-mononoki"
+cask "font-inria"
+cask "font-bowlby-one"
+cask "font-salsa"
+cask "font-marcellus"
+cask "font-jura"
+cask "font-old-standard-tt"
+cask "font-iceberg"
+cask "font-tex-gyre-schola-math"
+cask "font-julius-sans-one"
+cask "font-gorditas"
+cask "font-antic-slab"
+cask "font-podkova"
+cask "font-kenia"
+cask "font-averia-libre"
+cask "font-blokk-neue"
+cask "font-limelight"
+cask "font-blockzone"
+cask "font-merriweather-sans"
+cask "font-moul"
+cask "font-seoulhangang"
+cask "font-expletus-sans"
+cask "font-gfs-didot"
+cask "font-risque"
+cask "font-medievalsharp"
+cask "font-judson"
+cask "font-atomic-age"
+cask "font-marta"
+cask "font-denk-one"
+cask "font-bubblegum-sans"
+cask "font-wonder-unit-sans"
+cask "font-linux-biolinum"
+cask "font-ovo"
+cask "font-lobster"
+cask "font-luculent"
+cask "font-metal-mania"
+cask "font-hanalei"
+cask "font-gilbert"
+cask "font-space-grotesk"
+cask "font-mclaren"
+cask "font-gravitas-one"
+cask "font-pt-sans"
+cask "font-disclaimer"
+cask "font-princess-sofia"
+cask "font-tex-gyre-bonum-math"
+cask "font-chelsea-market"
+cask "font-migu-1c"
+cask "font-delius-unicase"
+cask "font-rotinonhsonni-serif"
+cask "font-cantata-one"
+cask "font-almendra-sc"
+cask "font-ezra-sil"
+cask "font-yesteryear"
+cask "font-marcellus-sc"
+cask "font-holtwood-one-sc"
+###############################  </END FONTS>  ###############################
