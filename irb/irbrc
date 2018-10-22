@@ -1,0 +1,5 @@
+# Redirect to a Pry session instead of IRB.
+# Seemlessly closes when Pry exits.
+require "pry"
+pry
+exit
