@@ -1,0 +1,8 @@
+rails
+bundler
+pry
+pry-byebug
+awesome_print
+hirb
+hirb-unicode
+tmuxinator
