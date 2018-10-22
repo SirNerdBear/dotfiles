@@ -1,103 +1,107 @@
-export TERM="xterm-256color-italic"
-export PYLINTHOME="$XDG_CACHE_HOME"/pylint
-export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonstartup.py
+##############################################################################
+# ZSH Configuration                                                          #
+# AUTHOR: Scott D Hall (https://github.com/SirNerdBear)                      #
+#                                                                            #
+# This fairly simple ZSH configuration avoids the bloat of Oh-My-ZSH and     #
+# uses Antibody as a plugin manager.                                         #
+#                                                                            #
+# Sources shell files for functions, exports, aliases, etc. Which are all    #
+# compatable with BASH to keep configuration as DRY as possible.             #
+#                                                                            #
+# Spaceship prompt is highly underutalized and I should write my own prompt  #
+# theme at this point.                                                       #
+#                                                                            #
+# Put ZSH plugins in the line-delimited text file zsh_plugins and then type  #
+# plug at the prompt to auto-update _plugins.zsh.                            #
+##############################################################################
 
-export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
-export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
-export NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
 
 
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+##############################-> ZSH  Options <-##############################
+HISTFILE="$XDG_DATA_HOME"/zsh/history #SHAME!
+HISTSIZE=100000000              # Much history!
+SAVEHIST=100000000              # …
+setopt HIST_IGNORE_SPACE        #
+setopt extended_history         #
+setopt hist_expire_dups_first   # Get rid of dups
+setopt hist_ignore_dups         # Ignore duplication command history list
+setopt hist_ignore_space        #
+setopt hist_verify              #
+setopt inc_append_history       #
+setopt share_history            # Share command history data
+setopt appendhistory            #
+setopt extendedglob             #
+unsetopt nomatch                # Avoid annoying "no match found" from globs
+setopt notify                   #
+setopt COMPLETE_ALIASES         #
+unsetopt LIST_BEEP              # Bell is annoying during autocompletion
+unsetopt banghist               # Avoid "nerd rage" when harmlessly using !
+##############################################################################
 
-alias wget='wget --hsts-file "$XDG_CONFIG_HOME/wget/wget-hsts"'
-alias curl='curl --config "$XDG_CONFIG_HOME/curl/curlrc"'
-alias gdb='gdb -nh -x "$XDG_CONFIG_HOME"/gdb/init'
-alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
+# Ensure ~/.editorconfig is symlinked to $XDG_CONFIG_HOME/.editorconfig
+# ~/.editorconfig -> ~/.config/.editorconfig
 
-export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
-export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
-export ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
+# Touch .hushlogin to ensure it exists
+# The existance of .hushling surpresses login banners, motd, and other noise
+touch ~/.hushlogin
 
-export RBENV_ROOT=/usr/local/var/rbenv
-
-export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
-export GEMRC="$XDG_CONFIG_HOME"/rubygems/config
-export GEM_HOME="$XDG_DATA_HOME"/gem
-export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
-export LPASS_HOME="$XDG_RUNTIME_DIR"/lpass
-
-export NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-if [ -d ~/.oracle_jre_usage ]
-then
+# Delete this yucky file because a bug prevents it from being configured away
+if [ -d ~/.oracle_jre_usage ]; then
     rm -r ~/.oracle_jre_usage/
 fi
 
-setopt appendhistory extendedglob nomatch notify
-#history
-HISTFILE="$XDG_DATA_HOME"/zsh/history
-HISTSIZE=100000000
-SAVEHIST=100000000
-setopt HIST_IGNORE_SPACE
-setopt extended_history
-setopt hist_expire_dups_first
-setopt hist_ignore_dups # ignore duplication command history list
-setopt hist_ignore_space
-setopt hist_verify
-setopt inc_append_history
-setopt share_history # share command history data
-setopt COMPLETE_ALIASES
-unsetopt LIST_BEEP
-setopt VI
-unsetopt banghist #stop pissing me off when using ! in line
+##########################-> ZSH Spaceship Prompt <-##########################
+SPACESHIP_CHAR_COLOR_SUCCESS="048" # A very mild and light green.
+SPACESHIP_CHAR_COLOR_FAILURE="048" # Don't prompt change color on errors.
+SPACESHIP_CHAR_SYMBOL="❯ "         # Better than the default.
+SPACESHIP_BATTERY_SHOW=false       # Ugly. Battery life shown in tmux status.
+SPACESHIP_VI_MODE_SHOW=false       # Icky. Cursor changed below to show mode.
+#SPACESHIP_VI_MODE_INSERT="%F{237}%K{2}I%F{2}%k%f"
+#SPACESHIP_VI_MODE_NORMAL="%F{237}%K{176}N%F{176}%k%f"
+##############################################################################
 
-
-# thic can be set and checked on by .zshrc
-# ~/.editorconfig -> ~/.config/.editorconfig
-# touch .hushlogin if it doesn't exist
+# If there is no terminfo file for 256-color and italics then create one
+if [ ! -f ~/.terminfo/**/xterm-256color-italic ]; then
+    tic $XDG_CONFIG_HOME/init/xterm-256color-italic.terminfo
+fi
 
 #TODO detect OS and source scripts accoringly
 #https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
 
-
-#https://wiki.archlinux.org/index.php/XDG_Base_Directory
-#.tmux / .tmux.config
-
-
-SPACESHIP_CHAR_COLOR_SUCCESS="048"
-SPACESHIP_CHAR_COLOR_FAILURE="208"
-SPACESHIP_CHAR_SYMBOL="" #❯ removed normal prompt for a VI status prompt
-SPACESHIP_BATTERY_SHOW=false
-SPACESHIP_VI_MODE_INSERT="%F{237}%K{2}I%F{2}%k%f"
-SPACESHIP_VI_MODE_NORMAL="%F{237}%K{176}N%F{176}%k%f"
-
+##########################-> Source all ZSH Files <-##########################
+# Should proably move these to be more generic and have them be .sh
 for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
+##############################################################################
 
-if [ ! -d $ANTIBODY_HOME ] || [ ! "$(ls -A $ANTIBODY_HOME)" ]; then
-  #install plugsin and then (if successful) resourse this file
-  plug && source $ZDOTDIR/.zshrc
-fi
-
+# If abbrev-alias is installed than intialize it now
 if type abbrev-alias > /dev/null && type abbrev-alias | grep -q function; then
   abbrev-alias -i
 fi
 
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="/usr/local/opt/python/libexec/bin:$PATH" #/bin/env python -> python3
-export PATH="/usr/local/var/rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# This usually triggers on first install but it also ensures that if for any
+# reason antibody's home directory is nuked, we replace it and avoid issues.
+if [ ! -d $ANTIBODY_HOME ] || [ ! "$(ls -A $ANTIBODY_HOME)" ]; then
+  #install plugsin and then (if successful) re-source this file
+  plug && source $ZDOTDIR/.zshrc && exit
+fi
 
-# SSH
-eval "$(ssh-agent -s)" &> /dev/null
-ssh-add -A &> /dev/null
+if [ $MACOS ]
+then
+  :
+elif [ $LINUX ]
+then
+  :
+elif [ $WINDOWS ]
+then
+  :
+fi
 
-
+#########################-> Proper VI Mode Support <-#########################
+setopt VI
 bindkey -v
-
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^?' backward-delete-char
@@ -105,15 +109,42 @@ bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
+#zle-line-finish ???
+
 function zle-line-init zle-keymap-select {
    #redraw prompt on vi-mode change
+       if [ "$TERM" = "xterm-256color-italic" ]; then
+        if [ $KEYMAP = vicmd ]; then
+            # the command mode for vi
+            echo -ne "\e[1 q"
+        else
+            # the insert mode for vi
+            echo -ne "\e[3 q"
+        fi
+    fi
    zle reset-prompt
 }
 
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=zle-keymap-select
 
-
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-export KEYTIMEOUT=1
+export KEYTIMEOUT=1 # 10ms timeout for VI key sequences
+##############################################################################
+
+# RBENV intitaliztion
+eval "$(rbenv init -)"
+
+# Make sure SSH Agent running and all keys added
+eval "$(ssh-agent -s)" &> /dev/null
+ssh-add -A &> /dev/null
+
+function precmd() {
+    # Hook fires before new prompt printed
+    # Show an exit code banner if $? != 0
+    local err=$?
+    if [ $err -ne 0 ]; then
+        echo "\e[1;41;160m EXIT CODE: $err \e[0;31;196m\e[0m"
+    fi
+}
