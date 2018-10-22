@@ -1,4 +1,16 @@
-# Make Tab autocomplete regardless of filename case
+set editing-mode vi
+set show-mode-in-prompt
+# \e[1;38;5;237;48;5;176mN\e[48;5;237;38;5;176m\e[0m
+# \e[1;38;5;237;48;5;2mI\e[48;5;237;38;5;2m\e[0m
+
+# Set cursor to blinking block/underline for Normal/Insert modes respectivly.
+set vi-cmd-mode-string "\1\e[1 q\2" # It's Normal mode, not command...
+set vi-ins-mode-string "\1\e[3 q\2"
+
+# Allow escaped codes but quickly respond to a pressed <esc>
+set keyseq-timeout 10 #10ms delay (default is 500ms)
+
+# Make Tab autocomplete regardless of filename case.
 set completion-ignore-case on
 
 # List all matches in case multiple possible completions are possible
@@ -36,5 +48,20 @@ set input-meta on
 set output-meta on
 set convert-meta off
 
+set bind-tty-special-chars
 # Use Alt/Meta + Delete to delete the preceding word
 "\e[3;3~": kill-word
+
+$if ruby
+  set keymap vi-command
+  "n": "ddinext\C-m\e\e"
+  " ": "ddicontinue\C-m\e\e"
+  "S": "ddistep\C-m\e\e"
+$endif
+
+# TODO should remove finds we're not using
+# https://linux.die.net/man/3/readline
+
+#TODO Proably should switch readline and iterm to use nonblinking cursors (less buggy)
+#https://wiki.archlinux.org/index.php/readline
+
