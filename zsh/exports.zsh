@@ -84,6 +84,9 @@ export LESS_TERMCAP_md="${green}";
 # Don’t clear the screen after quitting a manual page.
 export MANPAGER='less -X';
 
+# Superuser bin
+export PATH="/usr/local/sbin:$PATH"
+
 # Make brew installed Python3 the system default
 export PATH="/usr/local/opt/python/libexec/bin:$PATH"
 
