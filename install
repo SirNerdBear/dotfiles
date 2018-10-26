@@ -7,49 +7,6 @@ PROJECT_DIR = "#{ENV["HOME"]}/Projects".freeze
 CONFIG_DIR = "#{ENV["HOME"]}/Projects/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 
-
-# Name this computer
-# echo ""
-# echo "Would you like to set your computer name (as done via System Preferences >> Sharing)?  (y/n)"
-# read -r response
-# if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-#   echo "What would you like it to be?"
-#   read COMPUTER_NAME
-#   sudo scutil --set ComputerName $COMPUTER_NAME
-#   sudo scutil --set HostName $COMPUTER_NAME
-#   sudo scutil --set LocalHostName $COMPUTER_NAME
-#   sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $COMPUTER_NAME
-# fi
-
-module Tty
-    module_function
-
-    def blue
-        bold 34
-    end
-
-    def red
-        bold 31
-    end
-
-    def reset
-        escape 0
-    end
-
-    def bold(n = 39)
-        escape "1;#{n}"
-    end
-
-    def underline
-        escape "4;39"
-    end
-
-    def escape(n)
-        "\033[#{n}m" if STDOUT.tty?
-    end
-
-end
-
 class Array
     def shell_s
         cp = dup
@@ -59,11 +16,7 @@ class Array
 end
 
 def ohai(*args)
-    puts "#{Tty.blue}==>#{Tty.bold} #{args.shell_s}#{Tty.reset}"
-end
-
-def warn(warning)
-    puts "#{Tty.red}Warning#{Tty.reset}: #{warning.chomp}"
+    puts "\e[34m;==>\e[1m #{args.shell_s}\e[0m"
 end
 
 def capture_system(*args)
@@ -86,170 +39,8 @@ def sudo(*args)
     system "/usr/bin/sudo", *args
 end
 
-class LPassInterface
-
-    def provision_sshkey(id,name=nil)
-        result = capture_system 'lpass', 'show', id
-        hash = {}
-        result.scan(/^(?<=\n)([A-Z ]+):\s+(.*?)(?=\n[A-Z ]+:|\Z)/mi) do |match|
-            hash[match[0]] = match[1]
-        end
-        name = "#{name}_rsa" if name
-        pri = File.join(SSH_DIR,name || 'id_rsa')
-        pub = File.join(SSH_DIR,(name || 'id_rsa') + '.pub')
-        File.open(pri, 'w') { |file| file.write(hash["Private Key"] + "\n") }
-        File.open(pub, 'w') { |file| file.write(hash["Public Key"] + "\n") }
-        File.chmod(0644,pub)
-        File.chmod(0600,pri)
-        system 'ssh-add',"-qK", File.join(Dir.home,'.ssh',name || 'id_rsa')
-    end
-
-    def ssh_config(id)
-        #this should be pulled from lpass too
-        config = File.join(ENV["HOME"], ".ssh", "config")
-        unless File.exists?(config)
-            File.open(config, 'w') do |f|
-                f.write("Host *\n")
-                f.write("\tAddKeysToAgent yes\n")
-                f.write("\tUseKeychain yes\n")
-                f.write("\tIdentityFile ~/.ssh/id_rsa\n")
-            end
-        end
-        File.chmod(0600, config)
-    end
-
-    def initialize()
-        print "LastPass Email: "
-        email = gets.chomp
-        abort "Must provide login to continue!" unless email != ""
-        run('lpass', 'login', email) || …
-
-        list = capture_system 'lpass','ls','SysConfig'
-        found = false
-        secure_env = ""
-        list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
-            (name,id) = match
-            if name == "Primary SSH Key"
-                provision_sshkey(id)
-            elsif name == "Secure Env Vars"
-                result = capture_system 'lpass', 'show', id
-                if result =~ /Notes:\W+(.*?)\Z/m
-                    File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
-                        f.write($1)
-                    end
-                end
-            elsif name =~ /\ASSH Key \((.*?)\)\Z/
-                provision_sshkey(id,$1)
-            elsif name == "FileVault"
-                #lpass show {id} | sed -r -n 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain
-            elsif name =~ /\Alicense\((.*?)\)\Z/
-                #how do we organize this data? BetterTouchTool has a file extension
-                #other licences are text based
-            end
-            found = true
-        end
-        abort "No secure notes found in list SysConfig group on LastPass" unless found
-
-    end
-
-end
-# defaults write ~/Library/Preferences/com.apple.AppStore.plist ASAcknowledgedOnboardingVersion -int 1
-
-# osascript <<EOF
-# tell application "App Store"
-#     try
-#         activate
-#         delay 5
-#     end try
-# end tell
-# tell application "System Events"
-#     tell process "App Store"
-#         set frontmost to true
-#         delay 2
-#         ### on first run when installing the appstore asks for accepting privacy policy
-#         try
-#             click button 2 of UI element 1 of sheet 1 of window 1
-#             #click button "Weiter" of UI element 1 of sheet 1 of window 1
-#             delay 3
-#         end try
-#         ### login
-#         click menu item 15 of menu "Store" of menu bar item "Store" of menu bar 1
-#         #click menu item "Anmelden" of menu "Store" of menu bar item "Store" of menu bar 1
-#         delay 2
-#         tell application "System Events" to keystroke "$MAS_APPLE_ID"
-#         delay 2
-#         tell application "System Events" to keystroke return
-#         delay 2
-#         tell application "System Events" to keystroke "$MAS_APPSTORE_PASSWORD"
-#         delay 2
-#         tell application "System Events" to keystroke return
-#     end tell
-# end tell
-
-# tell application "App Store"
-#     try
-#         delay 10
-#         quit
-#     end try
-# end tell
-
-# EOF
-
-# echo "the app store has to be quit before continuing..."
-# while ps aux | grep 'App Store.app' | grep -v grep > /dev/null; do sleep 1; done
-# echo ''
-
-def getc
-    system "/bin/stty raw -echo"
-    if STDIN.respond_to?(:getbyte)
-        STDIN.getbyte
-    else
-        STDIN.getc
-    end
-ensure
-    system "/bin/stty -raw echo"
-end
-
-class Version
-    include Comparable
-    attr_reader :parts
-
-    def initialize(str)
-        @parts = str.split(".").map { |p| p.to_i }
-    end
-
-    def <=>(other)
-        parts <=> self.class.new(other).parts
-    end
-end
-
-def macos_version
-    @macos_version ||= Version.new(`/usr/bin/sw_vers -productVersion`.chomp[/10\.\d+/])
-end
-
-def should_install_homebrew?
+def install_homebrew?
     !File.exist?("/usr/local/bin/brew")
-end
-
-def git
-    @git ||=
-        if ENV["GIT"] && File.executable?(ENV["GIT"])
-            ENV["GIT"]
-        elsif run "/usr/bin/which -s git"
-            "git"
-        else
-            exe = `xcrun -find git 2>/dev/null`.chomp
-            exe if $? && $?.success? && !exe.empty? && File.executable?(exe)
-        end
-
-    return unless @git
-    # Github only supports HTTPS fetches on 1.7.10 or later:
-    # https://help.github.com/articles/https-cloning-errors
-    `#{@git} --version` =~ /git version (\d\.\d+\.\d+)/
-    return if $1.nil?
-    return if Version.new($1) < "1.7.10"
-
-    @git
 end
 
 def mkdir_p(mode,dir)
@@ -266,23 +57,37 @@ def mkdir_p(mode,dir)
     end
 end
 
+def name_computer
+    puts "Computer Name (Leave Blank to Skip):"
+    computer_name = gets.chomp
+    return if computer_name == ""
+    sudo "scutil","--set","ComputerName", computer_name
+    sudo "scutil","--set","HostName", computer_name
+    sudo "scutil","--set","LocalHostName", computer_name
+    plist = '/Library/Preferences/SystemConfiguration/com.apple.smb.server'
+    sudo "defaults","write", plist, "NetBIOSName", "-string", computer_name
+end
+
+
 # Avoid reprompting for sudo password
 run "/usr/bin/sudo -n -v 2>/dev/null"
 
 # But invalidate sudo timestamp before exiting
 at_exit { run "/usr/bin/sudo", "-k" } unless $?.success?
 
-# The block form of Dir.chdir fails if Dir.CWD doesn't exist.
+# The block form of Dir.chdir fails if Dir.CWD doesn't exist
 Dir.chdir "/usr"
 
+name_computer
+exit
 #TODO work for linux as well
-RUBY_PLATFORM.to_s.downcase.include?("linux") &&
+#darwin for macos
+RUBY_PLATFORM.to_s.downcase.include?("linux") and
     abort "This is the macOS installer, not Linux!"
 
-abort "Mac OS X too old" if macos_version < "10.5"
 abort "Don't run install as root!" if Process.uid.zero?
 
-`dsmemberutil checkmembership -U "#{ENV["USER"]}" -G admin`.include?('is a')||
+`dsmemberutil checkmembership -U "#{ENV["USER"]}" -G admin`.include? 'is a' or
     abort "This installer can only be ran by an Administrator."
 
 
@@ -299,58 +104,60 @@ unless Dir.exists?( CONFIG_DIR )
     end
 end
 
+ohai "Brewing…"
+
+system 'brew', 'update' # Make sure we’re using the latest Homebrew.
+system 'brew', 'upgrade' # Upgrade any already-installed formulae.
+
+# An Apple private API change prevents mas signin from working on 10.12+
+# Therefore we install mas here instead of on-demand install via Brewfile
+# and we open the GUI for manual signin.
+system 'brew', 'install', 'mas'
+
+ohai "AppStore Signin"
+run "osascript -e 'delay 3' -e 'tell application \"App Store\" to activate' &"
+puts "Please signin to the App Store and then exit App Store to continue"
+system 'open', '-g', '-W', "/Applications/App Store.app" #waits for exit
+if capture_system("mas account") =~ /Not signed in/
+    abort "You do not appear to be signed into the App Store!"
+end
+puts "Thanks!"
+
+# TODO otherwise the install of knock fails
+#sudo mkdir -p /usr/local/sbin
+#sudo chown -R $(whoami) /usr/local/sbin
+
 Dir.chdir(CONFIG_DIR) do
-    ohai "Brewing…"
+    ohai "Running Brewfile"
 
-    system 'brew', 'update' # Make sure we’re using the latest Homebrew.
-    system 'brew', 'upgrade' # Upgrade any already-installed formulae.
-
-    #pin the tap so we use 1.4.2
-    system 'brew', 'tap', 'mas-cli/tap'
-    system 'brew', 'tap-pin', 'mas-cli/tap'
-    system 'brew', 'install', 'mas'
-    #unpin with brew tap-unpin mas-cli/tap once homebrew core has 1.4.2+
-
-    # `brew bundle` will invoke the mas CLI to install from App Store
-    # but mas 1.4.2 still has a bug and the work around is to invoke
-    # a bit of applescript to login via the GUI
-
-    # SCRIPT HERE
-
+    # TODO chipmunk, SDL2, etc.
     system 'brew', 'bundle'  # Install everything in the Brewfile
     system 'brew', 'cleanup' # Remove outdated versions from the cellar.
 
-    #make the symlinks and source XDG env vars
+    #make the symlinks and setup XDG env vars
     #these will be expected by the install scripts
-    system "/usr/bin/env", "bash", "init/xdg_env"
+    system "source", "init/xdg_env"
 
-
-
-    ohai "LastPass Login"
-
-    #Lets make LPASS a class interface and loop the request for email
-    #asking if they are sure they want to skip LASTPASS setup
-    #should print a banner and explain lastpass part in case I share
-    #my repo or some sad soul finds it
-    LPassInterface()
+    ohai "Launching Dropbox Dotfile Syncer"
+    #an idea is to do a GUI installer with a prompt for name
+    #and the option to pull files from Dropbox
+    #
 
     #this is python stupid, do ruby…
-    for installer in glob.glob("**/install.sh"):
-            ohai "Running install script for %s"
+    for installer in glob.glob("**/install.sh")
+        ohai "Running install script for %s"
         system installer
-
     end
 
     ohai "Installation successful!"
     puts
-    ohai "Don't forget to manually install:"
+    ohai "Don't forget to manually install:\e[1m"
 
     #also (mostly) python dumb dumb...
-    for app in ("Adobe Photoshop", "Adobe Illustrator", "Adobe Acrobat DC",
-            "Adobe InDesign", "CleanMyMac X", "Sidify Apple Music Converter" )
-        puts "\t#{Tty.bold}• #{app}#{Tty.reset}"
+    for app in ["Adobe Photoshop", "Adobe Illustrator", "Adobe Acrobat DC",
+            "Adobe InDesign", "CleanMyMac X", "Sidify Apple Music Converter" ]
+        puts "\t• #{app}"
     end
 
-    puts
-    # Use the shell's audible bell.
-    print "\a"
+    puts "\e[0m"
+end
