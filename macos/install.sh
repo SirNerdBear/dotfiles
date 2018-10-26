@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ $(uname -s) != "Darwin" ] && exit
+
 # Ask for the administrator password upfront
 sudo -v
 
