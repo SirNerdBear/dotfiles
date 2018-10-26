@@ -21,7 +21,6 @@ export IRBRC="$XDG_CONFIG_HOME"/irb/irbrc
 export PSQLRC="$XDG_CONFIG_HOME"/psql/config
 export PRYRC="$XDG_CONFIG_HOME"/pry/pryrc
 #TODO .subversion
-#TODO .gnupg
 #TODO .lesshst
 #TODO .tmux / .tmux.config
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
