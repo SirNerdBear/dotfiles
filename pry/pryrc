@@ -173,21 +173,43 @@ end
 end
 
 Pry.editor = 'vim'
-#Pry.config.prompt_name = "pry" #rails name or Pry (purple for app names otherwise green)
+Pry.config.pager = true
+Pry.config.should_load_local_rc = defined?(Rails) || Dir.pwd != Dir.home
 
-# TODO make the directory if needed
+
+# Support XDG data location for history if env set
 if ENV.include?('XDG_DATA_HOME')
-  Pry.config.history.file = "#{ENV['XDG_DATA_HOME']}/pry/history"
-else
-  Pry.config.history.file = "~/.local/share/pry/history"
+  File.expand_path("#{ENV['XDG_DATA_HOME']}/pry/history").tap do |history_file|
+    dir = File.dirname(history_file)
+    Dir.mkdir dir unless Dir.exist? dir
+    Pry.config.history.file = history_file
+  end
 end
 
 cs = Dracula.new()
 cs.readline_mode = true
 
-##{cs.green.bold}Dev#{cs.white}//   for rails apps
+_PS1 = ""
+if defined?(Rails) then
+    formatted_env = case Rails.env
+        when 'production'
+            "#{cs.red.bold}Production"
+        when 'staging'
+            "#{cs.orange.bold}Staging"
+        when 'development'
+            "#{cs.green.bold}Dev"
+        when 'test'
+            "#{cs.yellow.bold}Test"
+        else
+            Rails.env
+        end
+    Pry.config.prompt_name = Rails.application.class.parent_name
+    _PS1 += "#{formatted_env}#{cs.white}//#{cs.purple}"
+else
+    _PS1 += "#{cs.green}"
+end
 
-_PS1 =  "#{false ? cs.purple : cs.green}#{Pry.config.prompt_name}"
+_PS1 += "#{Pry.config.prompt_name}"
 _PS1 += "#{cs.white}(#{cs.cyan.bold.italic}%s#{cs.white}):%03d#{cs.green} ❯ #{cs.reset}"
 
 Pry.prompt =
@@ -238,20 +260,72 @@ if defined? AwesomePrint
         }
     }
     Pry.config.print = proc { |output, value|
+        #value = value.to_a if defined?(ActiveRecord) && value.is_a?(ActiveRecord::Relation)
+        case
+        when defined?(Capybara) && value.is_a?(Capybara::Node::Element)
+            #
+        when defined?(Rails)
+            #
+        when defined?(ActiveRecord) && value.is_a?(ActiveRecord::Relation)
+            #value = value.to_a #not sure if this works?
+        else
+            #
+        end
+        # when defined?(ActiveSupport::SafeBuffer) && value.is_a?(ActiveSupport::SafeBuffer)
+        #     output.print value.to_str.ai
+        #     if value.html_safe?
+        #     output.print ' (HTML safe)'
+        #     end
+        #     output.puts
+        # when defined?(Heroics) && value.is_a?(Heroics::Client)
+        #     output.puts value.instance_variable_get('@resources').keys.ai(multiline: false)
+        # when defined?(Heroics) && value.is_a?(Heroics::Resource)
+        #     output.puts value.instance_variable_get('@links').keys.ai(multiline: false)
+        # else
+        #     value = value.to_a if %w[ActiveRecord::Relation ActiveRecord::Result].include?(value.class.name)
+        #     output.puts value.ai
         formatted = value.ai(**defaults).split("\n").map { |line| "   #{line}" }
         formatted[0].gsub!(/\A   /,"=> ")
-        Pry::Helpers::BaseHelpers.stagger_output(formatted.join("\n"), output)
+        formatted[-1] += "\n" unless formatted[-1] =~ /\n$/
+        (defined?(Hirb) ? Hirb::View.view_or_page_output(value) : nil) || \
+            Pry::Helpers::BaseHelpers.stagger_output(formatted.join("\n"), output)
     }
 end
 
-#TODO add rails stuff https://github.com/jasoncodes/dotfiles/blob/master/config/pryrc
-#https://github.com/ches/dotfiles/blob/master/.pryrc#L27
+def pager!
+    Pry.config.pager = !Pry.config.pager
+    Hirb.enable :pager => Pry.config.pager if defined?(Hirb)
+end
+
+if defined?(Hirb) then
+    Hirb.enable
+    def hirb!
+        if Hirb::View.toggle_formatter
+            Hirb.enable :pager => Pry.config.pager
+        else
+            Hirb.enable :pager => false
+            false
+        end
+    end
+end
+
+if defined?(Rails) && Rails.version.to_f >= 3.0
+    #a quick alias for reload!
+    def r!
+      reload!
+    end
+
+    # Should disable by default TODO
+    # automatically reload rails env every time a new command is typed
+    Pry.hooks.add_hook(:before_eval, :reload_everything) { reload!(false) }
+end
 
 # https://gist.github.com/lfender6445/9919357
 # PRY CHEAT SHEET
 
 # Welcome message.
 Pry.hooks.add_hook(:before_session, "pryrc_start_hook") do |output, binding, pry|
+    puts "" unless defined?(Rails) #Add a linebreak if not in rails console
     ruby_version =
         if defined? RUBY_VERSION && defined? RUBY_PATCHLEVEL
             "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
@@ -260,10 +334,15 @@ Pry.hooks.add_hook(:before_session, "pryrc_start_hook") do |output, binding, pry
         else
             (`ruby -v` || '').split(' ')[1].sub('p', '-p')
         end
-    output.print "\n#{cs.green}Pry session running on #{cs.red} #{ruby_version}#{cs.green} "
+    output.print "Pry session running on #{cs.red} #{ruby_version}#{cs.reset} "
     output.print "with RubyGems #{Gem::VERSION}" if defined? Gem::VERSION
     output.puts "."
-    #output.puts "Rails 5.1.4 console envirorment loaded. Happy hacking!"
     output.puts "#{cs.red}Opps! Unable to load gems: #{PRY_BUMMERS.join ', '}" unless PRY_BUMMERS.empty?
     output.puts cs.reset
+end
+
+# coding:utf-8 vim:ft=ruby
+if defined?(ActiveRecord) then
+    # [] acts as find()
+    ActiveRecord::Base.instance_eval { alias :[] :find } if defined?(ActiveRecord)
 end
