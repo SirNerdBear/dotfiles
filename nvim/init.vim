@@ -346,8 +346,12 @@ autocmd Syntax ruby syn match rubyOperator "\S\@<=:\ze[[:space:],]\@="
 autocmd Syntax ruby syn match rubyStringEscape "\\u" contained display
 
 command! ToggleCC :let &cc = &cc == '' ? '+0' : ''
-
+command! ToggleCF :let &foldcolumn = &foldcolumn == '0' ? '1' : '0'
+command! ToggleCV :let &signcolumn = &signcolumn == 'no' ? 'yes' : 'no'
 nnoremap <leader>cc :ToggleCC<CR>
+nnoremap <leader>cf :ToggleCF<CR>
+nnoremap <leader>cv :ToggleCV<CR>
+
 nnoremap S :write<cr>
 function! NeatFoldText()
     let line = ' ' . substitute(getline(v:foldstart), '^\s*["#]\s*\|--\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
