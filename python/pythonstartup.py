@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
 import atexit
 import os
@@ -9,7 +10,6 @@ import sys
 #import rlcompleter
 
 from pprint import pprint
-from __future__ import print_function
 
 import prettyprinter
 prettyprinter.install_extras(["python"])
@@ -27,8 +27,8 @@ from pygments.formatters import Terminal256Formatter
 
 #if sys.version_info.major == 3:
 
-sys.ps1 = "\033[0;38;5;32;48;5;237m \033[49;38;5;237m\033[0m "
-sys.ps2 = "\033[0;38;5;32;48;5;237m …\033[49;38;5;237m\033[0m "
+sys.ps1 = "\001\033[0;38;5;32;48;5;237m\002  \001\033[49;38;5;237m\002\001\033[0m\002 "
+sys.ps2 = "\001\033[0;38;5;32;48;5;237m\002 … \001\033[49;38;5;237m\002\001\033[0m\002 "
 
 def my_displayhook(value):
     #if value is not None:
