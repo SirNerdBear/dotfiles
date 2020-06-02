@@ -170,7 +170,7 @@ if should_install_homebrew?
 end
 
 system 'brew', 'update'
-system 'brew', 'install', 'lastpass-cli', '--with-pinentry'
+system 'brew', 'install', 'lastpass-cli'
 
 mkdir_p(0700,SSH_DIR)
 mkdir_p(0700,PROJECT_DIR)
