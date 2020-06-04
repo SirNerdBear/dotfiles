@@ -126,6 +126,9 @@ puts "Thanks!"
 # TODO otherwise the install of knock fails
 #sudo mkdir -p /usr/local/sbin
 #sudo chown -R $(whoami) /usr/local/sbin
+=======
+system 'brew', 'update'
+system 'brew', 'install', 'lastpass-cli'
 
 Dir.chdir(CONFIG_DIR) do
     ohai "Running Brewfile"
@@ -147,6 +150,41 @@ Dir.chdir(CONFIG_DIR) do
     for installer in glob.glob("**/install.sh")
         ohai "Running install script for %s"
         system installer
+=======
+config = File.join(ENV["HOME"], ".ssh", "config")
+unless File.exists?(config)
+  File.open(config, 'w') do |f|
+    f.write("Host *\n")
+    f.write("\tAddKeysToAgent yes\n")
+    f.write("\tUseKeychain yes\n")
+    f.write("\tIdentityFile ~/.ssh/id_rsa\n")
+  end
+end
+File.chmod(0600, config)
+
+ohai "Login to LastPass to Retrieve SSH Keys"
+
+print "LastPass Login Email: "
+email = gets.chomp
+abort "Must provide login to continue!" unless email != ""
+system 'lpass', 'login', email
+
+#lpass show {id} | sed -r -n 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain
+
+list = capture_system 'lpass','ls','SysConfig'
+found = false
+secure_env = ""
+list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
+  (name,id) = match
+  if name == "Primary SSH Key"
+    provision_sshkey(id)
+  elsif name == "Secure Env Vars"
+    result = capture_system 'lpass', 'show', id
+    if result =~ /Notes:\W+(.*?)\Z/m
+      #this breaks on systems that don't have this dir yet
+      File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
+	f.write($1)
+      end
     end
 
     ohai "Installation successful!"
@@ -161,3 +199,36 @@ Dir.chdir(CONFIG_DIR) do
 
     puts "\e[0m"
 end
+=======
+#CLI for AppStore https://github.com/mas-cli/mas
+system "brew","install","mas"
+#system "mas","signin","--dialog",email
+system "mas","install","409203825" #Numbers
+system "mas","install","409203825" #XCoode
+system "mas","install","497799835" #Pages
+system "mas","install","409201541" #The Archive Browser
+system "mas","install","409183694" #Keynote
+system "mas","install","425424353" #The Unarchiver
+system "mas","install","490461369" #Bandwidth+
+system "mas","install","425264550" #Blackmagic Disk Speed Test
+
+
+system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
+
+#an idea is to make a bunch of install.sh scripts and glob them in a loop
+#this works only if install order doesn't matter and it does =(
+#could make it dotfiles.sh that does the critical stuff
+#or could do install_first.sh as another glob
+#or mas could be installed here in this script (might be easier)
+#as we could do the login here as well
+
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"
+system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/macos.sh"
+
+ohai "Installation successful!"
+puts
+
+# Use the shell's audible bell.
+print "\a"
