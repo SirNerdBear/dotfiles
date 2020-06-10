@@ -164,7 +164,7 @@ if ! type abbrev-alias > /dev/null; then
 	cmd='alias' 
 else
 	#define function aliases here as they don't make sense without space expantion
-	$cmd -f B="git symbolic-ref --short HEAD"
+	$cmd -g -e B="git symbolic-ref --short HEAD"
 fi
 
 # Flush Directory Service cache
