@@ -28,23 +28,17 @@ defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 # Alfred 3 — GUI fuzzy finder and more (replaces spotlight interface)
 ##################################################################################
 brew cask install alfred
-defaults write com.runningwithcrayons.Alfred-Preferences-3 syncfolder "${HOME}/.config"
-! $(pgrep -q "Alfred 3") && open /Applications/Alfred\ 3.app
-
+defaults write com.runningwithcrayons.Alfred-Preferences syncfolder "${HOME}/.config"
+! $(pgrep -q "Alfred 4") && open /Applications/Alfred\ 4.app
+#TODO copy license file... how?
+#~/Library/ApplicationSupport/Alfred
+#license.FVFXV2AZHV2H.plist
+#not sure if this will work since it may need activation
 
 brew cask install dropbox 
 brew cask install google-drive
 
-#TODO copy license file
-brew cask install bettertouchtool #touchbar, remapping mice, keyboard shortcuts, window management
 
-if [ ! $(pgrep -q "BetterTouchTool") ]; then
-	ln -s ~/.config/init/Default.bttpreset ~/.btt_autoload_preset.json
-	open /Applications/BetterTouchTool.app
-	sleep 4
-	rm ~/.btt_autoload_preset.json
-	#open license_goes_here (pulled from lpass)
-fi
 
 brew cask install visual-studio-code #VSCode is a GUI text editor (not used much anymore)
 brew cask install discord #Chatting sexyness
@@ -81,7 +75,7 @@ brew tap homebrew/cask-fonts
 #not sure why but ligatures don't work with font-firacode-nerd-font-mono
 #so utilizing the non-acsii font for iTerm to support ligatures AND powerline+ symbols
 brew cask install font-fira-code #ligature font for development sexyness
-brew cask install font-firacode-nerd-font-mono #nerdfont support (includes powerline and many others)
+brew cask install font-firacode-nerd-font #nerdfont support (includes powerline and many others)
 
 #install a whole bunch of non-restrictive license fonts
 brew cask install
