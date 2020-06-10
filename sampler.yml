@@ -1,0 +1,32 @@
+gauges:
+  - title: Minute progress
+    position: [[0, 36], [40, 6]]
+    rate-ms: 500
+    scale: 2
+    color: 178
+    percent-only: false
+    cur:
+        sample: date +%S
+    max:
+        sample: echo 60
+    min:
+        sample: echo 0
+  - title: Year progress
+    position: [[40, 35], [40, 7]]
+    cur:
+        sample: date +%j
+    max:
+        sample: echo 365
+    min:
+        sample: echo 0
+sparklines:
+  - title: CPU usage
+    position: [[0, 12], [40, 24]]
+    rate-ms: 200
+    scale: 0
+    sample: ps -A -o %cpu | awk '{s+=$1} END {print s}'
+  - title: Free memory pages
+    position: [[40, 12], [25, 24]]
+    rate-ms: 200
+    scale: 0
+    sample: memory_pressure | grep 'Pages free' | awk '{print $3}'
