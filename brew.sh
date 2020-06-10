@@ -110,6 +110,10 @@ brew install vitetris
 #text based adventure games like Adventure
 #neocat
 
+#monitoring
+brew install sampler
+
+
 # Python stuff
 pip3 install pyobjc-framework-ScriptingBridge
 pip3 install -U pyobjc
