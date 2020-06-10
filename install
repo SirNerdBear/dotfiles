@@ -228,17 +228,17 @@ end
 #CLI for AppStore https://github.com/mas-cli/mas
 system "brew","install","mas"
 #system "mas","signin","--dialog",email
-system "mas","install","409203825" #Numbers
-system "mas","install","409203825" #XCoode
-system "mas","install","497799835" #Pages
+#system "mas","install","409203825" #Numbers
+#system "mas","install","409203825" #XCoode
+#system "mas","install","497799835" #Pages
 system "mas","install","409201541" #The Archive Browser
-system "mas","install","409183694" #Keynote
+#system "mas","install","409183694" #Keynote
 system "mas","install","425424353" #The Unarchiver
 system "mas","install","490461369" #Bandwidth+
 system "mas","install","425264550" #Blackmagic Disk Speed Test
 
 
-system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
+#system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
 
 #an idea is to make a bunch of install.sh scripts and glob them in a loop
 #this works only if install order doesn't matter and it does =(
