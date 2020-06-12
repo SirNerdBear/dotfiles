@@ -17,3 +17,6 @@ momo-lab/zsh-abbrev-alias
 
 #gpg agent starting
 robbyrussell/oh-my-zsh folder:plugins/gpg-agent
+
+#osx
+robbyrussell/oh-my-zsh folder:plugins/osx
