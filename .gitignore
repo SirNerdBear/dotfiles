@@ -37,7 +37,7 @@ cmus/*
 !cmus/autosave
 !cmus/*.theme
 
-VSCode/user-data/*
-VSCode/extensions
-!VSCode/user-data/User
-VSCode/user-data/User/workspaceStorage
+VSCode
+!VSCode/User/settings.json
+!VSCode/User/snippets
+
