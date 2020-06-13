@@ -12,6 +12,8 @@ export WGETRC="$XDG_CONFIG_HOME"/wget/wgetrc
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
 export ANTIBODY_HOME="$XDG_DATA_HOME"/antibody #to be fair they avoid ~
+export ZSH=$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh"
+
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
 export GEMRC="$XDG_CONFIG_HOME"/rubygems/config
@@ -48,7 +50,7 @@ export PRYRC="$XDG_CONFIG_HOME"/pry/pryrc
 # .local/ (XDG spec)
 # .config (Symlink XDG spec)
 # .ssh (Could be moved but not worth the hassle)
-# .terminfo/ (not sure if this can be moved)
+# .terminfo/ 
 
 
 

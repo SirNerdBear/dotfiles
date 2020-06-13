@@ -16,7 +16,6 @@
 ##############################################################################
 
 
-
 ##############################-> ZSH  Options <-##############################
 HISTFILE="$XDG_DATA_HOME"/zsh/history #SHAME!
 HISTSIZE=100000000              # Much history!
@@ -53,11 +52,11 @@ fi
 ##########################-> ZSH Spaceship Prompt <-##########################
 SPACESHIP_CHAR_COLOR_SUCCESS="048" # A very mild and light green.
 SPACESHIP_CHAR_COLOR_FAILURE="048" # Don't prompt change color on errors.
-SPACESHIP_CHAR_SYMBOL="❯ "         # Better than the default.
+SPACESHIP_CHAR_SYMBOL=""         # Better than the default.
 SPACESHIP_BATTERY_SHOW=false       # Ugly. Battery life shown in tmux status.
-SPACESHIP_VI_MODE_SHOW=false       # Icky. Cursor changed below to show mode.
-#SPACESHIP_VI_MODE_INSERT="%F{237}%K{2}I%F{2}%k%f"
-#SPACESHIP_VI_MODE_NORMAL="%F{237}%K{176}N%F{176}%k%f"
+#SPACESHIP_VI_MODE_SHOW=true        # Removed to have changing color of prompt character
+SPACESHIP_VI_MODE_INSERT="%F{2}❯%f"
+SPACESHIP_VI_MODE_NORMAL="%F{176}❯%f"
 ##############################################################################
 
 # If there is no terminfo file for 256-color and italics then create one
@@ -70,6 +69,8 @@ fi
 
 ##########################-> Source all ZSH Files <-##########################
 # Should proably move these to be more generic and have them be .sh
+source ~/.config/zsh/exports.zsh
+
 for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
@@ -112,7 +113,7 @@ bindkey '^r' history-incremental-search-backward
 #zle-line-finish ???
 
 function zle-line-init zle-keymap-select {
-   #redraw prompt on vi-mode change
+   #redraw prompt on vi-mode change and change the cursor in Iterm
        if [ "$TERM" = "xterm-256color-italic" ]; then
         if [ $KEYMAP = vicmd ]; then
             # the command mode for vi
@@ -148,3 +149,5 @@ function precmd() {
         echo "\e[1;41;160m EXIT CODE: $err \e[0;31;196m\e[0m"
     fi
 }
+
+eval $(antibody init)
