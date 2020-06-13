@@ -165,6 +165,7 @@ def get_pipeparser():
 	parser.add_argument('-p', '--prefix', action='store_true')
 	parser.add_argument('-k', '--keys', type=str, default="root")
 	parser.add_argument('-c', '--copy', action='store_true')
+	parser.add_argument('-v', '--view', type=str, default="tmux")
 	return parser
 
 USE_FILESYSTEM = not sys.platform.lower().startswith('linux')
@@ -288,7 +289,7 @@ class ITunesPlayerSegment(ThreadedSegment):
 		if playerState is None:
 			self.data = None
 			return
-		icons = { u'play': 'ﱘ', u'pause': '' }
+		icons = { u'play': '', u'pause': '' }
 		playerState['icon'] = icons.get(playerState['state'],'')
 		self.data = playerState
 
@@ -329,7 +330,7 @@ class CMUS(StaticSegment):
                 meta = {}
                 for tag in tags:
                     meta[tag[0]] = tag[1]
-                icon = { u'playing': 'ﱘ', u'paused': '' }.get(status,None)
+                icon = { u'playing': '', u'paused': '' }.get(status,None)
                 if icon is None: return
                 min_cols = 13 if args.prefix or args.copy or args.keys == 'off' else 9
                 if cols <= min_cols: return icon
@@ -398,12 +399,12 @@ class Host(StaticSegment):
 class Date(StaticSegment):
 	def render(self,args,cols):
 		dt = datetime.utcnow() if args.utc else time
-		return " " + dt.strftime('%x')
+		return dt.strftime('%x')
 
 class Time(StaticSegment):
 	def render(self,args,cols):
 		dt = datetime.utcnow() if args.utc else time
-		return " " + dt.strftime('%H:%M')
+		return dt.strftime('%H:%M')
 
 class TimeZone(StaticSegment):
 	def render(self,args,cols):
@@ -412,21 +413,25 @@ class TimeZone(StaticSegment):
 class PrefixMode(StaticSegment):
 	def render(self,args,cols):
 		if not args.prefix and args.copy:
-			return "#[fg=black]C"
+			c = '#00adef' if args.view == 'quake' else 'white'
+			return f"#[fg={c}]C"
 		if args.keys == 'off':
 			return "OFF"
 		if not args.prefix:
 			return None
 
-		return "[PREFIX]" if cols >= 11 else "^A"
+		c = '#00adef' if args.view == 'quake' else 'white'
+		return f"#[fg={c}][PREFIX]" if cols >= 11 else f"#[fg={c}]^A"
 
 	def color(self,args=None):
 		if args is not None:
-			if args.keys == 'off':
-				return 88
 			if not args.prefix and args.copy:
-				return 227
-		return 39
+				return '#111111'
+			if args.keys == 'off':
+				return '#c80808'
+			if args.prefix:
+				return '#111111'
+		return '#00afff'
 
 def start_segment_thread(seg, state):
 	seg_name = seg.__name__
@@ -439,8 +444,7 @@ def start_segment_thread(seg, state):
 	return thread
 
 class StatusLine():
-	__segments__ = ( PrefixMode, CMUS, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
-	__colors__ = (242,235,237,240)
+	__segments__ = ( PrefixMode, ITunesPlayerSegment, (VMachines,Dockers) , Host, (Date, Time, TimeZone) )
     # Segments to maybe add:
     # Gmail counter https://github.com/erikw/tmux-powerline/blob/master/segments/mailcount.sh
     # Battery life (there are sweet icons for this in http://nerdfonts.com/)
@@ -465,33 +469,35 @@ class StatusLine():
 		return len(re.sub(r'#\[.*?\]','',str))
 
 	def render(self,args):
-
+		__colors__ =  ("#00516f","#00739c","#00394d","#00668e") if args.view == 'quake' else ("#6c6c6c","#262626","#3a3a3a","#585858")
 		cols = args.width
 		color = 0
 		out = []
 		for seg in reversed(self.segments):
 			if seg is None: continue
 			rendered = []
-			colour = StatusLine.__colors__[color]
+			colour = __colors__[color]
 			if isinstance(seg,(ThreadedSegment,StaticSegment)):
 				s = seg.render(args,cols)
 				if s is None: continue
 				if seg.color() is not None:
 					colour = seg.color(args)
 				else:
-					color = (color + 1) % len(StatusLine.__colors__)
+					color = (color + 1) % len(__colors__)
 				cols -= self.true_length(s) + 3
 				rendered.append(s)
 			elif isinstance(seg, (list, tuple)):
-				s = ' #[nobold]#[bold] '.join( filter(None,[s.render(args,cols) for s in seg]) )
+				subdivider = '' if args.view == 'quake' else ''
+				s = f' #[nobold]{subdivider}#[bold] '.join( filter(None,[s.render(args,cols) for s in seg]) )
 				if len(s) > 0:
 					cols -= self.true_length(s) + 3
 					rendered.append( s )
-					color = (color + 1) % len(StatusLine.__colors__)
+					color = (color + 1) % len(__colors__)
 			if len(rendered) <= 0: continue
 
 			rendered = ''.join(rendered)
-			out.insert(0," #[fg=colour{colour}]#[fg=white,bold,bg=colour{colour}] {rendered}".format(**locals()) )
+			divider = '' if args.view == 'quake' else ''
+			out.insert(0," #[fg={colour}]{divider}#[fg=white,bold,bg={colour}] {rendered}".format(**locals()) )
 		return ''.join(out)
 
 
