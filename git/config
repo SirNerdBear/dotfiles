@@ -187,5 +187,5 @@
 	program = /usr/local/bin/gpg
 
 [include]
-      path = ~/Dropbox/SecureConfig/git/config.local
+      path = ~/.local/share/git/config.local
 
