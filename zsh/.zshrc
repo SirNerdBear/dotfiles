@@ -69,7 +69,7 @@ fi
 
 ##########################-> Source all ZSH Files <-##########################
 # Should proably move these to be more generic and have them be .sh
-source ~/.config/zsh/exports.zsh
+source ~/.config/zsh/exports.zsh #this has to run first or aliases won't work
 
 for file in ~/.config/zsh/*.zsh; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file";
@@ -151,3 +151,4 @@ function precmd() {
 }
 
 eval $(antibody init)
+
