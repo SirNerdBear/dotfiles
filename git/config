@@ -181,10 +181,13 @@
 	insteadOf = "gist:"
 
 [user]
+	name = Scott Hall
+	email = scott@novelrpg.com
+	signingkey = BB20E2284C73B99D
       # These values are set in $XDG_CONFIG_HOME/git/config.local
 
 [gpg]
-	program = /usr/local/bin/gpg
+	program = gpg
 
 [include]
       path = ~/.local/share/git/config.local
