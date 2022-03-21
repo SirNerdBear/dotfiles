@@ -1,8 +1,9 @@
 rails
 bundler
 pry
+coderay
 pry-byebug
-awesome_print
+amazing_print
 hirb
 hirb-unicode
 tmuxinator

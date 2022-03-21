@@ -1,0 +1,4 @@
+m = BioDataField.new(:name => 'Age', :data_type => 0)
+m = BioData.new(:name => 'Age', :data_type => 0)
+m.save
+m.type

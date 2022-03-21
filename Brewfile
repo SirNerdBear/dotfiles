@@ -108,7 +108,7 @@ brew "vitetris"            # DA DA DA DA DUM DUM DUM DA DA DA DO DO DO DA DA…
 # General use applications not directly tied to development                  #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
 cask "discord"             # Chatting sexyness
-#cask "scrivener"          # Writing prose. TODO: Need 3.0 license upgrade.
+cask "scrivener"           # Writing prose.
 cask "kindle"              # I was elected to lead, not to read
 cask "transmit"            # For the occational FTP need. LAWL.
 cask "vlc"                 # Playing videos and such
@@ -119,7 +119,11 @@ cask "iterm2"              # Terminal replacement
 
 cask "firefox"             # Better
 cask "google-chrome"       # Best
-# Adobe applications and things from the AppStore are now installed. 
+
+cask "sensiblesidebuttons" # Make back/forward on mouse work
+cast "zoomus"              # For remote meetings and such
+
+# Adobe applications and things from the AppStore are not installed. 
 #############################  </END macOS APPS>  ############################
 
 

@@ -44,9 +44,6 @@ export PRYRC="$XDG_CONFIG_HOME"/pry/pryrc
 # .DS_Store (because some sadistic programmer though these up)
 # .Trash/ (macOS trash directory)
 # .cups (printer driver, special snowflake)
-# .dropbox (hardcoded?)
-# .editorconfig (symlinked, many things look in ~ for this file)
-# .hushlogin (sileces login crap like timestamp and motd)
 # .local/ (XDG spec)
 # .config (Symlink XDG spec)
 # .ssh (Could be moved but not worth the hassle)
@@ -54,15 +51,6 @@ export PRYRC="$XDG_CONFIG_HOME"/pry/pryrc
 
 
 
-# RBENV makes little sense in the XDG spec as it's compiled binaries.
-# but a clean ~ is awesome so we move it to…
-# Disabled because bin shims weren't being created when gems installed
-# It may be an issue with GEM_HOME or GEM_PATH not being respected
-# Perhaps it's a ruby build plugin issue?
-# If we can get this all fixed we can stop the sudo tmuxinator install as well
-
-
-# Make neovim the default editor.
 export EDITOR='nvim';
 
 # Enable persistent REPL history for `node`.
@@ -107,7 +95,6 @@ export TERM="xterm-256color-italic"
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 # Set Env for Platform
-# TODO detect Cygwin over Bash on Winows
 [ $(uname -s) = "Darwin" ] && export MACOS=1 && export UNIX=1
 [ $(uname -s) = "Linux" ] && export LINUX=1 && export UNIX=1
 uname -s | grep -q "_NT-" && export WINDOWS=1

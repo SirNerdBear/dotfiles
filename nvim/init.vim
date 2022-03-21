@@ -54,7 +54,7 @@ set cursorline
 
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'Dracula',
+      \ 'colorscheme': 'dracula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'fugitive', 'filename' ] ],
@@ -364,6 +364,6 @@ function! NeatFoldText()
     return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 
-set foldtext=NeatFoldText()
+"set foldtext=NeatFoldText()
 
-set foldmethod=syntax
+"set foldmethod=syntax

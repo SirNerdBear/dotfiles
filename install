@@ -109,31 +109,11 @@ ohai "Brewing…"
 system 'brew', 'update' # Make sure we’re using the latest Homebrew.
 system 'brew', 'upgrade' # Upgrade any already-installed formulae.
 
-# An Apple private API change prevents mas signin from working on 10.12+
-# Therefore we install mas here instead of on-demand install via Brewfile
-# and we open the GUI for manual signin.
-system 'brew', 'install', 'mas'
-
-ohai "AppStore Signin"
-run "osascript -e 'delay 3' -e 'tell application \"App Store\" to activate' &"
-puts "Please signin to the App Store and then exit App Store to continue"
-system 'open', '-g', '-W', "/Applications/App Store.app" #waits for exit
-if capture_system("mas account") =~ /Not signed in/
-    abort "You do not appear to be signed into the App Store!"
-end
-puts "Thanks!"
-
-# TODO otherwise the install of knock fails
-#sudo mkdir -p /usr/local/sbin
-#sudo chown -R $(whoami) /usr/local/sbin
-=======
-system 'brew', 'update'
 system 'brew', 'install', 'lastpass-cli'
 
 Dir.chdir(CONFIG_DIR) do
     ohai "Running Brewfile"
 
-    # TODO chipmunk, SDL2, etc.
     system 'brew', 'bundle'  # Install everything in the Brewfile
     system 'brew', 'cleanup' # Remove outdated versions from the cellar.
 
@@ -141,24 +121,18 @@ Dir.chdir(CONFIG_DIR) do
     #these will be expected by the install scripts
     system "source", "init/xdg_env"
 
-    ohai "Launching Dropbox Dotfile Syncer"
-    #an idea is to do a GUI installer with a prompt for name
-    #and the option to pull files from Dropbox
-    #
-
-    #this is python stupid, do ruby…
     for installer in glob.glob("**/install.sh")
         ohai "Running install script for %s"
         system installer
-=======
-config = File.join(ENV["HOME"], ".ssh", "config")
-unless File.exists?(config)
-  File.open(config, 'w') do |f|
-    f.write("Host *\n")
-    f.write("\tAddKeysToAgent yes\n")
-    f.write("\tUseKeychain yes\n")
-    f.write("\tIdentityFile ~/.ssh/id_rsa\n")
-  end
+
+        config = File.join(ENV["HOME"], ".ssh", "config")
+    unless File.exists?(config)
+    File.open(config, 'w') do |f|
+        f.write("Host *\n")
+        f.write("\tAddKeysToAgent yes\n")
+        f.write("\tUseKeychain yes\n")
+        f.write("\tIdentityFile ~/.ssh/id_rsa\n")
+    end
 end
 File.chmod(0600, config)
 
@@ -191,44 +165,16 @@ list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
     puts
     ohai "Don't forget to manually install:\e[1m"
 
-    #also (mostly) python dumb dumb...
-    for app in ["Adobe Photoshop", "Adobe Illustrator", "Adobe Acrobat DC",
-            "Adobe InDesign", "CleanMyMac X", "Sidify Apple Music Converter" ]
+    ["Adobe Photoshop", "Adobe Illustrator", "Adobe Acrobat DC",
+     "Adobe InDesign","Adobe After Effects", "Adobe Premiere",
+     "Adobe Audition", "Numbers","Pages","Keynote",
+     "XCode", "The Archive Browser", "The Unarchiver"
+    ].each |app| do
         puts "\t• #{app}"
     end
 
     puts "\e[0m"
 end
-=======
-#CLI for AppStore https://github.com/mas-cli/mas
-system "brew","install","mas"
-#system "mas","signin","--dialog",email
-system "mas","install","409203825" #Numbers
-system "mas","install","409203825" #XCoode
-system "mas","install","497799835" #Pages
-system "mas","install","409201541" #The Archive Browser
-system "mas","install","409183694" #Keynote
-system "mas","install","425424353" #The Unarchiver
-system "mas","install","490461369" #Bandwidth+
-system "mas","install","425264550" #Blackmagic Disk Speed Test
-
-
-system "/usr/bin/env", "bash", "/etc/xdg_env" #make the symlink (things below expect it)
-
-#an idea is to make a bunch of install.sh scripts and glob them in a loop
-#this works only if install order doesn't matter and it does =(
-#could make it dotfiles.sh that does the critical stuff
-#or could do install_first.sh as another glob
-#or mas could be installed here in this script (might be easier)
-#as we could do the login here as well
-
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew.sh"
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/brew-apps.sh"
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/VSCode/install.sh"
-system "/usr/bin/env", "zsh", "#{CONFIG_DIR}/macos.sh"
-
-ohai "Installation successful!"
-puts
 
 # Use the shell's audible bell.
 print "\a"

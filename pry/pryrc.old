@@ -1,8 +1,9 @@
-# vim: nowrap fdm=marker ft=ruby fenc=UTF-8
-
-PRY_BUMMERS = []
-
-# Color Scheme {{{
+# === EDITOR ===
+Pry.editor = 'nvim'
+#https://gist.github.com/bespokoid/3732620
+#https://github.com/lebibin/dotfiles
+#
+# === THEME ===
 class Dracula
     attr_accessor :readline_mode
 
@@ -64,8 +65,8 @@ class Dracula
             bg_color = @colors.fetch(@bg,nil) ? "48;2;#{@colors[@bg]}" : nil
             attibs = @attrs.map { |a,set| set ? @@attr_codes[a] : nil }.compact.join(";") || nil
             return "#{@readline_mode ? "\001" : ''}\e[0;" + \
-                   [fg_color,bg_color,attibs].compact.join(";").gsub(/;$/,'') + "m" + \
-                   (@readline_mode ? "\002" : '')
+                    [fg_color,bg_color,attibs].compact.join(";").gsub(/;$/,'') + "m" + \
+                    (@readline_mode ? "\002" : '')
         end
 
         def reset
@@ -85,7 +86,7 @@ module CodeRay
         class Terminal < Encoder
             cs = Dracula.new()
             {
-                :symbol => cs.green.bold,               # :symbols
+                :symbol => cs.purple,               # :symbols
                 :ident  => cs.white,                    # default
                 :debug => cs.red_bg,                    # not used?
                 :binary => {                            # not implemented
@@ -94,7 +95,8 @@ module CodeRay
                     :delimiter => "",
                 },
                 :key => {
-                    :self => cs.green.bold,             # symbols only
+                    :self => cs.purple,             # symbols only
+                    :delimiter => cs.white,
                 },
                 :instance_variable => cs.purple.italic, # @instance_var
                 :class => cs.cyan.bold.italic,          # class name
@@ -157,13 +159,98 @@ module CodeRay
         end
     end
 end
-#}}}
+
+# === COLORS ===
+unless ENV['PRY_BW']
+  Pry.color = true
+  #Pry.config.theme = "railscasts"
+  Pry.config.prompt = PryRails::RAILS_PROMPT if defined?(PryRails::RAILS_PROMPT)
+  Pry.config.prompt ||= Pry.prompt
+end
+
+# === HISTORY ===
+Pry::Commands.command /^$/, "repeat last command" do
+  _pry_.run_command Pry.history.to_a.last
+end
+
+# == Pry-Nav - Using pry as a debugger ==
+Pry.commands.alias_command 'c', 'continue' rescue nil
+Pry.commands.alias_command 's', 'step' rescue nil
+Pry.commands.alias_command 'n', 'next' rescue nil
+Pry.commands.alias_command 'f', 'finish' rescue nil
+Pry.commands.alias_command 'l', 'whereami' rescue nil
+
+# === Listing config ===
+# Better colors - by default the headings for methods are too
+# similar to method name colors leading to a "soup"
+# These colors are optimized for use with Solarized scheme
+# for your terminal
+Pry.config.ls.separator = "\n" # new lines between methods
+Pry.config.ls.heading_color = :magenta
+Pry.config.ls.public_method_color = :green
+Pry.config.ls.protected_method_color = :yellow
+Pry.config.ls.private_method_color = :bright_black
+
+# == PLUGINS ===
+# amazing_print gem: great syntax colorized printing
+begin
+  require 'amazing_print'
+  # The following line enables amazing_print for all pry output,
+  # and it also enables paging
+  Pry.config.print = proc { |output, value| Pry::Helpers::BaseHelpers.stagger_output("=> #{value.ai}", output) }
+
+  # If you want awesome_print without automatic pagination, use the line below
+  module AmazingPrint
+    Formatter.prepend(Module.new do
+      def awesome_self(object, type)
+        if type == :string && @options[:string_limit] && object.inspect.to_s.length > @options[:string_limit]
+          colorize(object.inspect.to_s[0..@options[:string_limit]] + "...", type)
+        else
+          super(object, type)
+        end
+      end
+    end)
+  end
+
+  AmazingPrint.defaults = {
+    :string_limit => 80,
+    :indent => 2,
+    :multiline => true
+  }
+  AmazingPrint.pry!
+rescue LoadError => err
+  puts "gem install amazing_print  # <-- highly recommended"
+end
+
+# === CUSTOM COMMANDS ===
+default_command_set = Pry::CommandSet.new do
+  command "sql", "Send sql over AR." do |query|
+    if ENV['RAILS_ENV'] || defined?(Rails)
+      pp ActiveRecord::Base.connection.select_all(query)
+    else
+      pp "No rails env defined"
+    end
+  end
+end
+
+Pry.config.commands.import default_command_set
+
+# === COLOR CUSTOMIZATION ===
+# Everything below this line is for customizing colors, you have to use the ugly
+# color codes, but such is life.
+CodeRay.scan("example", :ruby).term # just to load necessary files
+# Token colors pulled from: https://github.com/rubychan/coderay/blob/master/lib/coderay/encoders/terminal.rb
+
+$LOAD_PATH << File.dirname(File.realpath(__FILE__))
+
+
+PRY_BUMMERS = []
 
 %w(
   hirb
-  awesome_print
-  awesome_print/ext/active_record
-  awesome_print/ext/active_support
+  amazing_print
+  amazing_print/ext/active_record
+  amazing_print/ext/active_support
 ).each do |gem|
   begin
     require gem
@@ -177,120 +264,36 @@ Pry.config.pager = true
 Pry.config.should_load_local_rc = defined?(Rails) || Dir.pwd != Dir.home
 
 
-# Support XDG data location for history if env set
+#Support XDG data location for history if env set
 if ENV.include?('XDG_DATA_HOME')
-  File.expand_path("#{ENV['XDG_DATA_HOME']}/pry/history").tap do |history_file|
+    history_file = "~/.local/share/pry/pry_history"
     dir = File.dirname(history_file)
-    Dir.mkdir dir unless Dir.exist? dir
-    Pry.config.history.file = history_file
-  end
+    FileUtils.mkdir_p dir unless Dir.exist? dir
+    Pry.config.should_load_rc = false
+    Pry.config.should_load_local_rc = false
+    history_file_path = File.expand_path(history_file)
+    Pry.config.history_file = history_file_path
 end
 
 cs = Dracula.new()
 cs.readline_mode = true
 
-_PS1 = ""
-if defined?(Rails) then
-    formatted_env = case Rails.env
-        when 'production'
-            "#{cs.red.bold}Production"
-        when 'staging'
-            "#{cs.orange.bold}Staging"
-        when 'development'
-            "#{cs.green.bold}Dev"
-        when 'test'
-            "#{cs.yellow.bold}Test"
-        else
-            Rails.env
-        end
-    Pry.config.prompt_name = Rails.application.class.parent_name
-    _PS1 += "#{formatted_env}#{cs.white}//#{cs.purple}"
-else
-    _PS1 += "#{cs.green}"
-end
 
-_PS1 += "#{Pry.config.prompt_name}"
-_PS1 += "#{cs.white}(#{cs.cyan.bold.italic}%s#{cs.white}):%03d#{cs.green} ❯ #{cs.reset}"
-
-Pry.prompt =
-    [
-        proc { |obj, _, pry|
-            _PS1 % [Pry.view_clip(obj),pry.input_array.size]
-        },
-        proc { |obj, _, pry|
-            _PS1.gsub(/❯/,"…") % [Pry.view_clip(obj), pry.input_array.size]
-        }
-    ]
-Pry.config.ls.separator = "\n"
-
-if defined? AwesomePrint
-    # not using .aprc  as ap doesn't respect XDG or offer configuration.
-    defaults = {
-        indent:        4,      # Number of spaces for indenting.
-        index:         true,   # Display array indices.
-        html:          false,  # Use ANSI color codes rather than HTML.
-        multiline:     true,   # Display in multiple lines.
-        plain:         false,  # Use colors.
-        raw:           false,  # Do not recursively format instance variables.
-        sort_keys:     false,  # Do not sort hash keys.
-        sort_vars:     true,   # Sort instance variables.
-        limit:         false,  # Limit arrays & hashes. Accepts bool or int.
-        ruby19_syntax: true,   # Use Ruby 1.9 hash syntax in output.
-        color: {
-            args:       :pale,
-            array:      :white,
-            bigdecimal: :blueish,
-            class:      :cyan,
-            date:       :purpleish,
-            falseclass: :cyan,
-            fixnum:     :blueish,
-            integer:    :blueish,
-            float:      :blueish,
-            hash:       :purpleish,
-            keyword:    :cyan,
-            method:     :blueish,
-            nilclass:   :cyan,
-            rational:   :blueish,
-            string:     :yellowish,
-            struct:     :pale,
-            symbol:     :green,
-            time:       :purpleish,
-            trueclass:  :cyan,
-            variable:   :pale
-        }
-    }
-    Pry.config.print = proc { |output, value|
-        #value = value.to_a if defined?(ActiveRecord) && value.is_a?(ActiveRecord::Relation)
-        case
-        when defined?(Capybara) && value.is_a?(Capybara::Node::Element)
-            #
-        when defined?(Rails)
-            #
-        when defined?(ActiveRecord) && value.is_a?(ActiveRecord::Relation)
-            #value = value.to_a #not sure if this works?
-        else
-            #
-        end
-        # when defined?(ActiveSupport::SafeBuffer) && value.is_a?(ActiveSupport::SafeBuffer)
-        #     output.print value.to_str.ai
-        #     if value.html_safe?
-        #     output.print ' (HTML safe)'
-        #     end
-        #     output.puts
-        # when defined?(Heroics) && value.is_a?(Heroics::Client)
-        #     output.puts value.instance_variable_get('@resources').keys.ai(multiline: false)
-        # when defined?(Heroics) && value.is_a?(Heroics::Resource)
-        #     output.puts value.instance_variable_get('@links').keys.ai(multiline: false)
-        # else
-        #     value = value.to_a if %w[ActiveRecord::Relation ActiveRecord::Result].include?(value.class.name)
-        #     output.puts value.ai
-        formatted = value.ai(**defaults).split("\n").map { |line| "   #{line}" }
-        formatted[0].gsub!(/\A   /,"=> ")
-        formatted[-1] += "\n" unless formatted[-1] =~ /\n$/
-        (defined?(Hirb) ? Hirb::View.view_or_page_output(value) : nil) || \
-            Pry::Helpers::BaseHelpers.stagger_output(formatted.join("\n"), output)
-    }
-end
+# === PROMPT ===
+#Pry.prompt = [ ->(obj, nest_level, _) { "✎ " }, ->(obj, nest_level, _) { "#{' ' * nest_level}  " } ]
+unless false
+    default_prompt = Pry::Prompt[:default]
+    env = "" #Pry::Helpers::Text.red(Rails.env.upcase)
+    Pry.config.prompt = Pry::Prompt.new(
+      'custom',
+      'my custom prompt',
+      [ proc { "PRY #{cs.green}❯#{cs.reset} " }, proc { " * #{cs.green.italic}>>#{cs.reset} " }]
+    #   [
+    #     proc{ |*args| "#{env} #{default_prompt.wait_proc.call(*args)}" },
+    #     proc{ |*args| "#{env} #{default_prompt.incomplete_proc.call(*args)}" },
+    #   ],
+    )
+  end
 
 def pager!
     Pry.config.pager = !Pry.config.pager

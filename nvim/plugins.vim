@@ -4,7 +4,7 @@ Plug 'tpope/vim-rails'                         " Ruby on Rails development
 Plug 'sheerun/vim-polyglot'                    " Syntax support many languages
 " TODO vim-ruby is patched, need to pull my own version and disable polyglots?
 
-
+Plug 'wakatime/vim-wakatime'                   " Time tracking
 Plug 'itchyny/lightline.vim'                   " status line
 Plug 'scrooloose/nerdtree'                     " file browser (not used much)
 Plug 'ryanoasis/vim-devicons'                  " add nerdfront icons

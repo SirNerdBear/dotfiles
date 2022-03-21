@@ -37,7 +37,7 @@ unsetopt LIST_BEEP              # Bell is annoying during autocompletion
 unsetopt banghist               # Avoid "nerd rage" when harmlessly using !
 ##############################################################################
 
-# Ensure ~/.editorconfig is symlinked to $XDG_CONFIG_HOME/.editorconfig
+# TODO Ensure ~/.editorconfig is symlinked to $XDG_CONFIG_HOME/.editorconfig
 # ~/.editorconfig -> ~/.config/.editorconfig
 
 # Touch .hushlogin to ensure it exists
