@@ -7,9 +7,16 @@ CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 
 
-#TODO DBXcli
 #TODO config file for ssh stored in lpass
+#TODO fix macos install script
+#*******************************************************************************************************
+#TODO better read me
+#TODO adept to work with linux Ubuntu and PopOS
+#TODO adept to have a Windows version that reuses as much as possible
+#TODO also support wdl win subsystem
 #TODO Makefile or such to update extensions, copy fonts and upload, update ssh/gpg keys into lpass, etc.
+#TODO start working on tmux and neovim again
+
 
 
 class Array
@@ -208,16 +215,28 @@ def secure_restore
                 #this breaks on systems that don't have this dir yet
                 ohai "Setting up secure local env vars"
                 File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
-                f.write($1)
+                    f.write($1)
                 end
             end
         elsif name == "DBXcli"
+            result = capture_system 'lpass', 'show', id
+            if result =~ /Notes:\W+(.*?)\Z/m
+                #this breaks on systems that don't have this dir yet
+                ohai "Copy auth token for dbxcli"
+                auth_file = File.join(CONFIG_DIR,'dbxcli','auth.json')
+                File.open(auth_file,'w') do |f|
+                    f.write($1)
+                end
+                File.chmod(0600, auth_file)
+            end
             #TODO get this from lpass, it's a simple json file
             #make sure it's 600 for the file and 700 for the dbxcli directory inside of .config
             #https://github.com/dropbox/dbxcli/issues/130 the toke in the auth.json file should last forever
 
         elsif name == "FileVault"
-            `lpass show #{id} | gsed -r 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain`
+            unless File.exists?('/Library/Keychains/FileVaultMaster.keychain')
+                `lpass show #{id} | gsed -r 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > #{CONFIG_DIR}/init/FileVaultMaster.keychain`
+            end
         end
         #TODO need a method to update lpass with new/edited SSH keys and GPG keys, etc
     end
@@ -265,22 +284,29 @@ unless Dir.exists?( CONFIG_DIR )
     end
 end
 
+Dir.chdir(CONFIG_DIR) do
+    Dir.glob('*').each do |f|
+        mode = ( File.directory?(f) ? 0700 : 0600 )
+        File.chmod(mode, f)
+    end
+end
+
 ohai "Brewing…"
 
-system 'brew', 'update' # Make sure we’re using the latest Homebrew.
-system 'brew', 'upgrade' # Upgrade any already-installed formulae.
+#system 'brew', 'update' # Make sure we’re using the latest Homebrew.
+# system 'brew', 'upgrade' # Upgrade any already-installed formulae.
 
-system 'brew', 'install', 'lastpass-cli', 'gnu-sed' #needed for this script, before Brewfile runs
+# system 'brew', 'install', 'lastpass-cli', 'gnu-sed' #needed for this script, before Brewfile runs
 
 #make the symlinks and setup XDG env vars
 #these will be expected by the install scripts
 Dir.chdir(CONFIG_DIR) do
-    system "source", "init/xdg_env" 
+    system("source init/xdg_env 2>&1")
 end
 
 secure_restore()
 
-brewfile()
+# brewfile()
 
 ohai "Installation successful!"
 puts

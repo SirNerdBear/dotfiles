@@ -16,7 +16,7 @@ osascript -e 'tell application "System Preferences" to quit'
 #TODO detect if file exits and if not alert that it doesn't but don't fail
 #TODO maybe ask if Filevault should be enabled?
 if [ ! -f /Library/Keychains/FileVaultMaster.keychain ]; then
-  sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain \
+  sudo mv ~/Projects/dotfiles/init/FileVaultMaster.keychain \
           /Library/Keychains/FileVaultMaster.keychain
 fi
 if sudo fdesetup status | \

@@ -36,6 +36,9 @@ configstore
 # don't store trust db
 init/trustdb.txt
 
+# don't store Keychain
+init/FileVaultMaster.keychain
+
 # don't give away my dropbox key
 dbxcli/auth.json
 
