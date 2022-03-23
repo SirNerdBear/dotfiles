@@ -7,8 +7,10 @@ CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 
 
-#TODO figure out VSCode extensions restore
-#https://stackoverflow.com/questions/35929746/automatically-install-extensions-in-vs-code
+#TODO DBXcli
+#TODO config file for ssh stored in lpass
+#TODO Makefile or such to update extensions, copy fonts and upload, update ssh/gpg keys into lpass, etc.
+
 
 class Array
     def shell_s

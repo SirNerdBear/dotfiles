@@ -36,6 +36,9 @@ configstore
 # don't store trust db
 init/trustdb.txt
 
+# don't give away my dropbox key
+
+
 cmus/*
 !cmus/autosave
 !cmus/*.theme
