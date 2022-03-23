@@ -37,7 +37,7 @@ configstore
 init/trustdb.txt
 
 # don't give away my dropbox key
-
+dbxcli/auth.json
 
 cmus/*
 !cmus/autosave
