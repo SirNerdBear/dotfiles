@@ -4,6 +4,7 @@ tap "homebrew/services"    # Integrates brews with macOS' launchctl manager
 tap "homebrew/cask-fonts"  # https://github.com/Homebrew/homebrew-cask-fonts
 tap "homebrew/bundle"      # https://github.com/Homebrew/homebrew-bundle
 tap "homebrew/core"        # Majority of brews are in the core
+tap "idleberg/dbxcli"      # Dropbox dbxcli
 
 ################################## LIBRARYS ##################################
 # Development dependencies used mostly in C projects.                        #
@@ -29,6 +30,7 @@ brew "webp"                # Format providing lossless and lossy compression
 # Tools to get the most out of the command-line. A lot of use-case utilties. #
 # Some are for fun. That is, unless, ASCII fish are critical to workflow.    #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+brew "dbxcli"              # Dropbox CLI
 brew "automake"            # Tool to automatically generate Makefile.in
 brew "p7zip"               # A port of 7za.exe for POSIX systems
 brew "colordiff"           # CLI diff… Now in COLOR!
@@ -110,20 +112,30 @@ brew "vitetris"            # DA DA DA DA DUM DUM DUM DA DA DA DO DO DO DA DA…
 cask "discord"             # Chatting sexyness
 cask "scrivener"           # Writing prose.
 cask "kindle"              # I was elected to lead, not to read
-cask "transmit"            # For the occational FTP need. LAWL.
 cask "vlc"                 # Playing videos and such
 cask "karabiner-elements"  # Key remapping
-cask "dropbox"             # Much cloud
 cask "alfred"              # GUI fuzzy finder and more (replaces spotlight)
 cask "iterm2"              # Terminal replacement
 
-cask "firefox"             # Better
-cask "google-chrome"       # Best
+cask "firefox"             # Best
+cask "google-chrome"       # Ok
+cask "thunderbird"         # For Email
 
 cask "sensiblesidebuttons" # Make back/forward on mouse work
-cast "zoomus"              # For remote meetings and such
+cask "zoomus"              # For remote meetings and such
+cask "slack"               # Work chat
+cask "microsoft-teams"     # Gross. Sick!
+cask "webtorrent"          # Yo ho!
+cask "scrivener"           # For penning the next epic novel
+cask "grammarly"           # Write words the good
+cask "calibre"             # For making eBooks
+cask "dbeaver-community"   # Database GUI tool
 
-# Adobe applications and things from the AppStore are not installed. 
+cask "fontforge"           # Edit/convert fonts
+cask "adobe-creative-cloud"# These jerks get $$$ every month
+
+#Adobe apps must be installed manually from the CC app
+
 #############################  </END macOS APPS>  ############################
 
 
@@ -133,6 +145,7 @@ cast "zoomus"              # For remote meetings and such
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
 cask "java"                # Needed for arduno and others
 cask "arduino"             # Used for compiling/uploading arduino
+cask "blisk"               # Browser for testing mobile, etc.
 brew "go"                  # Twice as good as stop… j/k… https://golang.org/
 brew "gx"                  # Package manager (used by Go projects)
 brew "gx-go"               # Tool to use with the gx package manager in go
@@ -169,6 +182,7 @@ brew "hub"                 # Githubs wrapper for git https://hub.github.com/
 brew "git-lfs"             # GIT large file storage https://git-lfs.github.com
 brew "bfg"                 # Scubing files from a gitrepo, etc.
 brew "ripgrep"             # grep but respects .gitignore
+#https://stackoverflow.com/questions/39494631/gpg-failed-to-sign-the-data-fatal-failed-to-write-commit-object-git-2-10-0
 brew "gpg"                 # Signing git commits and such
 brew "pinentry-mac"        # GUI interface for GPG passphrase (macOS keychain)
 
@@ -192,16 +206,3 @@ brew "neovim"              # Neovim > VIM (for now)
 brew "the_silver_searcher" # Runs searches real fast. Get it? Ahahaha! NEEERD!
                            # Used in vim with Ag (replaces <Ctrl-P>).
 ###########################  </END DEV ENVIRONMENT>  #########################
-
-############################### ALL THE FONTS! ###############################
-# Install a whole bunch of non-restrictive license fonts. Licenced fonts are #
-# added elsewhere (via custom finder extention) and synced with Dropbox.     #
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
-#COPY FONTS HERE
-#need a script that copies everything in ~/Library/Fonts to a GZ TAR
-#and can restore them (with no overwrites) as well
-#something like font --import http://...
-#and font --export
-#the question is where to store the fonts? 
-#S3 would work in archive mode
-#and setup a IAM storing the info for it inside lpass

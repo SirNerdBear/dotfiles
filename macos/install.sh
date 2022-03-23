@@ -12,6 +12,9 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
+#this needs to be done by installer instead with lpass
+#TODO detect if file exits and if not alert that it doesn't but don't fail
+#TODO maybe ask if Filevault should be enabled?
 if [ ! -f /Library/Keychains/FileVaultMaster.keychain ]; then
   sudo cp ~/Projects/dotfiles/init/FileVaultMaster.keychain \
           /Library/Keychains/FileVaultMaster.keychain
@@ -23,10 +26,8 @@ then
   sudo fdesetup enable -defer /dev/null -keychain –norecoverykey -forceatlogin 0 –dontaskatlogout
 fi
 
-# TODO need to get Dropbox fonts somehow first but we can't make licensed fonts public
-# move this to our finder extention or a cronjob
-# for now it could be a script?
-find ~/Dropbox/Fonts -type f -exec cp \{\} ~/Library/Fonts \;
+#get the fonts from dropbox
+dbxcli get my-font-backup.zip && unzip -o my-font-backup.zip -d ~/Library/Fonts && rm my-font-backup.zip
 chmod 0600 ~/Library/Fonts/*
 
 ##################################################################################
@@ -156,6 +157,8 @@ defaults write com.apple.dock expose-animation-duration -float 0.1 #doesn't work
 #sudo rm -rf /System/Library/CoreServices/DefaultDesktop.jpg
 #sudo ln -s /path/to/your/image /System/Library/CoreServices/DefaultDesktop.jpg
 #sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$IMAGE'"
+
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "$XDG_CONFIG_HOME/Minimal Forest [FIXED].heic"'
 
 
 ###############################################################################

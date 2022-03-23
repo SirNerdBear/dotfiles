@@ -3,9 +3,12 @@
 require 'open3'
 
 SSH_DIR = "#{ENV["HOME"]}/.ssh".freeze
-PROJECT_DIR = "#{ENV["HOME"]}/Projects".freeze
-CONFIG_DIR = "#{ENV["HOME"]}/Projects/dotfiles".freeze
+CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
+
+
+#TODO figure out VSCode extensions restore
+#https://stackoverflow.com/questions/35929746/automatically-install-extensions-in-vs-code
 
 class Array
     def shell_s
@@ -58,7 +61,8 @@ def mkdir_p(mode,dir)
 end
 
 def name_computer
-    puts "Computer Name (Leave Blank to Skip):"
+    ohai "Computer name is #{`hostname`}"
+    ohai "Computer Name (Leave Blank to Skip):"
     computer_name = gets.chomp
     return if computer_name == ""
     sudo "scutil","--set","ComputerName", computer_name
@@ -69,6 +73,165 @@ def name_computer
 end
 
 
+def brewfile
+    # Brew file will install everything for homebrew and casks for most of my apps
+    Dir.chdir(CONFIG_DIR) do
+        ohai "Running Brewfile"
+    
+        system 'brew', 'bundle'  # Install everything in the Brewfile
+        system 'brew', 'cleanup' # Remove outdated versions from the cellar.
+
+        ohai "Running post install scripts"
+        for installer in glob.glob("**/install.sh")
+            ohai "Running install script for %s"
+            system installer
+        end
+    end
+end
+
+def ssh_config
+    config = File.join(ENV["HOME"], ".ssh", "config")
+    unless File.exists?(config)
+        File.open(config, 'w') do |f|
+            f.write("Host *\n")
+            f.write("\tAddKeysToAgent yes\n")
+            f.write("\tUseKeychain yes\n")
+            f.write("\tIdentityFile ~/.ssh/id_rsa\n")
+            f.write("\tIdentityFile ~/.ssh/id_ed25519\n")
+        end
+    end
+    File.chmod(0600, config)
+    #TODO need to restore hosts such as Proxy commands, etc.
+    # Host app1.epicpages.com
+    #     User scott
+    #     PubKeyAuthentication yes
+    #     ProxyCommand sh -c 'knock -u -d 400 %h 7928 9856 9814; nc %h %p'
+
+    # Host 10.0.1.51
+    #     HostName 10.0.1.51
+    #     User pi
+end
+
+def provision_gpg(id,name=nil)
+    file = (name || "id").downcase() + "_ed25519"
+    pub_file = file + ".pub"
+    cred = capture_system 'lpass','show',id
+    if cred =~ /Private Key: +(.*?-----END PGP PRIVATE KEY BLOCK-----)/m
+        File.open(File.join(SSH_DIR,file),'w') do |f|
+	        f.write($1)
+            f.write("\n")
+        end
+        File.chmod(0600, File.join(SSH_DIR,file))
+    end
+    if cred =~ /Public Key: +(.*?-----END PGP PUBLIC KEY BLOCK-----)/m
+        File.open(File.join(SSH_DIR,pub_file),'w') do |f|
+	        f.write($1)
+            f.write("\n")
+        end
+        File.chmod(0600, File.join(SSH_DIR,pub_file))
+    end
+end
+
+def provision_sshkey(id,name=nil)
+    file = (name || "id") + "_rsa"
+    pub_file = file + ".pub"
+    cred = capture_system 'lpass','show',id
+    if cred =~ /Private Key: +(.*?-----END RSA PRIVATE KEY-----)/m
+        File.open(File.join(SSH_DIR,file),'w') do |f|
+	        f.write($1)
+            f.write("\n")
+        end
+        File.chmod(0600, File.join(SSH_DIR,file))
+    end
+    if cred =~ /Public Key: +(.*?)$/m
+        File.open(File.join(SSH_DIR,pub_file),'w') do |f|
+	        f.write($1)
+            f.write("\n")
+        end
+        File.chmod(0600, File.join(SSH_DIR,pub_file))
+    end
+end
+
+
+def secure_restore
+    ohai "Getting secure config items from LastPass"
+
+    # If not logged into lpass prompt for login now
+    status = capture_system 'lpass','status'
+    if status =~ /Not logged in/m
+        ohai "Login to LastPass to Retrieve SSH Keys"
+        print "LastPass Login Email: "
+        email = gets.chomp
+        abort "Must provide login to continue!" unless email != ""
+        system 'lpass', 'login', email
+    end
+    
+    
+    
+    
+    list = capture_system 'lpass','ls','SysConfig'
+    found = false
+    secure_env = ""
+    list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
+        (name,id) = match
+        if name =~ /SSH Key *\(?(.*?)\)?$/
+            if $1 != ""
+                ohai "Adding SSH key: #{$1}"
+                provision_sshkey(id,$1)
+            else
+                ohai "Adding Primary SSH Key"
+                provision_sshkey(id)
+            end 
+        elsif name =~ /^GPG *\(?(.*?)\)?$/
+            if $1 != ""
+                ohai "Adding GPG key: #{$1}"
+                provision_gpg(id,$1)
+            else
+                ohai "Adding Primary GPG key"
+                provision_gpg(id)
+            end
+        elsif name == "Trust DB GPG"
+            result = capture_system 'lpass', 'show', id
+            if result =~ /Notes: +(.*?)\Z/m
+                ohai "Copying trust DB backup"
+                fn = File.join(CONFIG_DIR,"init","trustdb.txt")
+                File.open(fn,'w') do |f|
+                    f.write($1)
+                end
+                File.chmod(0600, fn)
+            end
+        elsif name == "Secure Env Vars"
+            result = capture_system 'lpass', 'show', id
+            if result =~ /Notes:\W+(.*?)\Z/m
+                #this breaks on systems that don't have this dir yet
+                ohai "Setting up secure local env vars"
+                File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
+                f.write($1)
+                end
+            end
+        elsif name == "DBXcli"
+            #TODO get this from lpass, it's a simple json file
+            #make sure it's 600 for the file and 700 for the dbxcli directory inside of .config
+            #https://github.com/dropbox/dbxcli/issues/130 the toke in the auth.json file should last forever
+
+        elsif name == "FileVault"
+            `lpass show #{id} | gsed -r 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain`
+        end
+        #TODO need a method to update lpass with new/edited SSH keys and GPG keys, etc
+    end
+end
+
+ohai "Build bootstrap script"
+ohai "**********************"
+
+if `uname -m` =~ /x86_64/
+    ohai "x86_64 CPU Architecture Detected"
+else
+    ohai "ARM CPU Architecture Detected, M1"
+end
+#uname -m
+#It should say arm64 if you are on an M1 Mac. If it says x86_4, that means Terminal is in Rosetta mode.
+
 # Avoid reprompting for sudo password
 run "/usr/bin/sudo -n -v 2>/dev/null"
 
@@ -78,28 +241,24 @@ at_exit { run "/usr/bin/sudo", "-k" } unless $?.success?
 # The block form of Dir.chdir fails if Dir.CWD doesn't exist
 Dir.chdir "/usr"
 
-name_computer
-exit
-#TODO work for linux as well
 #darwin for macos
-RUBY_PLATFORM.to_s.downcase.include?("linux") and
-    abort "This is the macOS installer, not Linux!"
+RUBY_PLATFORM.to_s.downcase.include?("linux") and abort "This is the macOS installer, not Linux!"
 
 abort "Don't run install as root!" if Process.uid.zero?
 
 `dsmemberutil checkmembership -U "#{ENV["USER"]}" -G admin`.include? 'is a' or
     abort "This installer can only be ran by an Administrator."
 
+name_computer()
 
 if install_homebrew? && !run("/usr/bin/ruby","-e",`curl -fsSL #{HB}`)
     abort "Can't proceed! Homebrew not installed."
 end
 
-mkdir_p(0700,SSH_DIR)       #TODO mkdir_p from stackoverflow notes
-mkdir_p(0700,PROJECT_DIR)
+mkdir_p(0700,SSH_DIR)
 
 unless Dir.exists?( CONFIG_DIR )
-    Dir.chdir(PROJECT_DIR) do
+    Dir.chdir(ENV["HOME"]) do
         system 'git', 'clone', 'git@bitbucket.org:sdhall/dotfiles.git'
     end
 end
@@ -109,72 +268,23 @@ ohai "Brewing…"
 system 'brew', 'update' # Make sure we’re using the latest Homebrew.
 system 'brew', 'upgrade' # Upgrade any already-installed formulae.
 
-system 'brew', 'install', 'lastpass-cli'
+system 'brew', 'install', 'lastpass-cli', 'gnu-sed' #needed for this script, before Brewfile runs
 
+#make the symlinks and setup XDG env vars
+#these will be expected by the install scripts
 Dir.chdir(CONFIG_DIR) do
-    ohai "Running Brewfile"
-
-    system 'brew', 'bundle'  # Install everything in the Brewfile
-    system 'brew', 'cleanup' # Remove outdated versions from the cellar.
-
-    #make the symlinks and setup XDG env vars
-    #these will be expected by the install scripts
-    system "source", "init/xdg_env"
-
-    for installer in glob.glob("**/install.sh")
-        ohai "Running install script for %s"
-        system installer
-
-        config = File.join(ENV["HOME"], ".ssh", "config")
-    unless File.exists?(config)
-    File.open(config, 'w') do |f|
-        f.write("Host *\n")
-        f.write("\tAddKeysToAgent yes\n")
-        f.write("\tUseKeychain yes\n")
-        f.write("\tIdentityFile ~/.ssh/id_rsa\n")
-    end
+    system "source", "init/xdg_env" 
 end
-File.chmod(0600, config)
 
-ohai "Login to LastPass to Retrieve SSH Keys"
+secure_restore()
 
-print "LastPass Login Email: "
-email = gets.chomp
-abort "Must provide login to continue!" unless email != ""
-system 'lpass', 'login', email
+brewfile()
 
-#lpass show {id} | sed -r -n 's/Notes:\s+(.*?)$/\1/p' | tr -d '\n' | openssl base64 -d -A > /Library/Keychains/FileVaultMaster.keychain
+ohai "Installation successful!"
+puts
+ohai "Don't forget to manually install Adobe programs from the Creative Cloud app"
 
-list = capture_system 'lpass','ls','SysConfig'
-found = false
-secure_env = ""
-list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
-  (name,id) = match
-  if name == "Primary SSH Key"
-    provision_sshkey(id)
-  elsif name == "Secure Env Vars"
-    result = capture_system 'lpass', 'show', id
-    if result =~ /Notes:\W+(.*?)\Z/m
-      #this breaks on systems that don't have this dir yet
-      File.open(File.join(CONFIG_DIR,'zsh','secure_env.zsh'),'w') do |f|
-	f.write($1)
-      end
-    end
-
-    ohai "Installation successful!"
-    puts
-    ohai "Don't forget to manually install:\e[1m"
-
-    ["Adobe Photoshop", "Adobe Illustrator", "Adobe Acrobat DC",
-     "Adobe InDesign","Adobe After Effects", "Adobe Premiere",
-     "Adobe Audition", "Numbers","Pages","Keynote",
-     "XCode", "The Archive Browser", "The Unarchiver"
-    ].each |app| do
-        puts "\t• #{app}"
-    end
-
-    puts "\e[0m"
-end
+puts "\e[0m"
 
 # Use the shell's audible bell.
 print "\a"

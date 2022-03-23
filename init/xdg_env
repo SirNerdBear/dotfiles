@@ -3,7 +3,7 @@
 if [ $(id -u) -ne 0 ]; then
 	#create symlink to dotfiles if needed
 
-	dotpath="$HOME"/Projects/dotfiles
+	dotpath="$HOME"/dotfiles
 	dotdir="$HOME"/.config
 
 	if [ ! -d $dotpath ]; then

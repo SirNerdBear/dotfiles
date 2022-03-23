@@ -33,6 +33,9 @@ git/config.local
 # doesn't need to be in repo
 configstore
 
+# don't store trust db
+init/trustdb.txt
+
 cmus/*
 !cmus/autosave
 !cmus/*.theme
