@@ -7,7 +7,6 @@ CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 
 
-#TODO config file for ssh stored in lpass
 #TODO fix macos install script
 #*******************************************************************************************************
 #TODO better read me
@@ -98,29 +97,6 @@ def brewfile
     end
 end
 
-def ssh_config
-    config = File.join(ENV["HOME"], ".ssh", "config")
-    unless File.exists?(config)
-        File.open(config, 'w') do |f|
-            f.write("Host *\n")
-            f.write("\tAddKeysToAgent yes\n")
-            f.write("\tUseKeychain yes\n")
-            f.write("\tIdentityFile ~/.ssh/id_rsa\n")
-            f.write("\tIdentityFile ~/.ssh/id_ed25519\n")
-        end
-    end
-    File.chmod(0600, config)
-    #TODO need to restore hosts such as Proxy commands, etc.
-    # Host app1.epicpages.com
-    #     User scott
-    #     PubKeyAuthentication yes
-    #     ProxyCommand sh -c 'knock -u -d 400 %h 7928 9856 9814; nc %h %p'
-
-    # Host 10.0.1.51
-    #     HostName 10.0.1.51
-    #     User pi
-end
-
 def provision_gpg(id,name=nil)
     file = (name || "id").downcase() + "_ed25519"
     pub_file = file + ".pub"
@@ -174,13 +150,8 @@ def secure_restore
         abort "Must provide login to continue!" unless email != ""
         system 'lpass', 'login', email
     end
-    
-    
-    
-    
+
     list = capture_system 'lpass','ls','SysConfig'
-    found = false
-    secure_env = ""
     list.scan(/^SysConfig\/(.*?) \[id: (\d+)\]$/m) do |match|
         (name,id) = match
         if name =~ /SSH Key *\(?(.*?)\)?$/
@@ -191,6 +162,17 @@ def secure_restore
                 ohai "Adding Primary SSH Key"
                 provision_sshkey(id)
             end 
+        elsif name == "SSH Config"
+            result = capture_system 'lpass', 'show', id
+            if result =~ /Notes: +(.*?)\Z/m
+                config = File.join(ENV["HOME"], ".ssh", "config")
+                unless File.exists?(config)
+                    File.open(config, 'w') do |f|
+                        f.write($1)
+                    end
+                end
+                File.chmod(0600, config)
+            end
         elsif name =~ /^GPG *\(?(.*?)\)?$/
             if $1 != ""
                 ohai "Adding GPG key: #{$1}"
