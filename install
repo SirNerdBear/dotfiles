@@ -7,7 +7,6 @@ CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
 HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 
 
-#TODO fix macos install script
 #*******************************************************************************************************
 #TODO better read me
 #TODO adept to work with linux Ubuntu and PopOS
@@ -15,7 +14,7 @@ HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 #TODO also support wdl win subsystem
 #TODO Makefile or such to update extensions, copy fonts and upload, update ssh/gpg keys into lpass, etc.
 #TODO start working on tmux and neovim again
-
+#*******************************************************************************************************
 
 
 class Array

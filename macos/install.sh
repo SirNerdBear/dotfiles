@@ -12,9 +12,6 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
-#this needs to be done by installer instead with lpass
-#TODO detect if file exits and if not alert that it doesn't but don't fail
-#TODO maybe ask if Filevault should be enabled?
 if [ ! -f /Library/Keychains/FileVaultMaster.keychain ]; then
   sudo mv ~/Projects/dotfiles/init/FileVaultMaster.keychain \
           /Library/Keychains/FileVaultMaster.keychain
@@ -150,15 +147,7 @@ defaults write -g AppleAquaColorVariant -int 6
 defaults write com.apple.universalaccess reduceMotion -bool true
 defaults write com.apple.dock expose-animation-duration -float 0.1 #doesn't work in 10.12+
 
-# Mojave.heic
-# Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
-# all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
-#rm -rf ~/Library/Application Support/Dock/desktoppicture.db
-#sudo rm -rf /System/Library/CoreServices/DefaultDesktop.jpg
-#sudo ln -s /path/to/your/image /System/Library/CoreServices/DefaultDesktop.jpg
-#sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$IMAGE'"
-
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "$XDG_CONFIG_HOME/Minimal Forest [FIXED].heic"'
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'"${XDG_CONFIG_HOME}/init/Minimal Forest [FIXED].heic"'"'
 
 
 ###############################################################################
