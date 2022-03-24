@@ -15,7 +15,18 @@ HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
 #TODO Makefile or such to update extensions, copy fonts and upload, update ssh/gpg keys into lpass, etc.
 #TODO start working on tmux and neovim again
 #*******************************************************************************************************
+# Manual
+# =============================
+# Setup iCloud and let it download files
+# Use command key to remove spotlight icon
+# Docker didn't load on boot?
 
+# To Fix
+# =============================
+# .editorconfig did not make a sym link so it lost changes and also didn't install
+
+# VSCode did not remain in the git and therefore did not reinstall correctly. Need to figure this out. 
+# Appears VSCode users Application Support which we could do a symlink for certain files
 
 class Array
     def shell_s
