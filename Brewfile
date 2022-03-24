@@ -1,7 +1,7 @@
 # https://github.com/Homebrew/homebrew-bundle
 
 tap "homebrew/services"    # Integrates brews with macOS' launchctl manager
-tap "homebrew/cask-fonts"  # https://github.com/Homebrew/homebrew-cask-fonts
+#tap "homebrew/cask-fonts"  # https://github.com/Homebrew/homebrew-cask-fonts
 tap "homebrew/bundle"      # https://github.com/Homebrew/homebrew-bundle
 tap "homebrew/core"        # Majority of brews are in the core
 tap "idleberg/dbxcli"      # Dropbox dbxcli
@@ -45,8 +45,7 @@ brew "htop"                # Better and sexier than top by 9001%
 brew "screenfetch"         # Show system stats in terminal to be a 'cool kid.'
 brew "lynx"                # CLI browser, for "reasons."
 brew "curl"                # Newer curl than macOS system default
-brew "wget",               # Easier terminal downloads over curl
-  args: ["with-iri"]  
+brew "wget"                # Easier terminal downloads over curl
 brew "tree"                # Visual file tree CLI
 brew "foremost"            # Data carving/recovery
 brew "binutils"            # https://www.gnu.org/software/binutils/binutils.html
@@ -66,6 +65,7 @@ brew "lnav"                # A different tailing log tool than multitail
 brew "fzf"                 # CLI fuzzy finder.
 brew "socat"               # Sockets via CLI
 brew "zsh"                 # Bash replacement
+brew "antibody"            # ZSH plugin manager
 brew "reattach-to-user-namespace" # Enable pbpaste/pbcopy in tmux
 brew "tmux"                # Terminal multiplexer
 brew "tmux-xpanes"         # https://github.com/greymd/tmux-xpanes
@@ -78,8 +78,7 @@ brew "lastpass-cli",       # CLI interface for LastPass. Used to restore SSH
 brew "coreutils"           # GNU core utilities
 brew "moreutils"           # Useful stuff like `vipe`, `vidir`, `chronic`.
                            # https://joeyh.name/code/moreutils/
-brew "findutils",          # GNU `find`, `locate`, `updatedb`, and `xargs`.
-  args: ["with-default-names"]
+brew "findutils"           # GNU `find`, `locate`, `updatedb`, and `xargs`.
 brew "gnu-sed"             # GNU `sed`
 brew "grep"                # GNU `grep`
 brew "openssh"             # Remote login with the SSH protocol. Key gen.
@@ -122,7 +121,7 @@ cask "google-chrome"       # Ok
 cask "thunderbird"         # For Email
 
 cask "sensiblesidebuttons" # Make back/forward on mouse work
-cask "zoomus"              # For remote meetings and such
+cask "zoom"              # For remote meetings and such
 cask "slack"               # Work chat
 cask "microsoft-teams"     # Gross. Sick!
 cask "webtorrent"          # Yo ho!
@@ -143,7 +142,7 @@ cask "adobe-creative-cloud"# These jerks get $$$ every month
 # Install a whole bunch of non-restrictive license fonts. Licenced fonts are #
 # added elsewhere (via custom finder extention) and synced with Dropbox.     #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
-cask "java"                # Needed for arduno and others
+#cask "java"                # Needed for arduno and others
 cask "arduino"             # Used for compiling/uploading arduino
 cask "blisk"               # Browser for testing mobile, etc.
 brew "go"                  # Twice as good as stop… j/k… https://golang.org/
@@ -199,8 +198,8 @@ brew "docker-compose-completion"
 # CODING FONT
 # Ligatures don't work with font-firacode-nerd-font
 # Therefore utilizing the non-acsii font for iTerm to support both.
-cask "font-fira-code"      # Ligature font for development sexyness
-cask "font-firacode-nerd-font" # Includes powerline symbols and much more
+#cask "font-fira-code"      # Ligature font for development sexyness
+#cask "font-firacode-nerd-font" # Includes powerline symbols and much more
 
 brew "neovim"              # Neovim > VIM (for now)
 brew "the_silver_searcher" # Runs searches real fast. Get it? Ahahaha! NEEERD!

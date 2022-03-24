@@ -89,9 +89,9 @@ def brewfile
         system 'brew', 'cleanup' # Remove outdated versions from the cellar.
 
         ohai "Running post install scripts"
-        for installer in glob.glob("**/install.sh")
+        for installer in Dir.glob("**/install.sh")
             ohai "Running install script for %s"
-            system installer
+            system '/bin/bash', installer
         end
     end
 end
@@ -275,10 +275,10 @@ end
 
 ohai "Brewing…"
 
-#system 'brew', 'update' # Make sure we’re using the latest Homebrew.
-# system 'brew', 'upgrade' # Upgrade any already-installed formulae.
+system 'brew', 'update' # Make sure we’re using the latest Homebrew.
+system 'brew', 'upgrade' # Upgrade any already-installed formulae.
 
-# system 'brew', 'install', 'lastpass-cli', 'gnu-sed' #needed for this script, before Brewfile runs
+system 'brew', 'install', 'lastpass-cli', 'gnu-sed' #needed for this script, before Brewfile runs
 
 #make the symlinks and setup XDG env vars
 #these will be expected by the install scripts
@@ -288,7 +288,7 @@ end
 
 secure_restore()
 
-# brewfile()
+brewfile()
 
 ohai "Installation successful!"
 puts

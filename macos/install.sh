@@ -24,8 +24,8 @@ then
 fi
 
 #get the fonts from dropbox
-dbxcli get my-font-backup.zip && unzip -o my-font-backup.zip -d ~/Library/Fonts && rm my-font-backup.zip
-chmod 0600 ~/Library/Fonts/*
+#dbxcli get my-font-backup.zip && unzip -o my-font-backup.zip -d ~/Library/Fonts && rm my-font-backup.zip
+#chmod 0600 ~/Library/Fonts/*
 
 ##################################################################################
 # General UI/UX
@@ -174,43 +174,43 @@ sudo pmset -a sms 0
 #Make function keys work like function keys by default
 defaults write -g com.apple.keyboard.fnState -bool true
 
-cnt=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources" ~/Library/Preferences/com.apple.HIToolbox.plist | grep "Dict" | wc -l | tr -d '[:space:]'`
-cnt=`expr "$cnt" '-' '1'`
-US=0
-UNICODE=0
-REMOVE=()
-foreach idx (`seq 0 $cnt`)
-    val=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:InputSourceKind" ~/Library/Preferences/com.apple.HIToolbox.plist`
-    if [ "$val" = "Keyboard Layout" ]; then
-        input=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:KeyboardLayout\ Name" ~/Library/Preferences/com.apple.HIToolbox.plist`
-        if [ "$input" = "U.S." ]; then
-            if [ "$US" -gt 0 ]; then
-                REMOVE+=($idx)
-            fi
-            US=1;
-        elif [ "$input" = "Unicode Hex Input" ]; then
-            if [ "$UNICODE" -gt 0 ]; then
-                REMOVE+=($idx)
-            fi
-            UNICODE=1;
-        else
-            REMOVE+=(idx)
-            echo "${input}"
-        fi
-    fi
-end
-if [ "$US" -lt 1 ]; then
-    #add US standard keyboard input
-    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>0</integer><key>KeyboardLayout Name</key><string>U.S.</string></dict>'
-fi
-if [ "$UNICODE" -lt 1 ]; then
-    #add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
-    defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
-fi
-foreach idx ($REMOVE)
-    #remove inputs that are dups or not U.S. / Unicode
-    /usr/libexec/PlistBuddy -c "delete AppleEnabledInputSources:${idx}" ~/Library/Preferences/com.apple.HIToolbox.plist
-end
+# cnt=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources" ~/Library/Preferences/com.apple.HIToolbox.plist | grep "Dict" | wc -l | tr -d '[:space:]'`
+# cnt=`expr "$cnt" '-' '1'`
+# US=0
+# UNICODE=0
+# REMOVE=()
+# foreach idx (`seq 0 $cnt`)
+#     val=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:InputSourceKind" ~/Library/Preferences/com.apple.HIToolbox.plist`
+#     if [ "$val" = "Keyboard Layout" ]; then
+#         input=`/usr/libexec/PlistBuddy -c "print AppleEnabledInputSources:${idx}:KeyboardLayout\ Name" ~/Library/Preferences/com.apple.HIToolbox.plist`
+#         if [ "$input" = "U.S." ]; then
+#             if [ "$US" -gt 0 ]; then
+#                 REMOVE+=($idx)
+#             fi
+#             US=1;
+#         elif [ "$input" = "Unicode Hex Input" ]; then
+#             if [ "$UNICODE" -gt 0 ]; then
+#                 REMOVE+=($idx)
+#             fi
+#             UNICODE=1;
+#         else
+#             REMOVE+=(idx)
+#             echo "${input}"
+#         fi
+#     fi
+# end
+# if [ "$US" -lt 1 ]; then
+#     #add US standard keyboard input
+#     defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>0</integer><key>KeyboardLayout Name</key><string>U.S.</string></dict>'
+# fi
+# if [ "$UNICODE" -lt 1 ]; then
+#     #add Unicode keyboard input allowing easy input of unicode characters (Option+unicode)
+#     defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add '<dict><key>InputSourceKind</key><string>Keyboard Layout</string><key>KeyboardLayout ID</key><integer>-1</integer><key>KeyboardLayout Name</key><string>Unicode Hex Input</string></dict>'
+# fi
+# foreach idx ($REMOVE)
+#     #remove inputs that are dups or not U.S. / Unicode
+#     /usr/libexec/PlistBuddy -c "delete AppleEnabledInputSources:${idx}" ~/Library/Preferences/com.apple.HIToolbox.plist
+# end
 
 # Trackpad: enable tap to click for this user and for the login screen
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
