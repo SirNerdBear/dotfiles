@@ -49,6 +49,9 @@ if [ -d ~/.oracle_jre_usage ]; then
     rm -r ~/.oracle_jre_usage/
 fi
 
+#findutils gnu versions of find, xargs, and locate
+PATH="$(brew --prefix)/opt/findutils/libexec/gnubin:$PATH"
+
 ##########################-> ZSH Spaceship Prompt <-##########################
 SPACESHIP_CHAR_COLOR_SUCCESS="048" # A very mild and light green.
 SPACESHIP_CHAR_COLOR_FAILURE="048" # Don't prompt change color on errors.

@@ -259,7 +259,6 @@ end
 
 mkdir_p(0700,SSH_DIR)
 
-#TODO lpass must happen before for at least SSH key??
 unless Dir.exists?( CONFIG_DIR )
     Dir.chdir(ENV["HOME"]) do
         system 'git', 'clone', 'git@github.com:SirNerdBear/dotfiles.git'

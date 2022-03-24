@@ -193,7 +193,7 @@ brew "webkit2png"          # Python script that takes screenshots using webkit
 
 # Add CLI completions for docker
 brew "docker-completion"
-brew "docker-compose-completion"
+#brew "docker-compose-completion"
 
 # CODING FONT
 # Ligatures don't work with font-firacode-nerd-font
