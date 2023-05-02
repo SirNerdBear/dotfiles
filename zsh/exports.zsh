@@ -88,6 +88,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # Make RBENV shims work
 export PATH="~/.rbenv/bin:$PATH"
 
+# Add python scripts to PATH
+export PATH="~/Library/Python/3.10/bin:$PATH"
+
 # Support italics
 export TERM="xterm-256color-italic"
 

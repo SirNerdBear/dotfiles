@@ -1239,7 +1239,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<false/>
 			<key>Normal Font</key>
-			<string>FiraCode-Regular 14</string>
+			<string>FiraCodeRoman-Regular 14</string>
 			<key>Open Toolbelt</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -1471,8 +1471,6 @@
 				<key>Red Component</key>
 				<real>0.11765811592340469</real>
 			</dict>
-			<key>Background Image Location</key>
-			<string>/Users/scott/dotfiles/init/term-bgui.jpg</string>
 			<key>Background Image Mode</key>
 			<integer>2</integer>
 			<key>Badge Color</key>
@@ -1489,13 +1487,13 @@
 				<real>1</real>
 			</dict>
 			<key>Blend</key>
-			<real>0.73070240850033974</real>
+			<real>1</real>
 			<key>Blinking Cursor</key>
 			<true/>
 			<key>Blur</key>
-			<true/>
+			<false/>
 			<key>Blur Radius</key>
-			<real>2</real>
+			<real>0.10000000000000001</real>
 			<key>Bold Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -1601,6 +1599,8 @@
 			<integer>0</integer>
 			<key>Initial Text</key>
 			<string></string>
+			<key>Initial Use Transparency</key>
+			<true/>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -1916,6 +1916,8 @@
 			<false/>
 			<key>Normal Font</key>
 			<string>FiraCodeRoman-Regular 14</string>
+			<key>Only The Default BG Color Uses Transparency</key>
+			<true/>
 			<key>Open Toolbelt</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -1963,7 +1965,7 @@
 			<key>Terminal Type</key>
 			<string>xterm-256color-italic</string>
 			<key>Transparency</key>
-			<real>0.016126665609137013</real>
+			<real>0.017800578665226063</real>
 			<key>Unicode Version</key>
 			<integer>9</integer>
 			<key>Unlimited Scrollback</key>
@@ -1972,6 +1974,8 @@
 			<true/>
 			<key>Use Bright Bold</key>
 			<true/>
+			<key>Use Custom Window Title</key>
+			<false/>
 			<key>Use Italic Font</key>
 			<true/>
 			<key>Use Non-ASCII Font</key>
@@ -3345,6 +3349,8 @@
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.41105518830128218</real>
+	<key>SquareWindowCorners</key>
+	<false/>
 	<key>StatusBarIcon</key>
 	<false/>
 	<key>StretchTabsToFillBar</key>
@@ -3355,6 +3361,8 @@
 	<integer>9</integer>
 	<key>TabStyle</key>
 	<integer>1</integer>
+	<key>TabStyleWithAutomaticOption</key>
+	<integer>4</integer>
 	<key>TerminalMargin</key>
 	<integer>0</integer>
 	<key>TerminalVMargin</key>

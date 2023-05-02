@@ -23,6 +23,12 @@ nvim/autoload/plug.vim
 #secure env vars shouldn't go into repo
 zsh/secure_env.zsh
 
+#ignore sessions for zsh
+zsh/.zsh_sessions
+
+#ignore karabiner backup files
+karabiner/automatic_backups
+
 #plugin is generatred
 zsh/_plugins.zsh
 
