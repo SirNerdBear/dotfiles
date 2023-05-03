@@ -4,7 +4,7 @@ require 'open3'
 
 SSH_DIR = "#{ENV["HOME"]}/.ssh".freeze
 CONFIG_DIR = "#{ENV["HOME"]}/dotfiles".freeze
-HB="https://raw.githubusercontent.com/Homebrew/install/master/install".freeze
+HB="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh".freeze
 
 
 #*******************************************************************************************************
