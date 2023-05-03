@@ -166,7 +166,7 @@ cask "docker"              # Containers are HOT!
 cask "virtualbox"          # Oracle's VirtualBox (VMs)
 brew "qemu"                # CLI VMs
 
-brew "postgresql"          # For local non-docker dbs
+brew "postgresql@14"          # For local non-docker dbs
 brew "redis"               # Local object storage (key value store)
 brew "mysql"               # local mySQL db support (not auto started)
 brew "memcached"           # An in-memory key-value store for small chunks
