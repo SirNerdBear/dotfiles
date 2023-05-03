@@ -272,7 +272,7 @@ mkdir_p(0700,SSH_DIR)
 
 unless Dir.exists?( CONFIG_DIR )
     Dir.chdir(ENV["HOME"]) do
-        system 'git', 'clone', 'git@github.com:SirNerdBear/dotfiles.git'
+        system 'git', 'clone', 'https://github.com/SirNerdBear/dotfiles.git'
     end
 end
 
