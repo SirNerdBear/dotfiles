@@ -1,10 +1,7 @@
 # https://github.com/Homebrew/homebrew-bundle
 
 tap "homebrew/services"    # Integrates brews with macOS' launchctl manager
-#tap "homebrew/cask-fonts"  # https://github.com/Homebrew/homebrew-cask-fonts
 tap "homebrew/bundle"      # https://github.com/Homebrew/homebrew-bundle
-tap "homebrew/core"        # Majority of brews are in the core
-tap "idleberg/dbxcli"      # Dropbox dbxcli
 
 ################################## LIBRARYS ##################################
 # Development dependencies used mostly in C projects.                        #
@@ -30,7 +27,6 @@ brew "webp"                # Format providing lossless and lossy compression
 # Tools to get the most out of the command-line. A lot of use-case utilties. #
 # Some are for fun. That is, unless, ASCII fish are critical to workflow.    #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
-brew "dbxcli"              # Dropbox CLI
 brew "automake"            # Tool to automatically generate Makefile.in
 brew "p7zip"               # A port of 7za.exe for POSIX systems
 brew "colordiff"           # CLI diff… Now in COLOR!
@@ -40,7 +36,7 @@ brew "speedtest-cli"       # CLI for https://speedtest.net bandwidth tests
 brew "tcpflow"             # TCP/IP packet demultiplexer
 brew "fontforge"           # Makes sexy fonts
 brew "asciinema"           # CLI Recording
-brew "cmus"                # CLI music player. Because iTunes is bloat-wear.
+brew "cmus"                # CLI music player. Because, why not?
 brew "htop"                # Better and sexier than top by 9001%
 brew "screenfetch"         # Show system stats in terminal to be a 'cool kid.'
 brew "lynx"                # CLI browser, for "reasons."
@@ -49,12 +45,10 @@ brew "wget"                # Easier terminal downloads over curl
 brew "tree"                # Visual file tree CLI
 brew "foremost"            # Data carving/recovery
 brew "binutils"            # https://www.gnu.org/software/binutils/binutils.html
-brew "knock"               # Port knocking (knock-knock. Who's there? Port 23)
 brew "netpbm"              # http://netpbm.sourceforge.net/
 brew "nmap"                # Network diagnostic tool
 brew "pngcheck"            # Validate images
 brew "exiv2"               # Manage image metadata
-brew "ssh-copy-id"         # Easier transfer of ssh key to remote hosts
 brew "cmatrix"             # Neo is the one
 brew "cowsay"              # Obligatory. Moo.
 brew "sl"                  # Ride the train
@@ -64,15 +58,11 @@ brew "grc"                 # Genetic colorizor for logs or other things
 brew "lnav"                # A different tailing log tool than multitail
 brew "fzf"                 # CLI fuzzy finder.
 brew "socat"               # Sockets via CLI
-brew "zsh"                 # Bash replacement
-brew "antibody"            # ZSH plugin manager
+brew "fish"		   # FISH shell
+brew "starship"		   # Starship.rs Prompt
 brew "reattach-to-user-namespace" # Enable pbpaste/pbcopy in tmux
 brew "tmux"                # Terminal multiplexer
 brew "tmux-xpanes"         # https://github.com/greymd/tmux-xpanes
-
-brew "lastpass-cli",       # CLI interface for LastPass. Used to restore SSH
-  args: ['with-pinentry']  # keys & other sensative data, keeping repo clean.
-# TODO https://github.com/lastpass/lastpass-cli/issues/427
 
 # Install more recent versions of some macOS tools.
 brew "coreutils"           # GNU core utilities
@@ -86,8 +76,6 @@ brew "vim"                 # Prefer NeoVim but a fallback is a good idea.
 
 # Install font tools.
 tap "bramstein/webfonttools" # adds cask for font tools below
-brew "sfnt2woff"           # TrueType and OpenType fonts -> WOFF
-brew "sfnt2woff-zopfli"    # sfnt2woff with Zopfli compression (2-5% smaller)
 brew "woff2"               # WOFF2 (de)compression utilities by Google
 #############################  </END CLI TOOLS>  #############################
 
@@ -108,34 +96,40 @@ brew "vitetris"            # DA DA DA DA DUM DUM DUM DA DA DA DO DO DO DA DA…
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ macOS APPS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
 # General use applications not directly tied to development                  #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+cask "ghostty"		   # The best terminal emulator... so far!
 cask "discord"             # Chatting sexyness
 cask "scrivener"           # Writing prose.
-cask "kindle"              # I was elected to lead, not to read
 cask "vlc"                 # Playing videos and such
 cask "karabiner-elements"  # Key remapping
 cask "alfred"              # GUI fuzzy finder and more (replaces spotlight)
-cask "iterm2"              # Terminal replacement
+cask "iterm2"              # Still around for now, but Ghostty replaces this
 
 cask "firefox"             # Best
 cask "google-chrome"       # Ok
-cask "thunderbird"         # For Email
+#cask "thunderbird"        # For Email, not using
 
-cask "sensiblesidebuttons" # Make back/forward on mouse work
-cask "zoom"              # For remote meetings and such
+cask "zoom"                # For remote meetings and such
 cask "slack"               # Work chat
-cask "microsoft-teams"     # Gross. Sick!
-cask "webtorrent"          # Yo ho!
+#cask "microsoft-teams"    # Gross. Sick!
 cask "scrivener"           # For penning the next epic novel
-cask "grammarly"           # Write words the good
 cask "calibre"             # For making eBooks
 cask "dbeaver-community"   # Database GUI tool
 
 cask "fontforge"           # Edit/convert fonts
 cask "adobe-creative-cloud"# These jerks get $$$ every month
-
+cask "sensiblesidebuttons" # Make btn 3/4 on mouse function as back/forward
 #Adobe apps must be installed manually from the CC app
 
+cask "balenaetcher"        # To burn usb sticks with bootable images
+cask "royal-tsx"           # RDP with saved connections
+
 #############################  </END macOS APPS>  ############################
+
+# Need to install with MAS:
+# Brother iPrint&Scan
+# Brother P-touch Editor
+# XLights
+
 
 
 ############################### DEV ENVIRONMENT ##############################
@@ -143,30 +137,19 @@ cask "adobe-creative-cloud"# These jerks get $$$ every month
 # added elsewhere (via custom finder extention) and synced with Dropbox.     #
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
 #cask "java"                # Needed for arduno and others
-cask "arduino"             # Used for compiling/uploading arduino
 cask "blisk"               # Browser for testing mobile, etc.
 brew "go"                  # Twice as good as stop… j/k… https://golang.org/
 brew "gx"                  # Package manager (used by Go projects)
-brew "gx-go"               # Tool to use with the gx package manager in go
-brew "python"              # Python 2.x
-brew "python3"             # Python 3.x
-brew "node"                # NodeJS
-brew "rbenv"               # Usually prefer containers but this allows
-                           # allows for not using the system gem folder
-                           # and can run non-dockorized RoR apps.
-brew "ruby-build"          # Allow rbenv to install Ruby versions
-brew "yarn"                # Mostly used in React projects. And for cats.
-brew "nvm"                 # Multiple versions of node and iojs (rbenv for js)
+brew "pyenv"		       # For python version shimming
+brew "pyenv-virtualenv"    # For python package management
+brew "asdf"                # Ruby and NodeJS version management
 
 cask "visual-studio-code"  # GUI text editor that I setup like VIM
 cask "imageoptim"          # Reduce size of images https://imageoptim.com/mac
 cask "imagealpha"          # PNG24->PNG8 /w alpha channel https://pngmini.com/
+cask "docker"              # Containers
 
-cask "docker"              # Containers are HOT!
-cask "virtualbox"          # Oracle's VirtualBox (VMs)
-brew "qemu"                # CLI VMs
-
-brew "postgresql@14"          # For local non-docker dbs
+brew "postgresql@17"       # For local non-docker dbs
 brew "redis"               # Local object storage (key value store)
 brew "mysql"               # local mySQL db support (not auto started)
 brew "memcached"           # An in-memory key-value store for small chunks
@@ -181,19 +164,16 @@ brew "hub"                 # Githubs wrapper for git https://hub.github.com/
 brew "git-lfs"             # GIT large file storage https://git-lfs.github.com
 brew "bfg"                 # Scubing files from a gitrepo, etc.
 brew "ripgrep"             # grep but respects .gitignore
-#https://stackoverflow.com/questions/39494631/gpg-failed-to-sign-the-data-fatal-failed-to-write-commit-object-git-2-10-0
 brew "gpg"                 # Signing git commits and such
 brew "pinentry-mac"        # GUI interface for GPG passphrase (macOS keychain)
 
 brew "autoconf"            # Create config shell scripts
-brew "mitmproxy"           # https://mitmproxy.org/
 brew "ossp-uuid"           # ISO-C API and CLI for generating UUIDs
 brew "pkg-config"          # helper tool used in compiling
 brew "webkit2png"          # Python script that takes screenshots using webkit
 
 # Add CLI completions for docker
 brew "docker-completion"
-#brew "docker-compose-completion"
 
 # CODING FONT
 # Ligatures don't work with font-firacode-nerd-font

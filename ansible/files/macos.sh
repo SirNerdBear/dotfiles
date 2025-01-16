@@ -1,5 +1,4 @@
-
-#!/usr/bin/bash
+#!/bin/bash
 
 set -x -e
 
@@ -171,6 +170,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 11 '<dic
 
 #Lock screen it Cmd+L
 defaults write com.apple.finder NSUserKeyEquivalents -dict 'Lock Screen' '@l'
+#TODO move this to All Applications
 
     # # Expand the following File Info panes:
     # # “General”, “Open with”, and “Sharing & Permissions”
@@ -191,19 +191,19 @@ defaults write com.google.Chrome NSUserKeyEquivalents '{ Extensions = "@$e"; }'
 defaults write com.google.Chrome.canary NSUserKeyEquivalents -dict-add 'Email Page Location' '\0'
 
 
-- domain: com.google.Chrome
-  key: NSUserKeyEquivalents
-  type: dict-add
-  value: 'Email Page Location' '\0'
-  name: Get rid of binds to email
+# - domain: com.google.Chrome
+#   key: NSUserKeyEquivalents
+#   type: dict-add
+#   value: 'Email Page Location' '\0'
+#   name: Get rid of binds to email
 
 
-# Remap Developer Tools to Command + Shift + I as that is more natural and it avoids the stupid email
-- domain: com.google.Chrome
-  key: NSUserKeyEquivalents
-  type: dict-add
-  value: 'Developer Tools' '@$i'
-  name: BetterTouchTool redirects Command + Option + I to this new shortcut
+# # Remap Developer Tools to Command + Shift + I as that is more natural and it avoids the stupid email
+# - domain: com.google.Chrome
+#   key: NSUserKeyEquivalents
+#   type: dict-add
+#   value: 'Developer Tools' '@$i'
+#   name: BetterTouchTool redirects Command + Option + I to this new shortcut
 
 #active settings from above
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u

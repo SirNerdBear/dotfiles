@@ -7,6 +7,18 @@
   hosts: "localhost"
   vars:
     system_macos_defaults:
+    - domain: /Library/Preferences/com.apple.loginwindow
+      key: AdminHostInfo
+      type: string
+      value: HostName
+      name: Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window
+
+    - domain: /Library/Preferences/com.apple.windowserver
+      key: DisplayResolutionEnabled
+      type: bool
+      value: true
+      name: Enable HiDPI display modes (requires restart)
+    user_macos_defaults:
     - domain: "/Library/Preferences/com.apple.AppleFileServer"
       key: guestAccess
       type: bool
@@ -125,11 +137,7 @@
       value: true
       name: Set Help Viewer windows to non-floating mode
 
-    - domain: /Library/Preferences/com.apple.loginwindow
-      key: AdminHostInfo
-      type: string
-      value: HostName
-      name: Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window
+
 
     - domain: NSGlobalDomain
       key: NSAutomaticQuoteSubstitutionEnabled
@@ -349,11 +357,7 @@
       value: 2
       name: Enable subpixel font rendering on non-Apple LCDs
 
-    - domain: /Library/Preferences/com.apple.windowserver
-      key: DisplayResolutionEnabled
-      type: bool
-      value: true
-      name: Enable HiDPI display modes (requires restart)
+
 
     - domain: com.apple.finder
       key: DisableAllAnimations
@@ -1037,7 +1041,7 @@
 
 
   tasks:
-    - name: "Set macOS default settings"
+    - name: "Set macOS default settings (privlaged)"
       community.general.osx_defaults:
         domain: "{{ item['domain'] }}"
         key: "{{ item['key'] }}"
@@ -1048,4 +1052,14 @@
         label: "{{ item['name'] }}"
       become: true
       #notify: Restart macOS dock
-
+    - name: "Set macOS default settings (user)"
+      community.general.osx_defaults:
+        domain: "{{ item['domain'] }}"
+        key: "{{ item['key'] }}"
+        type: "{{ item['type'] }}"
+        value: "{{ item['value'] }}"
+      loop: "{{ user_macos_defaults }}"
+      loop_control:
+        label: "{{ item['name'] }}"
+      become: true
+      #notify: Restart macOS dock
