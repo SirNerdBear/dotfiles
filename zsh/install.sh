@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ########################################################################################
-# ZSH Shell — Bash? We don't need no stickin' Bashes!
+#### ZSH Shell — Bash? We don't need no stickin' Bashes!
 ########################################################################################
 sudo cp ~/.config/init/zshrc /etc #set zdot_dir
 sudo cp ~/.config/init/xdg_env /etc #sourced by /etc/zshrc sets up XDG envirorment vars
