@@ -3,10 +3,45 @@
 #   ^#\s+(.*?)\ndefaults write (\S+)\s+(\S+)\s+-(\S+)\s(.*?)$
 #   - domain: $2\n  key: $3\n  type: $4\n  value: $5\n  name: $1\n
 
+#https://macos-defaults.com/
 - name: MacOS Playbook
   hosts: "localhost"
   vars:
     system_macos_defaults:
+    - domain: com.apple.universalaccess
+      key: reduceMotion
+      type: bool
+      value: true
+      name: Reudce motion enable to change space switching to a fade and not a swipe
+
+    - domain: com.apple.universalaccess
+      key: com.apple.custommenu.apps
+      type: array
+      value:
+        - com.apple.finder
+        - com.google.Chrome
+        - com.google.Chrome.canary
+        - com.apple.Safari
+      name: Enable keyboard shortcut overrides for select apps
+
+    - domain: com.apple.universalaccess
+      key: HIDScrollZoomModifierMask
+      type: int
+      value: 262144
+      name: Use scroll gesture with the Ctrl (^) modifier key to zoom
+
+    - domain: com.apple.universalaccess
+      key: closeViewScrollWheelToggle
+      type: bool
+      value: true
+      name: Enable scroll wheel zoom
+
+    - domain: com.apple.universalaccess
+      key: closeViewZoomFollowsFocus
+      type: bool
+      value: true
+      name: Follow the keyboard focus while zoomed in
+
     - domain: /Library/Preferences/com.apple.loginwindow
       key: AdminHostInfo
       type: string
@@ -18,6 +53,201 @@
       type: bool
       value: true
       name: Enable HiDPI display modes (requires restart)
+    - domain: com.apple.Safari
+      key: UniversalSearchEnabled
+      type: bool
+      value: false
+      name: Don't send search queries to Apple
+
+    ##################################################################################
+    # Safari & WebKit
+    ##################################################################################
+
+    - domain: NSGlobalDomain
+      key: WebKitDeveloperExtras
+      type: bool
+      value: true
+      name: Add a context menu item for showing the Web Inspector in web views
+
+    - domain: com.apple.Safari
+      key: WebContinuousSpellCheckingEnabled
+      type: bool
+      value: true
+      name: Enable continuous spellchecking
+
+    - domain: com.apple.Safari
+      key: WebAutomaticSpellingCorrectionEnabled
+      type: bool
+      value: false
+      name: Disable auto-correct
+
+    - domain: com.apple.Safari
+      key: AutoFillFromAddressBook
+      type: bool
+      value: false
+      name: Disable AutoFill for AddressBook
+
+    - domain: com.apple.Safari
+      key: AutoFillPasswords
+      type: bool
+      value: false
+      name: Disable Autofill for Passwords
+
+    - domain: com.apple.Safari
+      key: AutoFillCreditCardData
+      type: bool
+      value: false
+      name: Disable AutoFill for Credit Cards
+
+    - domain: com.apple.Safari
+      key: AutoFillMiscellaneousForms
+      type: bool
+      value: false
+      name: Disable Form Auto Fill
+
+    - domain: com.apple.Safari
+      key: WarnAboutFraudulentWebsites
+      type: bool
+      value: true
+      name: Warn about fraudulent websites
+
+    - domain: com.apple.Safari
+      key: WebKitPluginsEnabled
+      type: bool
+      value: false
+      name: Disable plug-ins
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled
+      type: bool
+      value: false
+      name: Disable Webkit plugins
+
+    - domain: com.apple.Safari
+      key: WebKitJavaEnabled
+      type: bool
+      value: false
+      name: Disable Java
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled
+      type: bool
+      value: false
+      name: Disable Webkit Java
+
+    - domain: com.apple.Safari
+      key: WebKitJavaScriptCanOpenWindowsAutomatically
+      type: bool
+      value: false
+      name: Block pop-up windows
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically
+      type: bool
+      value: false
+      name: Block Webkit popup windows
+
+    - domain: com.apple.Safari
+      key: SendDoNotTrackHTTPHeader
+      type: bool
+      value: true
+      name: Enable “Do Not Track”
+
+    - domain: com.apple.Safari
+      key: InstallExtensionUpdatesAutomatically
+      type: bool
+      value: true
+      name: Update extensions automatically
+
+    - domain: com.apple.Safari
+      key: SuppressSearchSuggestions
+      type: bool
+      value: true
+      name: Disable search suggestions
+
+    - domain: com.apple.Safari
+      key: WebKitTabToLinksPreferenceKey
+      type: bool
+      value: true
+      name: Press Tab to highlight each item on a web page
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks
+      type: bool
+      value: true
+      name: Enable tab to links
+
+    - domain: com.apple.Safari
+      key: ShowFullURLInSmartSearchField
+      type: bool
+      value: true
+      name: "Show the full URL in the address bar"
+
+    - domain: com.apple.Safari
+      key: HomePage
+      type: string
+      value: "about:blank"
+      name: Set Safari's home page to `about:blank` for faster loading
+
+    - domain: com.apple.Safari
+      key: AutoOpenSafeDownloads
+      type: bool
+      value: false
+      name: Prevent Safari from opening 'safe' files automatically after downloading
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled
+      type: bool
+      value: true
+      name: Allow hitting the Backspace key to go to the previous page in history
+
+    - domain: com.apple.Safari
+      key: ShowFavoritesBar
+      type: bool
+      value: false
+      name: Hide Safari's bookmarks bar by default
+
+    - domain: com.apple.Safari
+      key: ShowSidebarInTopSites
+      type: bool
+      value: false
+      name: Hide Safari's sidebar in Top Sites
+
+    - domain: com.apple.Safari
+      key: DebugSnapshotsUpdatePolicy
+      type: int
+      value: 2
+      name: Disable Safari's thumbnail cache for History and Top Sites
+
+    - domain: com.apple.Safari
+      key: IncludeInternalDebugMenu
+      type: bool
+      value: true
+      name: Enable Safari's debug menu
+
+    - domain: com.apple.Safari
+      key: FindOnPageMatchesWordStartsOnly
+      type: bool
+      value: false
+      name: Make Safari's search banners default to Contains instead of Starts With
+
+    - domain: com.apple.Safari
+      key: IncludeDevelopMenu
+      type: bool
+      value: true
+      name: Enable the Develop menu and the Web Inspector in Safari
+
+    - domain: com.apple.Safari
+      key: WebKitDeveloperExtrasEnabledPreferenceKey
+      type: bool
+      value: true
+      name: Enable Developer shortcut
+
+    - domain: com.apple.Safari
+      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled
+      type: bool
+      value: true
+      name: Enable Dev Extras
     user_macos_defaults:
     - domain: "/Library/Preferences/com.apple.AppleFileServer"
       key: guestAccess
@@ -169,12 +399,6 @@
       value: "0.968627 0.831373 1.000000 Purple"
       name: "Set Highlight colors"
 
-    - domain: com.apple.universalaccess
-      key: reduceMotion
-      type: bool
-      value: true
-      name: Reudce motion enable to change space switching to a fade and not a swipe
-
     - domain: com.apple.dock
       key: autohide-time-modifier
       type: float
@@ -216,24 +440,6 @@
       type: int
       value: 3
       name: Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
-
-    - domain: com.apple.universalaccess
-      key: HIDScrollZoomModifierMask
-      type: int
-      value: 262144
-      name: Use scroll gesture with the Ctrl (^) modifier key to zoom
-
-    - domain: com.apple.universalaccess
-      key: closeViewScrollWheelToggle
-      type: bool
-      value: true
-      name: Enable scroll wheel zoom
-
-    - domain: com.apple.universalaccess
-      key: closeViewZoomFollowsFocus
-      type: bool
-      value: true
-      name: Follow the keyboard focus while zoomed in
 
     - domain: NSGlobalDomain
       key: ApplePressAndHoldEnabled
@@ -550,16 +756,6 @@
       value: []
       name: Wipe all (default) app icons from the Dock
 
-    - domain: com.apple.universalaccess
-      key: com.apple.custommenu.apps
-      type: array
-      value:
-        - com.apple.finder
-        - com.google.Chrome
-        - com.google.Chrome.canary
-        - com.apple.Safari
-      name: Enable keyboard shortcut overrides for select apps
-
     - domain: com.apple.dock
       key: expose-animation-duration
       type: float
@@ -671,12 +867,12 @@
     - domain: com.apple.dock
       key: autohide-time-modifier
       type: float
-      value: 20000000000
+      value: 1000
       name: Set a very long time to show the dock (essentially removing it)
 
     - domain: com.apple.dock
       key: tilesize
-      type: int
+      type: float
       value: 1 #tiny size
       name: Make icons on dock tiny
 
@@ -739,201 +935,6 @@
       type: boolean
       value: true
       name: Disable bouncing effect for dock
-
-    ##################################################################################
-    # Safari & WebKit
-    ##################################################################################
-    - domain: com.apple.Safari
-      key: UniversalSearchEnabled
-      type: bool
-      value: false
-      name: Don't send search queries to Apple
-
-    - domain: com.apple.Safari
-      key: SuppressSearchSuggestions
-      type: bool
-      value: true
-      name: Disable search suggestions
-
-    - domain: com.apple.Safari
-      key: WebKitTabToLinksPreferenceKey
-      type: bool
-      value: true
-      name: Press Tab to highlight each item on a web page
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks
-      type: bool
-      value: true
-      name: Enable tab to links
-
-    - domain: com.apple.Safari
-      key: ShowFullURLInSmartSearchField
-      type: bool
-      value: true
-      name: "Show the full URL in the address bar"
-
-    - domain: com.apple.Safari
-      key: HomePage
-      type: string
-      value: "about:blank"
-      name: Set Safari's home page to `about:blank` for faster loading
-
-    - domain: com.apple.Safari
-      key: AutoOpenSafeDownloads
-      type: bool
-      value: false
-      name: Prevent Safari from opening 'safe' files automatically after downloading
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled
-      type: bool
-      value: true
-      name: Allow hitting the Backspace key to go to the previous page in history
-
-    - domain: com.apple.Safari
-      key: ShowFavoritesBar
-      type: bool
-      value: false
-      name: Hide Safari's bookmarks bar by default
-
-    - domain: com.apple.Safari
-      key: ShowSidebarInTopSites
-      type: bool
-      value: false
-      name: Hide Safari's sidebar in Top Sites
-
-    - domain: com.apple.Safari
-      key: DebugSnapshotsUpdatePolicy
-      type: int
-      value: 2
-      name: Disable Safari's thumbnail cache for History and Top Sites
-
-    - domain: com.apple.Safari
-      key: IncludeInternalDebugMenu
-      type: bool
-      value: true
-      name: Enable Safari's debug menu
-
-    - domain: com.apple.Safari
-      key: FindOnPageMatchesWordStartsOnly
-      type: bool
-      value: false
-      name: Make Safari's search banners default to Contains instead of Starts With
-
-    - domain: com.apple.Safari
-      key: IncludeDevelopMenu
-      type: bool
-      value: true
-      name: Enable the Develop menu and the Web Inspector in Safari
-
-    - domain: com.apple.Safari
-      key: WebKitDeveloperExtrasEnabledPreferenceKey
-      type: bool
-      value: true
-      name: Enable Developer shortcut
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled
-      type: bool
-      value: true
-      name: Enable Dev Extras
-
-    - domain: NSGlobalDomain
-      key: WebKitDeveloperExtras
-      type: bool
-      value: true
-      name: Add a context menu item for showing the Web Inspector in web views
-
-    - domain: com.apple.Safari
-      key: WebContinuousSpellCheckingEnabled
-      type: bool
-      value: true
-      name: Enable continuous spellchecking
-
-    - domain: com.apple.Safari
-      key: WebAutomaticSpellingCorrectionEnabled
-      type: bool
-      value: false
-      name: Disable auto-correct
-
-    - domain: com.apple.Safari
-      key: AutoFillFromAddressBook
-      type: bool
-      value: false
-      name: Disable AutoFill for AddressBook
-
-    - domain: com.apple.Safari
-      key: AutoFillPasswords
-      type: bool
-      value: false
-      name: Disable Autofill for Passwords
-
-    - domain: com.apple.Safari
-      key: AutoFillCreditCardData
-      type: bool
-      value: false
-      name: Disable AutoFill for Credit Cards
-
-    - domain: com.apple.Safari
-      key: AutoFillMiscellaneousForms
-      type: bool
-      value: false
-      name: Disable Form Auto Fill
-
-    - domain: com.apple.Safari
-      key: WarnAboutFraudulentWebsites
-      type: bool
-      value: true
-      name: Warn about fraudulent websites
-
-    - domain: com.apple.Safari
-      key: WebKitPluginsEnabled
-      type: bool
-      value: false
-      name: Disable plug-ins
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled
-      type: bool
-      value: false
-      name: Disable Webkit plugins
-
-    - domain: com.apple.Safari
-      key: WebKitJavaEnabled
-      type: bool
-      value: false
-      name: Disable Java
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled
-      type: bool
-      value: false
-      name: Disable Webkit Java
-
-    - domain: com.apple.Safari
-      key: WebKitJavaScriptCanOpenWindowsAutomatically
-      type: bool
-      value: false
-      name: Block pop-up windows
-
-    - domain: com.apple.Safari
-      key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically
-      type: bool
-      value: false
-      name: Block Webkit popup windows
-
-    - domain: com.apple.Safari
-      key: SendDoNotTrackHTTPHeader
-      type: bool
-      value: true
-      name: Enable “Do Not Track”
-
-    - domain: com.apple.Safari
-      key: InstallExtensionUpdatesAutomatically
-      type: bool
-      value: true
-      name: Update extensions automatically
 
     ##################################################################################
     # Chrome
@@ -1061,5 +1062,5 @@
       loop: "{{ user_macos_defaults }}"
       loop_control:
         label: "{{ item['name'] }}"
-      become: true
+      become: false
       #notify: Restart macOS dock
