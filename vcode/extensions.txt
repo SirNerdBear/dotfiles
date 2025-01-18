@@ -40,3 +40,9 @@ vscodevim.vim
 WakaTime.vscode-wakatime
 wingrunr21.vscode-ruby
 xabikos.JavaScriptSnippets
+bung87.rails
+bung87.vscode-gemfile
+esbenp.prettier-vscode
+ms-python.debugpy
+sianglim.slim
+tuxtina.json2yaml
