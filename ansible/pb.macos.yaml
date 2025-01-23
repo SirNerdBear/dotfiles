@@ -7,10 +7,42 @@
 # GPG keys (backup, restore, replace, promote)
 # VSCode extenions and config
 # Create files from file templates in roles
+  # - DEV_CLI
+  #   * Zsh (/etc as well as homedir, plus imports)
+  #   * Tmux
+  #   * Tmuxinator
+  #   * htop
+  #   * xterm
+  #   * Zshplugs should get it's own playbook/tags
+  #   * Ghostty
+  #   * Noba/nccm (generate from hosts in other Ansible?)
+  # - DEV_TOOLS
+  #   * awesome print (aprc)
+  #   * curl
+  #   * fontforge
+  #   * gdb
+  #   * git (global ignore and config)
+  #   * irb
+  #   * multitail
+  #   * npm
+  #   * psql
+  #   * readline
+  #   * wget
+  # - DOCKER
+  # - NEOVIM
+  #   * vim config
+  #   * git pull of plug.vim
+  #   * plugins.vim
 # Move Alfred Preferences into iCloud?
 # ASDF 
 # PyEnv
-# 
+# Karabiner config into macos role/pb
+# Have a host rename task
+  # - The idea is inventory will be all my Macs and possibly linux systems once I expand to that.
+  # - When setting up a new Mac I can use an existing Mac to run the Ansible, or I should have a 
+  # - bootloader script to get the bare minimum installed to load the Ansible repo.
+# Setup scripts and do aliases automatically so I don't need to type extension
+
 
 #https://macos-defaults.com/
 - name: MacOS Playbook
