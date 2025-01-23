@@ -40,7 +40,6 @@ Ansible runs the playbook `pb.macos.yaml` with the tag:
 * Build things from source as needed (simi-idenpotent)
 * Copy and install fonts from Dropbox storage
 
-
 ** Many security settings can no longer be automated. **
 
 Post install steps (manual):
@@ -62,6 +61,8 @@ Post install steps (manual):
 * Set desired wallpaper/screensaver (not automated for... reasons!)
 * Ghostty startup script (TODO automat adding to login items)
 * Login to Firefox and Chrome
+* Bitwarden added to Chrome and Safari
+* Licenses for Scriviner, Royal TSX, and Alfred
 * A restart is an excellent idea!
 
 ## TODO
@@ -71,6 +72,10 @@ Post install steps (manual):
 * https://ghostty.org/docs/config/reference
 
 * Close apps affected by default changes https://stackoverflow.com/questions/43961903/registering-multiple-variables-in-a-loop
+
+* Ansible automation to update ssh/gpg keys
+
+* Make template for ~/.ssh/config
 
 * 
 
