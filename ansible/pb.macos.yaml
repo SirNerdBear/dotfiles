@@ -3,6 +3,15 @@
 #   ^#\s+(.*?)\ndefaults write (\S+)\s+(\S+)\s+-(\S+)\s(.*?)$
 #   - domain: $2\n  key: $3\n  type: $4\n  value: $5\n  name: $1\n
 
+# TODO
+# GPG keys (backup, restore, replace, promote)
+# VSCode extenions and config
+# Create files from file templates in roles
+# Move Alfred Preferences into iCloud?
+# ASDF 
+# PyEnv
+# 
+
 #https://macos-defaults.com/
 - name: MacOS Playbook
   hosts: "localhost"
