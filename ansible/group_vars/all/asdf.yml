@@ -1,0 +1,14 @@
+asdf_plugins:
+- name: "erlang"
+  versions: ["23.3.4", "23.3.3"]
+  global: "23.3.4"
+  environment:
+    KERL_CONFIGURE_OPTIONS: "--without-javac --with-ssl=/usr/local/opt/openssl@1.1 --disable-hipe"
+    CFLAGS: "-O2 -g -fno-stack-check"
+- name: "nodejs"
+  versions: ["16.20.2", "20.17.0","22.7.0"]
+  global: "20.17.0"
+- name: "ruby"
+  versions: ["2.7.6", "3.3.5"]
+  global: "3.3.5"
+

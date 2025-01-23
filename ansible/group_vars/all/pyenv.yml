@@ -1,0 +1,21 @@
+pyenv_owner_group: "staff"
+pyenv_shellrc_file: "{{ ansible_env.HOME }}/.zshrc"
+pyenv_path: "{{ ansible_env.HOME }}/.pyenv"
+pyenvrc_path: "{{ ansible_env.HOME }}"
+pyenv_global:
+  - 3.10.16
+  - 2.7.18
+pyenv_enable_autocompletion: true
+pyenv_python_versions:
+  - 3.12.4
+  - 3.10.16
+  - 2.7.18
+pyenv_virtualenvs:
+  - venv_name: latest_v312
+    py_version: 3.12.4
+  - venv_name: latest_v310
+    py_version: 3.10.16
+pyenv_update_git_install: false
+pyenv_osx_packages:
+  - readline
+  - xz
