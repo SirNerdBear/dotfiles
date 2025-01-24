@@ -1,30 +1,10 @@
 
 
 if [ $(id -u) -ne 0 ]; then
-	#create symlink to dotfiles if needed
-
-	dotpath="$HOME"/dotfiles
-	dotdir="$HOME"/.config
-
-	if [ ! -d $dotpath ]; then
-		echo "WARNING! $dotpath does not exist!"
-		exit 1
-	fi
-
-	if [ ! -L $dotdir ] || [ $(readlink $dotdir) != $dotpath ]; then
-		if [ -e $dotdir ]; then
-			set -e #exit on error
-			mkdir -p "$dotpath"/backups
-			mv $dotdir $dotpath/backups/$(basename $dotdir)-$(date +"%Y.%m.%d.%H.%M.%S")
-		fi
-		set +e
-		unlink $dotdir > /dev/null 2>&1 #if its a bad link get rid of it
-		set -e
-		ln -s $dotpath $dotdir
-	fi
 
 	mkdir -p "$HOME"/.local/share
     mkdir -p "$HOME"/.local/bin
+	mkdir -p "$HOME"/.config
 
 	if [ -z "$XDG_CONFIG_HOME" ]; then
 		export XDG_CONFIG_HOME="$HOME/.config"
