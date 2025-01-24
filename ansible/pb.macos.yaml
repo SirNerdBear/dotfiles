@@ -42,7 +42,16 @@
   # - When setting up a new Mac I can use an existing Mac to run the Ansible, or I should have a 
   # - bootloader script to get the bare minimum installed to load the Ansible repo.
 # Setup scripts and do aliases automatically so I don't need to type extension
-
+# Close apps affected by default changes https://stackoverflow.com/questions/43961903/registering-multiple-variables-in-a-loop
+# update ssh/gpg keys (seperate playbook?)
+# Make template for ~/.ssh/config (part of the above?)
+# Task to add Ansible Vault key to keychain
+# Add an SSH tmux config to change status BAR for remote sessions (location and styling)
+# TMUX persistance
+  # https://github.com/tmux-plugins/tmux-resurrect/blob/master/README.md
+  # https://github.com/tmux-plugins/tmux-resurrect
+## Followup Items
+# https://github.com/ghostty-org/ghostty/issues/4538
 
 #https://macos-defaults.com/
 - name: MacOS Playbook
