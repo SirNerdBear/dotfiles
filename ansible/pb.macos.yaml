@@ -52,6 +52,9 @@
   # https://github.com/tmux-plugins/tmux-resurrect
 ## Followup Items
 # https://github.com/ghostty-org/ghostty/issues/4538
+# Update vault-keyring-client.py to work on linux/docker by alternativly getting user input, or taking a var
+# Put vault-keyring-client.py into a module so it can be used by many repos
+# 
 
 #https://macos-defaults.com/
 - name: MacOS Playbook
