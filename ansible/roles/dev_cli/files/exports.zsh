@@ -1,30 +1,29 @@
 ########################-> Env Vars for XDG Support <-########################
-# Stuborn people [Example: https://github.com/tmux/tmux/issues/142 ] are the #
-# cause of this nonsense! Maintainers are stuborn mules fighting progress.   #
-# Therefore, consider this list of shame [rings shame bell]. SHAME! SHAME!   #
-##############################################################################
 export PYLINTHOME="$XDG_CACHE_HOME"/pylint
 export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonstartup.py
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
 export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 export NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
 export WGETRC="$XDG_CONFIG_HOME"/wget/wgetrc
-export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
-export ANTIBODY_HOME="$XDG_DATA_HOME"/antibody #to be fair they avoid ~
-export ZSH=$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh"
+export ANSIBLE_HOME="$XDG_DATA_HOME"/ansible
+export ASDF_DATA_DIR="$XDG_DATA_HOME"/asdf 
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+export PYENV_ROOT="$XDG_DATA_HOME"/pyenv 
+export PYTHONSTARTUP="$XDG_CONFIG_HOME"/python/pythonrc
+
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export SHELL_SESSION_DIR="$XDG_STATE_HOME/zsh/sessions"
+export SHELL_SESSION_FILE="$SHELL_SESSION_DIR/$TERM_SESSION_ID"
 
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
 export GEMRC="$XDG_CONFIG_HOME"/rubygems/config
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
-export LPASS_HOME="$XDG_RUNTIME_DIR"/lpass
 export IRBRC="$XDG_CONFIG_HOME"/irb/irbrc
 export PSQLRC="$XDG_CONFIG_HOME"/psql/config
 export PRYRC="$XDG_CONFIG_HOME"/pry/pryrc
 #TODO .subversion
-#TODO .lesshst
-#TODO .tmux / .tmux.config
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory
 ##############################################################################
 
@@ -90,9 +89,6 @@ export PATH="~/.rbenv/bin:$PATH"
 
 # Add python scripts to PATH
 export PATH="~/Library/Python/3.10/bin:$PATH"
-
-# Support italics
-export TERM="xterm-256color-italic"
 
 # NeoVIM True Color Support (because 256 isn't enough for my rainbow!)
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
