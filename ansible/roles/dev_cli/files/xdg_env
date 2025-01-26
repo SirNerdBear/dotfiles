@@ -3,15 +3,15 @@
 if [ $(id -u) -ne 0 ]; then
 
 	mkdir -p "$HOME"/.local/share
+	mkdir -p "$HOME"/.local/state/zsh
     mkdir -p "$HOME"/.local/bin
 	mkdir -p "$HOME"/.config
 
-	if [ -z "$XDG_CONFIG_HOME" ]; then
-		export XDG_CONFIG_HOME="$HOME/.config"
-		export XDG_DATA_HOME="$HOME/.local/share"
-		export XDG_CACHE_HOME="$HOME/Library/Caches" #should maybe be .cache ??
-		export XDG_RUNTIME_DIR="/private/tmp"
-	fi
+	export XDG_CONFIG_HOME="$HOME/.config"
+	export XDG_DATA_HOME="$HOME/.local/share"
+	export XDG_STATE_HOME="$HOME/.local/state"
+	export XDG_CACHE_HOME="$HOME/.cache"
+	export XDG_RUNTIME_DIR="/private/tmp"
 fi
 
 set +e
