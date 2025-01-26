@@ -6,12 +6,6 @@
 
 mafredri/zsh-async
 
-#sexy prompt
-denysdovhan/spaceship-prompt
-
-#fish like auto suggestions
-zsh-users/zsh-autosuggestions
-
 #expandable some aliases so we can see the full command
 momo-lab/zsh-abbrev-alias
 
