@@ -51,12 +51,14 @@
 # TMUX persistance
   # https://github.com/tmux-plugins/tmux-resurrect/blob/master/README.md
   # https://github.com/tmux-plugins/tmux-resurrect
-# 
+#  
 # Update vault-keyring-client.py to work on linux/docker by alternativly getting user input, or taking a var
 # Put vault-keyring-client.py into a module so it can be used by many repos
 # https://wiki.archlinux.org/title/XDG_Base_Directory
 # Use https://github.com/b3nj5m1n/xdg-ninja to aid clearing out ~/
 # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# brew install of ASDF did not respect XDG need to look into or do git install https://asdf-vm.com/guide/getting-started.html
+
 
 #https://macos-defaults.com/
 - name: MacOS Playbook
