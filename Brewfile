@@ -166,6 +166,8 @@ brew "bfg"                 # Scubing files from a gitrepo, etc.
 brew "ripgrep"             # grep but respects .gitignore
 brew "gpg"                 # Signing git commits and such
 brew "pinentry-mac"        # GUI interface for GPG passphrase (macOS keychain)
+brew "fd"                  # Find tool
+brew "ripgrep"             # Recursive regex server for directories
 
 brew "autoconf"            # Create config shell scripts
 brew "ossp-uuid"           # ISO-C API and CLI for generating UUIDs
