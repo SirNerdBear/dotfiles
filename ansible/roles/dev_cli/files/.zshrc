@@ -83,6 +83,9 @@ source ~/.config/zsh/aliases.zsh
 source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
 antidote load $ZDOTDIR/zsh_plugins
 
+source ~/.local/share/cargo/env
+
+
 if [ $MACOS ]
 then
   :

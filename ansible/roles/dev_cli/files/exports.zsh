@@ -11,6 +11,9 @@ export ASDF_DATA_DIR="$XDG_DATA_HOME"/asdf
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export PYENV_ROOT="$XDG_DATA_HOME"/pyenv 
 export PYTHONSTARTUP="$XDG_CONFIG_HOME"/python/pythonrc
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+
 
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export SHELL_SESSION_DIR="$XDG_STATE_HOME/zsh/sessions"
