@@ -85,6 +85,8 @@ antidote load $ZDOTDIR/zsh_plugins
 
 source ~/.local/share/cargo/env
 
+. "$XDG_DATA_HOME/asdf/asdf.sh"
+
 
 if [ $MACOS ]
 then
