@@ -55,4 +55,4 @@ cmus/*
 VSCode
 !VSCode/User/settings.json
 !VSCode/User/snippets
-
+.vscode
